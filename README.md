@@ -1,4 +1,4 @@
-# Screener-Runner
+# Screener-Runner [![Build Status](https://circleci.com/gh/screener-io/screener-runner/tree/master.svg?style=shield)](https://circleci.com/gh/screener-io/screener-runner)
 
 Test Runner for [Screener.io](https://screener.io) Visual Testing service.
 
