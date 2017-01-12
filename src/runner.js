@@ -43,6 +43,7 @@ exports.run = function(config) {
       }
     })
     .then(function(tunnelHost) {
+      console.log(config.states.length + ' UI state' + (config.states.length === 1 ? '' : 's') + ' to capture and test');
       console.log('Creating build for ' + config.projectRepo);
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
