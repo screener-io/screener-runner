@@ -53,9 +53,30 @@ describe('screener-runner/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', diffOptions: {}})
+      return validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', includeRules: [], excludeRules: [], diffOptions: {}})
         .catch(function() {
           throw new Error('Should not be here');
+        });
+    });
+
+    it('should allow include/exclude rules that are strings', function() {
+      return validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: ['string'], excludeRules: ['string']})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should allow include/exclude rules that are regex expressions', function() {
+      return validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: [/^string$/], excludeRules: [/^string$/]})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should throw error when include/exclude rules are not in array', function() {
+      return validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: 'string', excludeRules: 'string'})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "includeRules" fails because ["includeRules" must be an array]');
         });
     });
 
