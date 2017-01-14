@@ -9,6 +9,14 @@ exports.runnerConfig = function(value) {
     branch: Joi.string().max(100),
     resolution: Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution'),
     ignore: Joi.string(),
+    includeRules: Joi.array().min(0).items(
+      Joi.string(),
+      Joi.object().type(RegExp)
+    ),
+    excludeRules: Joi.array().min(0).items(
+      Joi.string(),
+      Joi.object().type(RegExp)
+    ),
     states: Joi.array().min(0).items(
       Joi.object().keys({
         url: Joi.string().uri().required(),
