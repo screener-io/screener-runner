@@ -48,15 +48,30 @@ Run the following command:
 $ npm run test-screener
 ```
 
-
 ### Additional Configuration Options
 
 **Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, Drone, Bitbucket Pipelines, Semaphore.
 
 - **build:** Build number from your CI tool. Screener will auto-generate a Build number if not provided.
 - **branch:** Current branch name for your repo
-- **resolution:** Screen resolution to use. Defaults to `1280x1024`
+- **resolution:** Screen resolution to use. Defaults to `1024x768`
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
+- **includeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
+    - Example:
+    ```
+    includeRules: [
+      'State name',
+      /^Component/
+    ]
+    ```
+- **excludeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
+    - Example:
+    ```
+    excludeRules: [
+      'State name',
+      /^Component/
+    ]
+    ```
 - **tunnel.host:** The internal host to tunnel. If this is set, an encrypted tunnel will be automatically started by screener-runner to the specified host.
     - Example:
     ```

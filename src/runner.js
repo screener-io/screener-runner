@@ -1,9 +1,11 @@
 var api = require('./api');
 var validate = require('./validate');
+var Rules = require('./rules');
 var Tunnel = require('./tunnel');
 var CI = require('./ci');
 var GzipProxy = require('./gzip-proxy');
 var Promise = require('bluebird');
+var cloneDeep = require('lodash/cloneDeep');
 var pick = require('lodash/pick');
 
 var MAX_MS = 30 * 60 * 1000; // max 30 mins
@@ -17,9 +19,11 @@ var transformToTunnelHost = function(states, host, tunnelHost) {
 
 exports.run = function(config) {
   // create copy of config
-  config = JSON.parse(JSON.stringify(config));
+  config = cloneDeep(config);
   return validate.runnerConfig(config)
     .then(function() {
+      // apply includeRules and excludeRules
+      config.states = Rules.filter(config.states, 'name', config.includeRules, config.excludeRules);
       // cancel if there are 0 states
       if (config.states.length === 0) {
         throw new Error('no-states');
