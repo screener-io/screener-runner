@@ -96,9 +96,9 @@ describe('screener-runner/src/validate', function() {
   });
 
   describe('validate.steps', function() {
-    it('should error when no value passed in', function() {
-      var result = Validate.steps(undefined);
-      expect(result.error.message).to.equal('"value" is required');
+    it('should error when value not array', function() {
+      var result = Validate.steps('test');
+      expect(result.error.message).to.equal('"value" must be an array');
     });
 
     it('should error when step with invalid type added', function() {
