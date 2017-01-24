@@ -48,6 +48,48 @@ Run the following command:
 $ npm run test-screener
 ```
 
+### Testing Interactions
+
+To test interactions, you can add `Steps` to each state to interact with the UI. This is useful for clicking buttons, filling out forms, and getting the UI into the proper visual state to test.
+
+Here is an example:
+
+```
+var Steps = require('screener-runner').Steps;
+
+module.exports = {
+  ...
+
+  states: [
+    {
+      url: 'http://some-url.com',
+      name: 'Name of UI State',
+      steps: new Steps()
+        .click('.btn-demo')
+        .snapshot('Open Dialog')
+        .end()
+    }
+  ]
+};
+```
+
+Screener-Runner provides a fluent API for adding steps. Methods with selectors have built-in waits to simplify test flow creation.
+
+The following methods are currently available:
+
+- `click(selector)`: this will click on the first element matching the provided css selector.
+- `snapshot(name)`: this will capture a Screener snapshot.
+- `hover(selector)`: this will move the mouse over the first element matching the provided css selector.
+- `setValue(selector, value)`: this will set the value of the input field matching the provided css selector.
+- `executeScript(code)`: this executes custom JS code against the client browser the test is running in.
+- `ignore(selector)`: this ignores all elements matching the provided css selector(s).
+- `wait(ms)`: this will pause execution for the specified number of ms.
+- `wait(selector)`: this will wait until the element matching the provided css selector is present.
+- `end()`: this will return the steps to be run.
+
+**Note:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
+
+
 ### Additional Configuration Options
 
 **Note:** Screener will automatically set `build` and `branch` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Codeship, Drone, Bitbucket Pipelines, Semaphore.
