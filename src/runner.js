@@ -1,5 +1,5 @@
 var api = require('./api');
-var validate = require('./validate');
+var Validate = require('./validate');
 var Rules = require('./rules');
 var Tunnel = require('./tunnel');
 var CI = require('./ci');
@@ -20,7 +20,7 @@ var transformToTunnelHost = function(states, host, tunnelHost) {
 exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);
-  return validate.runnerConfig(config)
+  return Validate.runnerConfig(config)
     .then(function() {
       // apply includeRules and excludeRules
       config.states = Rules.filter(config.states, 'name', config.includeRules, config.excludeRules);
