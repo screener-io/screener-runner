@@ -17,6 +17,8 @@ var transformToTunnelHost = function(states, host, tunnelHost) {
   });
 };
 
+exports.Steps = require('./steps');
+
 exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);
