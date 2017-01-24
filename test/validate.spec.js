@@ -1,6 +1,62 @@
 var expect = require('chai').expect;
 var Validate = require('../src/validate');
 
+var steps = [
+  {
+    type: 'saveScreenshot',
+    name: 'State Name'
+  },
+  {
+    type: 'clickElement',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    }
+  },
+  {
+    type: 'moveTo',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    }
+  },
+  {
+    type: 'setElementText',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    },
+    text: 'text'
+  },
+  {
+    type: 'executeScript',
+    code: 'code'
+  },
+  {
+    type: 'executeScript',
+    code: 'code',
+    isAsync: true
+  },
+  {
+    type: 'ignoreElements',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    }
+  },
+  {
+    type: 'pause',
+    waitTime: 300
+  },
+  {
+    type: 'waitForElementPresent',
+    locator: {
+      type: 'css selector',
+      value: 'msOrSelector'
+    }
+  }
+];
+
 describe('screener-runner/src/validate', function() {
   describe('validate.runnerConfig', function() {
     it('should throw error when no value passed in', function() {
@@ -42,6 +98,13 @@ describe('screener-runner/src/validate', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{}]})
         .catch(function(err) {
           expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" is required]]]');
+        });
+    });
+
+    it('should allow states with steps', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', steps: steps}, {url: 'http://url.com', name: 'name'}]})
+        .catch(function() {
+          throw new Error('Should not be here');
         });
     });
 
@@ -113,73 +176,18 @@ describe('screener-runner/src/validate', function() {
     });
 
     it('should error when valid step with extra property is added', function() {
-      var steps = [
+      var testSteps = [
         {
           type: 'saveScreenshot',
           name: 'hello',
           extra: 'prop'
         }
       ];
-      var result = Validate.steps(steps);
+      var result = Validate.steps(testSteps);
       expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
     });
 
     it('should allow all valid types', function() {
-      var steps = [
-        {
-          type: 'saveScreenshot',
-          name: 'State Name'
-        },
-        {
-          type: 'clickElement',
-          locator: {
-            type: 'css selector',
-            value: 'selector'
-          }
-        },
-        {
-          type: 'moveTo',
-          locator: {
-            type: 'css selector',
-            value: 'selector'
-          }
-        },
-        {
-          type: 'setElementText',
-          locator: {
-            type: 'css selector',
-            value: 'selector'
-          },
-          text: 'text'
-        },
-        {
-          type: 'executeScript',
-          code: 'code'
-        },
-        {
-          type: 'executeScript',
-          code: 'code',
-          isAsync: true
-        },
-        {
-          type: 'ignoreElements',
-          locator: {
-            type: 'css selector',
-            value: 'selector'
-          }
-        },
-        {
-          type: 'pause',
-          waitTime: 300
-        },
-        {
-          type: 'waitForElementPresent',
-          locator: {
-            type: 'css selector',
-            value: 'msOrSelector'
-          }
-        }
-      ];
       var result = Validate.steps(steps);
       expect(result.error).to.equal(null);
     });
