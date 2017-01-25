@@ -17,6 +17,17 @@ var transformToTunnelHost = function(states, host, tunnelHost) {
   });
 };
 
+var getTotalStates = exports.getTotalStates = function(states) {
+  var total = 0;
+  states.forEach(function(state) {
+    total++;
+    (state.steps || []).forEach(function(step) {
+      if (step.type.indexOf('Screenshot') > 0) total++;
+    });
+  });
+  return total;
+};
+
 exports.Steps = require('./steps');
 
 exports.run = function(config) {
@@ -49,7 +60,8 @@ exports.run = function(config) {
       }
     })
     .then(function(tunnelHost) {
-      console.log(config.states.length + ' UI state' + (config.states.length === 1 ? '' : 's') + ' to capture and test');
+      var totalStates = getTotalStates(config.states);
+      console.log(totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture and test');
       console.log('Creating build for ' + config.projectRepo);
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
