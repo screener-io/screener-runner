@@ -1,7 +1,7 @@
 var Joi = require('joi');
 var Promise = require('bluebird');
 
-var stepsSchema = Joi.array().min(0).items(
+var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
     name: Joi.string().required()
