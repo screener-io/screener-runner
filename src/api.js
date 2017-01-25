@@ -7,6 +7,11 @@ var RETRY_MS = 30 * 1000;
 var POLL_MS = 2500;
 
 var checkStatus = function(body, response) {
+  if (typeof body === 'string' && body.indexOf('{"error":') === 0) {
+    try {
+      body = JSON.parse(body);
+    } catch (ex) { /**/ }
+  }
   if (typeof body === 'object' && body.error && body.error.message) {
     throw new Error(body.error.message);
   } else if (response.statusCode !== 200) {
@@ -71,5 +76,15 @@ var waitForBuild = exports.waitForBuild = function(apiKey, projectId, branch, bu
         .then(function() {
           return waitForBuild(apiKey, projectId, branch, buildId);
         });
+    })
+    .catch(function(err) {
+      if (err.message.indexOf('Build Not Found') >= 0) {
+        return Promise.delay(POLL_MS)
+          .then(function() {
+            return waitForBuild(apiKey, projectId, branch, buildId);
+          });
+      } else {
+        throw err;
+      }
     });
 };

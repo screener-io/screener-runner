@@ -27,6 +27,11 @@ var conflictResponse = {
     message: 'Conflict'
   }
 };
+var notFoundResponse = {
+  error: {
+    message: 'Build Not Found'
+  }
+};
 
 describe('screener-runner/src/api', function() {
   beforeEach(function() {
@@ -148,6 +153,19 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/project-id/branches/branch/builds/build-id/status')
         .reply(200, '');
+      nock(API_URL, headers)
+        .get('/project-id/branches/branch/builds/build-id/status')
+        .reply(200, 'status');
+      return api.waitForBuild('api-key', 'project-id', 'branch', 'build-id')
+        .then(function(response) {
+          expect(response).to.deep.equal('status');
+        });
+    });
+
+    it('should retry when build not found', function() {
+      nock(API_URL, headers)
+        .get('/project-id/branches/branch/builds/build-id/status')
+        .reply(404, notFoundResponse);
       nock(API_URL, headers)
         .get('/project-id/branches/branch/builds/build-id/status')
         .reply(200, 'status');
