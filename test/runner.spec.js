@@ -137,4 +137,23 @@ describe('screener-runner/src/runner', function() {
         });
     });
   });
+
+  describe('Runner.getTotalStates', function() {
+    it('should return count of all states', function() {
+      var states = [{}, {}, {}];
+      expect(Runner.getTotalStates(states)).to.equal(3);
+    });
+
+    it('should return count including steps', function() {
+      var states = [{
+        steps: [
+          {type: 'clickElement'},
+          {type: 'saveScreenshot'},
+          {type: 'setElementText'},
+          {type: 'saveScreenshot'}
+        ]
+      }];
+      expect(Runner.getTotalStates(states)).to.equal(3);
+    });
+  });
 });
