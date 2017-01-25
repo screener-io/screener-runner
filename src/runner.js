@@ -28,8 +28,6 @@ var getTotalStates = exports.getTotalStates = function(states) {
   return total;
 };
 
-exports.Steps = require('./steps');
-
 exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);

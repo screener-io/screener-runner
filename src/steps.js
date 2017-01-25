@@ -1,5 +1,3 @@
-var Validate = require('./validate');
-
 function Steps() {
   this.steps = [];
 }
@@ -96,10 +94,6 @@ Steps.prototype.wait = function(msOrSelector) {
 };
 
 Steps.prototype.end = function() {
-  var result = Validate.steps(this.steps);
-  if (result.error) {
-    throw result.error;
-  }
   return this.steps;
 };
 

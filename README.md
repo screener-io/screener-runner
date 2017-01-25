@@ -55,7 +55,7 @@ To test interactions, you can add `Steps` to each state to interact with the UI.
 Here is an example:
 
 ```
-var Steps = require('screener-runner').Steps;
+var Steps = require('screener-runner/src/steps');
 
 module.exports = {
   ...

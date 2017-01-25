@@ -131,17 +131,6 @@ describe('screener-runner/src/steps', function() {
   });
 
   describe('Steps.prototype.end', function() {
-    it('should throw error if invalid step added', function() {
-      var test = new Steps();
-      test.steps.push({});
-      try {
-        test.end();
-        throw new Error('should not be here');
-      } catch(ex) {
-        expect(ex.message).to.equal('"value" at position 0 does not match any of the allowed types');
-      }
-    });
-
     it('should return steps', function() {
       var result = new Steps()
         .snapshot('State Name')
