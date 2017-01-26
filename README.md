@@ -9,7 +9,7 @@ $ npm install --save-dev screener-runner
 ```
 
 Then add a script to your `package.json`:
-```
+```javascript
 "scripts": {
   "test-screener": "screener-runner --conf screener.conf.js"
 }
@@ -18,7 +18,7 @@ Then add a script to your `package.json`:
 Then add a configuration file to your project root. Here is an example:
 
 **screener.conf.js**
-```
+```javascript
 module.exports = {
   // full repository name for your project:
   projectRepo: 'user/my-project-repo',
@@ -54,7 +54,7 @@ To test interactions, you can add `Steps` to each state to interact with the UI.
 
 Here is an example:
 
-```
+```javascript
 var Steps = require('screener-runner/src/steps');
 
 module.exports = {
@@ -100,7 +100,7 @@ The following methods are currently available:
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
 - **includeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
     - Example:
-    ```
+    ```javascript
     includeRules: [
       'State name',
       /^Component/
@@ -108,7 +108,7 @@ The following methods are currently available:
     ```
 - **excludeRules:** Optional array of strings or RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
     - Example:
-    ```
+    ```javascript
     excludeRules: [
       'State name',
       /^Component/
@@ -116,14 +116,14 @@ The following methods are currently available:
     ```
 - **tunnel.host:** The internal host to tunnel. If this is set, an encrypted tunnel will be automatically started by screener-runner to the specified host.
     - Example:
-    ```
+    ```javascript
     tunnel: {
       host: 'localhost:3000'
     }
     ```
 - **diffOptions:** Visual diff options to control validations.
     - Example:
-    ```
+    ```javascript
     diffOptions: {
       structure: true,
       layout: true,
