@@ -143,18 +143,62 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should throw error when resolution in incorrect format', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: 'resolution'})
-        .catch(function(err) {
-          expect(err.message).to.equal('child "resolution" fails because ["resolution" with value "resolution" fails to match the resolution pattern]');
-        });
-    });
-
     it('should throw error when field is unknown', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], someKey: 'key'})
         .catch(function(err) {
           expect(err.message).to.equal('"someKey" is not allowed');
         });
+    });
+
+    describe('validate.resolutionSchema', function() {
+      it('should throw error when resolution in incorrect format', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: 'resolution'})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "resolution" fails because ["resolution" with value "resolution" fails to match the resolution pattern, "resolution" must be an object, "resolution" must be an object]');
+          });
+      });
+
+      it('should allow resolution in string format <width>x<height>', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: '1024x768'})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow resolution in device object format', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {deviceName: 'iPhone 6'}})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow resolution in device object format with orientation', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {deviceName: 'iPhone 6', deviceOrientation: 'landscape'}})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow resolution in object format', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {width: 1024, height: 768}})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow resolution in object format with user agent string', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {width: 1024, height: 768, userAgent: 'user agent string'}})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should throw error when resolution object in incorrect format', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {deviceName: 'iPhone 6', width: 1024, height: 768}})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "resolution" fails because ["resolution" must be a string, "deviceName" is not allowed, "width" is not allowed, "height" is not allowed]');
+          });
+      });
     });
   });
 
