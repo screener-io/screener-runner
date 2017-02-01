@@ -1,6 +1,19 @@
 var Joi = require('joi');
 var Promise = require('bluebird');
 
+var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
+  Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution'),
+  Joi.object().keys({
+    width: Joi.number().min(320).max(1920).required(),
+    height: Joi.number().min(320).max(1920).required(),
+    userAgent: Joi.string()
+  }),
+  Joi.object().keys({
+    deviceName: Joi.string().required(),
+    deviceOrientation: Joi.string().valid('portrait', 'landscape')
+  })
+);
+
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
@@ -37,7 +50,7 @@ var runnerSchema = Joi.object().keys({
   projectRepo: Joi.string().max(100).required(),
   build: Joi.string().max(40),
   branch: Joi.string().max(100),
-  resolution: Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution'),
+  resolution: resolutionSchema,
   ignore: Joi.string(),
   includeRules: Joi.array().min(0).items(
     Joi.string(),
