@@ -9,6 +9,10 @@ var Tunnel = require('../src/tunnel');
 var config = {
   apiKey: 'api-key',
   projectRepo: 'repo',
+  resolutions: [
+    '1024x768',
+    {deviceName: 'iPhone 6'}
+  ],
   build: 'build-id',
   states: [
     {
@@ -34,6 +38,10 @@ var apiMock = {
     expect(apiKey).to.equal('api-key');
     expect(payload).to.deep.equal({
       projectRepo: 'repo',
+      resolutions: [
+        '1024x768',
+        {deviceName: 'iPhone 6'}
+      ],
       build: 'build-id',
       branch: 'git-branch',
       states: config.states
@@ -91,6 +99,10 @@ describe('screener-runner/src/runner', function() {
         createBuildWithRetry: function(apiKey, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
+            resolutions: [
+              '1024x768',
+              {deviceName: 'iPhone 6'}
+            ],
             build: 'build-id',
             branch: 'git-branch',
             states: [
