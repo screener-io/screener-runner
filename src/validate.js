@@ -51,6 +51,9 @@ var runnerSchema = Joi.object().keys({
   build: Joi.string().max(40),
   branch: Joi.string().max(100),
   resolution: resolutionSchema,
+  resolutions: Joi.array().min(1).items(
+    resolutionSchema
+  ),
   ignore: Joi.string(),
   includeRules: Joi.array().min(0).items(
     Joi.string(),
@@ -77,7 +80,7 @@ var runnerSchema = Joi.object().keys({
     style: Joi.boolean(),
     content: Joi.boolean()
   })
-}).required();
+}).without('resolutions', ['resolution']).required();
 
 exports.runnerConfig = function(value) {
   var validator = Promise.promisify(Joi.validate);

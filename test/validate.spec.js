@@ -150,6 +150,43 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
+    describe('validate.resolutions', function() {
+      it('should allow resolutions array by itself', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: ['1024x768']})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow both string and object resolution formats in resolutions array', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: ['1024x768', {deviceName: 'iPhone 6'}]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should not allow both resolution and resolutions', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: '1024x768', resolutions: ['1024x768']})
+          .catch(function(err) {
+            expect(err.message).to.equal('"resolutions" conflict with forbidden peer "resolution"');
+          });
+      });
+
+      it('should throw error when resolutions is empty', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: []})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "resolutions" fails because ["resolutions" must contain at least 1 items]');
+          });
+      });
+
+      it('should throw error when resolutions in incorrect format', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: 'resolutions'})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "resolutions" fails because ["resolutions" must be an array]');
+          });
+      });
+    });
+
     describe('validate.resolutionSchema', function() {
       it('should throw error when resolution in incorrect format', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: 'resolution'})
