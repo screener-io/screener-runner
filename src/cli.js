@@ -9,6 +9,8 @@ program
   .option('-c, --conf <config-file>', 'Path to Configuration File')
   .parse(process.argv);
 
+console.log('\nscreener-runner v' + pjson.version + '\n');
+
 if (!program.conf) {
   console.error('--conf is a required argument. Type --help for more information.');
   process.exit(1);
