@@ -2,6 +2,7 @@ var program = require('commander');
 var fs = require('fs');
 var path = require('path');
 var pjson = require('../package.json');
+var colors = require('colors/safe');
 var Runner = require('./runner');
 
 program
@@ -9,7 +10,7 @@ program
   .option('-c, --conf <config-file>', 'Path to Configuration File')
   .parse(process.argv);
 
-console.log('\nscreener-runner v' + pjson.version + '\n');
+console.log(colors.bold('\nscreener-runner v' + pjson.version + '\n'));
 
 if (!program.conf) {
   console.error('--conf is a required argument. Type --help for more information.');
