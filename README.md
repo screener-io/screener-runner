@@ -11,13 +11,13 @@ $ npm install --save-dev screener-runner
 Then add a script to your `package.json`:
 ```javascript
 "scripts": {
-  "test-screener": "screener-runner --conf screener.conf.js"
+  "test-screener": "screener-runner --conf screener.config.js"
 }
 ```
 
 Then add a configuration file to your project root. Here is an example:
 
-**screener.conf.js**
+**screener.config.js**
 ```javascript
 module.exports = {
   // full repository name for your project:
@@ -162,6 +162,14 @@ module.exports = {
     ```javascript
     tunnel: {
       host: 'localhost:3000'
+    }
+    ```
+    - `gzip` and `cache` options are also available to improve tunnel performance. Example:
+    ```javascript
+    tunnel: {
+      host: 'localhost:3000',
+      gzip: true, // gzip compress all content being served from tunnel host
+      cache: true // sets cache-control header for all content being served from tunnel host. Must be used with gzip option
     }
     ```
 - **diffOptions:** Visual diff options to control validations.
