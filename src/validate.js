@@ -72,7 +72,8 @@ var runnerSchema = Joi.object().keys({
   ).required(),
   tunnel: Joi.object().keys({
     host: Joi.string().required(),
-    gzip: Joi.boolean()
+    gzip: Joi.boolean(),
+    cache: Joi.boolean()
   }),
   diffOptions: Joi.object().keys({
     structure: Joi.boolean(),

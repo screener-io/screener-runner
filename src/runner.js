@@ -52,7 +52,11 @@ exports.run = function(config) {
     })
     .then(function() {
       if (config.tunnel && config.tunnel.gzip) {
-        return GzipProxy.startServer(config.tunnel.host);
+        var options = {
+          targetHost: config.tunnel.host,
+          cache: config.tunnel.cache
+        };
+        return GzipProxy.startServer(options);
       } else {
         return Promise.resolve();
       }
