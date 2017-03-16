@@ -5,17 +5,18 @@ var Tunnel = rewire('../src/tunnel');
 
 describe('screener-runner/src/tunnel', function() {
   describe('Tunnel.connect', function() {
-    it('should pass host and return tunnel url on success', function() {
+    it('should pass host/token and return tunnel url on success', function() {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
             addr: 'localhost:8080',
-            host_header: 'localhost'
+            host_header: 'localhost',
+            authtoken: 'token'
           });
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('localhost:8080')
+      return Tunnel.connect('localhost:8080', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
         });
@@ -26,12 +27,13 @@ describe('screener-runner/src/tunnel', function() {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
             addr: 'localhost:80',
-            host_header: 'localhost'
+            host_header: 'localhost',
+            authtoken: 'token'
           });
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('localhost')
+      return Tunnel.connect('localhost', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
         });
@@ -43,7 +45,7 @@ describe('screener-runner/src/tunnel', function() {
           cb(new Error('error msg'));
         }
       });
-      return Tunnel.connect('localhost:8080')
+      return Tunnel.connect('localhost:8080', 'token')
         .catch(function(err) {
           expect(err.message).to.equal('error msg');
         });

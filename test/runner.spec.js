@@ -26,14 +26,21 @@ var config = {
   ]
 };
 var tunnelMock = {
-  connect: function(host) {
+  connect: function(host, token) {
     expect(host).to.equal('localhost:8081');
+    expect(token).to.equal('token');
     return Promise.resolve('tunnel-url');
   },
   disconnect: sinon.spy(),
   transformUrl: Tunnel.transformUrl
 };
 var apiMock = {
+  getTunnelToken: function(apiKey) {
+    expect(apiKey).to.equal('api-key');
+    return Promise.resolve({
+      token: 'token'
+    });
+  },
   createBuildWithRetry: function(apiKey, payload) {
     expect(apiKey).to.equal('api-key');
     expect(payload).to.deep.equal({
@@ -96,6 +103,7 @@ describe('screener-runner/src/runner', function() {
 
     it('should connect, convert to tunnel urls, and disconnect tunnel when tunnel.host exists', function() {
       Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
         createBuildWithRetry: function(apiKey, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
@@ -138,6 +146,7 @@ describe('screener-runner/src/runner', function() {
 
     it('should run test and wait for failure test status to return', function() {
       Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
         createBuildWithRetry: apiMock.createBuildWithRetry,
         waitForBuild: function() {
           return Promise.resolve('failed');
