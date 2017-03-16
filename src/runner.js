@@ -90,7 +90,8 @@ exports.run = function(config) {
       config.project = response.project;
       config.build = response.build;
       config.branch = response.branch;
-      console.log('Waiting for build #' + config.build + ' on ' + config.branch + ' to complete...');
+      console.log('Waiting for build #' + config.build + ' on ' + config.branch + ' to complete...\n');
+      console.log('View progress via Screener\'s Dashboard => https://screener.io/v2/dashboard\n');
       return api.waitForBuild(config.apiKey, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
     })
     .then(function(response) {
