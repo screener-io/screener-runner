@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var rp = require('request-promise');
 var extend = require('lodash/extend');
 
-var API_URL = 'https://screener.io/api/v2/projects';
+var API_URL = 'https://screener.io/api/v2';
 var RETRY_MS = 30 * 1000;
 var POLL_MS = 2500;
 
@@ -32,8 +32,18 @@ var request = function(apiKey, options) {
   return rp(extend(defaults, options));
 };
 
+exports.getTunnelToken = function(apiKey) {
+  var url = API_URL + '/tunnel/token';
+  var options = {
+    method: 'GET',
+    uri: url,
+    json: true
+  };
+  return request(apiKey, options);
+};
+
 var createBuild = exports.createBuild = function(apiKey, payload) {
-  var url = API_URL;
+  var url = API_URL + '/projects';
   var options = {
     method: 'POST',
     uri: url,
@@ -44,7 +54,7 @@ var createBuild = exports.createBuild = function(apiKey, payload) {
 };
 
 var getBuildStatus = exports.getBuildStatus = function(apiKey, projectId, branch, buildId) {
-  var url = API_URL + '/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + buildId + '/status';
+  var url = API_URL + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + buildId + '/status';
   var options = {
     uri: url
   };
