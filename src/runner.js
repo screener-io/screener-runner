@@ -48,9 +48,16 @@ exports.run = function(config) {
         throw new Error('no-states');
       }
       config = CI.setVars(config);
-      return Promise.resolve();
+      if (config.tunnel) {
+        return api.getTunnelToken(config.apiKey);
+      } else {
+        return Promise.resolve();
+      }
     })
-    .then(function() {
+    .then(function(response) {
+      if (config.tunnel) {
+        config.tunnel.token = response.token;
+      }
       if (config.tunnel && config.tunnel.gzip) {
         var options = {
           targetHost: config.tunnel.host,
@@ -64,7 +71,7 @@ exports.run = function(config) {
     .then(function(proxyHost) {
       if (config.tunnel) {
         console.log('Connecting tunnel');
-        return Tunnel.connect(proxyHost || config.tunnel.host);
+        return Tunnel.connect(proxyHost || config.tunnel.host, config.tunnel.token);
       } else {
         return Promise.resolve();
       }
