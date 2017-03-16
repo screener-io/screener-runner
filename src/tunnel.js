@@ -2,11 +2,12 @@ var ngrok = require('ngrok');
 var Promise = require('bluebird');
 var url = require('url');
 
-exports.connect = function(host) {
+exports.connect = function(host, token) {
   var urlObj = url.parse('http://' + host);
   var options = {
     addr: urlObj.hostname + ':' + (urlObj.port || 80),
-    host_header: urlObj.hostname
+    host_header: urlObj.hostname,
+    authtoken: token
   };
   var connect = Promise.promisify(ngrok.connect);
   return connect(options)
