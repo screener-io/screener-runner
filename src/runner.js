@@ -81,7 +81,7 @@ exports.run = function(config) {
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = pick(config, ['projectRepo', 'build', 'branch', 'states', 'ignore', 'diffOptions']);
+      var payload = pick(config, ['projectRepo', 'build', 'branch', 'states', 'cssAnimations', 'ignore', 'diffOptions']);
       console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per resolution');
       if (config.resolution || config.resolutions) {
         payload.resolutions = config.resolutions || [config.resolution];
