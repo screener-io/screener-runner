@@ -116,7 +116,7 @@ describe('screener-runner/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', resolution: '1280x1024', ignore: 'ignore', includeRules: [], excludeRules: [], diffOptions: {}})
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', includeRules: [], excludeRules: [], diffOptions: {}})
         .catch(function() {
           throw new Error('Should not be here');
         });
