@@ -54,6 +54,7 @@ var runnerSchema = Joi.object().keys({
   resolutions: Joi.array().min(1).items(
     resolutionSchema
   ),
+  cssAnimations: Joi.boolean(),
   ignore: Joi.string(),
   includeRules: Joi.array().min(0).items(
     Joi.string(),
