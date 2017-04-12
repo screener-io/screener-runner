@@ -6,7 +6,7 @@ var CI = require('./ci');
 var GzipProxy = require('./gzip-proxy');
 var Promise = require('bluebird');
 var cloneDeep = require('lodash/cloneDeep');
-var pick = require('lodash/pick');
+var omit = require('lodash/omit');
 
 var MAX_MS = 30 * 60 * 1000; // max 30 mins
 
@@ -81,7 +81,7 @@ exports.run = function(config) {
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = pick(config, ['projectRepo', 'build', 'branch', 'states', 'cssAnimations', 'ignore', 'diffOptions']);
+      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel']);
       console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per resolution');
       if (config.resolution || config.resolutions) {
         payload.resolutions = config.resolutions || [config.resolution];
