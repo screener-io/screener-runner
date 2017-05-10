@@ -150,6 +150,29 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
+    describe('validate.browsers', function() {
+      it('should error when browsers is empty', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: []})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "browsers" fails because ["browsers" must contain at least 1 items]');
+          });
+      });
+
+      it('should error when browsers is set without sauce', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }]})
+          .catch(function(err) {
+            expect(err.message).to.equal('"browsers" missing required peer "sauce"');
+          });
+      });
+
+      it('should allow browsers with sauce config', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+    });
+
     describe('validate.resolutions', function() {
       it('should allow resolutions array by itself', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: ['1024x768']})
