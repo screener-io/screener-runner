@@ -14,6 +14,21 @@ var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
   })
 );
 
+var browsersSchema = exports.browsersSchema = Joi.array().min(1).items(
+  Joi.object().keys({
+    browserName: Joi.string().valid(['chrome']).required()
+  }),
+  Joi.object().keys({
+    browserName: Joi.string().valid(['firefox', 'safari', 'microsoftedge', 'internet explorer']).required(),
+    version: Joi.string().required()
+  })
+);
+
+var sauceSchema = exports.sauceSchema = Joi.object().keys({
+  username: Joi.string().required(),
+  accessKey: Joi.string().required()
+});
+
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
@@ -54,6 +69,7 @@ var runnerSchema = Joi.object().keys({
   resolutions: Joi.array().min(1).items(
     resolutionSchema
   ),
+  browsers: browsersSchema,
   cssAnimations: Joi.boolean(),
   ignore: Joi.string(),
   includeRules: Joi.array().min(0).items(
@@ -82,8 +98,9 @@ var runnerSchema = Joi.object().keys({
     layout: Joi.boolean(),
     style: Joi.boolean(),
     content: Joi.boolean()
-  })
-}).without('resolutions', ['resolution']).required();
+  }),
+  sauce: sauceSchema
+}).without('resolutions', ['resolution']).with('browsers', ['sauce']).required();
 
 exports.runnerConfig = function(value) {
   var validator = Promise.promisify(Joi.validate);

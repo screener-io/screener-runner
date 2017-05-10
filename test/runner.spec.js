@@ -25,6 +25,10 @@ var config = {
     }
   ]
 };
+var sauceCreds = {
+  username: 'user',
+  accessKey: 'key'
+};
 var tunnelMock = {
   connect: function(host, token) {
     expect(host).to.equal('localhost:8081');
@@ -86,6 +90,45 @@ describe('screener-runner/src/runner', function() {
   describe('Runner.run', function() {
     it('should run test and wait for succesful test status to return', function() {
       return Runner.run(config)
+        .then(function(response) {
+          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(response).to.equal('status');
+        });
+    });
+
+    it('should handle multi-browser test run', function() {
+      Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
+        createBuildWithRetry: function(apiKey, payload) {
+          expect(payload).to.deep.equal({
+            projectRepo: 'repo',
+            browsers: [
+              { browserName: 'chrome' },
+              { browserName: 'firefox', version: '53.0' }
+            ],
+            resolutions: [
+              '1024x768',
+              { deviceName: 'iPhone 6' }
+            ],
+            build: 'build-id',
+            branch: 'git-branch',
+            states: config.states,
+            sauce: sauceCreds
+          });
+          return Promise.resolve({
+            project: 'project-id',
+            build: 'build-id'
+          });
+        },
+        waitForBuild: apiMock.waitForBuild
+      });
+      var tmpConfig = JSON.parse(JSON.stringify(config));
+      tmpConfig.browsers = [
+        { browserName: 'chrome' },
+        { browserName: 'firefox', version: '53.0' }
+      ];
+      tmpConfig.sauce = sauceCreds;
+      return Runner.run(tmpConfig)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
           expect(response).to.equal('status');

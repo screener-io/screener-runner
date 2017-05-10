@@ -36,6 +36,20 @@ var displayResolution = function(resolution) {
   return result;
 };
 
+var displayBrowser = function(browser) {
+  var result = {
+    chrome: 'Chrome',
+    firefox: 'Firefox',
+    safari: 'Safari',
+    microsoftedge: 'Microsoft Edge',
+    'internet explorer': 'Internet Explorer'
+  }[browser.browserName.toLowerCase()];
+  if (browser.version) {
+    result += ' ' + browser.version;
+  }
+  return result;
+};
+
 exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);
@@ -82,7 +96,13 @@ exports.run = function(config) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
       var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel']);
-      console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per resolution');
+      console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per ' + (config.browsers ? 'browser/' : '') + 'resolution');
+      if (config.browsers) {
+        console.log('Browsers:');
+        config.browsers.forEach(function(browser, index) {
+          console.log('  ' + (index + 1) + '. ' + displayBrowser(browser));
+        });
+      }
       if (config.resolution || config.resolutions) {
         payload.resolutions = config.resolutions || [config.resolution];
         console.log('Resolutions:');
