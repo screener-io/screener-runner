@@ -165,8 +165,22 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should error when browsers are not unique', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'chrome' }], sauce: { username: 'user', accessKey: 'key' }})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "browsers" fails because ["browsers" position 1 contains a duplicate value]');
+          });
+      });
+
       it('should allow browsers with sauce config', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow multiple unique browsers', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function() {
             throw new Error('Should not be here');
           });

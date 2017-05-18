@@ -14,7 +14,7 @@ var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
   })
 );
 
-var browsersSchema = exports.browsersSchema = Joi.array().min(1).items(
+var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   Joi.object().keys({
     browserName: Joi.string().valid(['chrome']).required()
   }),
