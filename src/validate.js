@@ -99,7 +99,8 @@ var runnerSchema = Joi.object().keys({
     style: Joi.boolean(),
     content: Joi.boolean()
   }),
-  sauce: sauceSchema
+  sauce: sauceSchema,
+  failureExitCode: Joi.number().integer().min(0).max(255).default(1)
 }).without('resolutions', ['resolution']).with('browsers', ['sauce']).required();
 
 exports.runnerConfig = function(value) {

@@ -35,5 +35,9 @@ Runner.run(config)
     console.error('---');
     console.error('Exiting Screener Runner');
     console.error('Need help? Contact: support@screener.io');
-    process.exit(1);
+    var exitCode = 1;
+    if (config && typeof config.failureExitCode === 'number') {
+      exitCode = config.failureExitCode;
+    }
+    process.exit(exitCode);
   });

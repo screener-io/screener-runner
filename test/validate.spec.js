@@ -150,6 +150,22 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
+    describe('validate.failureExitCode', function() {
+      it('should allow setting to 0', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], failureExitCode: 0})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when setting above 255', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], failureExitCode: 256})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "failureExitCode" fails because ["failureExitCode" must be less than or equal to 255]');
+          });
+      });
+    });
+
     describe('validate.browsers', function() {
       it('should error when browsers is empty', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: []})
