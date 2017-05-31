@@ -7,12 +7,14 @@ describe('screener-runner/src/ci', function() {
       process.env = {
         JENKINS_URL: 'jenkins-url',
         BUILD_NUMBER: 'jenkins-build',
-        GIT_BRANCH: 'jenkins-branch'
+        GIT_BRANCH: 'jenkins-branch',
+        GIT_COMMIT: 'commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'jenkins-build',
-        branch: 'jenkins-branch'
+        branch: 'jenkins-branch',
+        commit: 'commit'
       });
     });
 
@@ -21,12 +23,14 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         CIRCLECI: 'true',
         CIRCLE_BUILD_NUM: 'circle-build',
-        CIRCLE_BRANCH: 'circle-branch'
+        CIRCLE_BRANCH: 'circle-branch',
+        CIRCLE_SHA1: 'commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'circle-build',
-        branch: 'circle-branch'
+        branch: 'circle-branch',
+        commit: 'commit'
       });
     });
 
@@ -35,12 +39,14 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         TRAVIS: 'true',
         TRAVIS_BUILD_NUMBER: 'travis-build',
-        TRAVIS_BRANCH: 'travis-branch'
+        TRAVIS_BRANCH: 'travis-branch',
+        TRAVIS_COMMIT: 'commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'travis-build',
-        branch: 'travis-branch'
+        branch: 'travis-branch',
+        commit: 'commit'
       });
     });
 
@@ -49,23 +55,26 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         CI_NAME: 'codeship',
         CI_BUILD_NUMBER: 'codeship-build',
-        CI_BRANCH: 'codeship-branch'
+        CI_BRANCH: 'codeship-branch',
+        CI_COMMIT_ID: 'commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'codeship-build',
-        branch: 'codeship-branch'
+        branch: 'codeship-branch',
+        commit: 'commit'
       });
     });
 
     it('should return branch from Bitbucket Pipelines', function() {
       process.env = {
-        BITBUCKET_COMMIT: 'bitbucket-commit',
+        BITBUCKET_COMMIT: 'commit',
         BITBUCKET_BRANCH: 'bitbucket-branch'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
-        branch: 'bitbucket-branch'
+        branch: 'bitbucket-branch',
+        commit: 'commit'
       });
     });
 
@@ -74,12 +83,14 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         DRONE: 'true',
         DRONE_BUILD_NUMBER: 'drone-build',
-        DRONE_BRANCH: 'drone-branch'
+        DRONE_BRANCH: 'drone-branch',
+        DRONE_COMMIT: 'commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'drone-build',
-        branch: 'drone-branch'
+        branch: 'drone-branch',
+        commit: 'commit'
       });
     });
 
@@ -88,12 +99,14 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         SEMAPHORE: 'true',
         SEMAPHORE_BUILD_NUMBER: 'semaphore-build',
-        BRANCH_NAME: 'semaphore-branch'
+        BRANCH_NAME: 'semaphore-branch',
+        REVISION: 'commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'semaphore-build',
-        branch: 'semaphore-branch'
+        branch: 'semaphore-branch',
+        commit: 'commit'
       });
     });
 
@@ -115,12 +128,14 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         CIRCLECI: 'true',
         CIRCLE_BUILD_NUM: 'circle-build',
-        CIRCLE_BRANCH: 'circle-branch'
+        CIRCLE_BRANCH: 'circle-branch',
+        CIRCLE_SHA1: 'commit'
       };
       var result = CI.setVars({});
       expect(result).to.deep.equal({
         build: 'circle-build',
-        branch: 'circle-branch'
+        branch: 'circle-branch',
+        commit: 'commit'
       });
     });
 
@@ -129,17 +144,20 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         CIRCLECI: 'true',
         CIRCLE_BUILD_NUM: 'circle-build',
-        CIRCLE_BRANCH: 'circle-branch'
+        CIRCLE_BRANCH: 'circle-branch',
+        CIRCLE_SHA1: 'commit'
       };
       var result = CI.setVars({branch: 'branch'});
       expect(result).to.deep.equal({
         build: 'circle-build',
-        branch: 'branch'
+        branch: 'branch',
+        commit: 'commit'
       });
       result = CI.setVars({build: 'build'});
       expect(result).to.deep.equal({
         build: 'build',
-        branch: 'circle-branch'
+        branch: 'circle-branch',
+        commit: 'commit'
       });
     });
   });
