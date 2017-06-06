@@ -12,8 +12,8 @@ exports.connect = function(host, token) {
   var connect = Promise.promisify(ngrok.connect);
   return connect(options)
     .then((tunnelUrl) => {
-      console.log(tunnelUrl + ' -> ' + host);
       var urlObj = url.parse(tunnelUrl);
+      console.log('Connected private encrypted tunnel to ' + host + ' (' + urlObj.host.split('.')[0] + ')');
       return urlObj.host;
     });
 };
