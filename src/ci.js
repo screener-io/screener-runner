@@ -62,6 +62,14 @@ exports.getVars = function() {
       commit: env.REVISION
     };
   }
+  // GitLab
+  if (env.CI === 'true' && env.GITLAB_CI === 'true') {
+    return {
+      build: env.CI_JOB_ID || env.CI_BUILD_ID,
+      branch: env.CI_COMMIT_REF_NAME || env.CI_BUILD_REF_NAME,
+      commit: env.CI_COMMIT_SHA || env.CI_BUILD_REF
+    };
+  }
   // if no matches, return empty object
   return {};
 };
