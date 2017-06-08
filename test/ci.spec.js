@@ -110,6 +110,22 @@ describe('screener-runner/src/ci', function() {
       });
     });
 
+    it('should return build/branch from GitLab', function() {
+      process.env = {
+        CI: 'true',
+        GITLAB_CI: 'true',
+        CI_JOB_ID: 'gitlab-build',
+        CI_COMMIT_REF_NAME: 'gitlab-branch',
+        CI_COMMIT_SHA: 'commit'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'gitlab-build',
+        branch: 'gitlab-branch',
+        commit: 'commit'
+      });
+    });
+
     it('should return empty object if no matches', function() {
       process.env = {
         CI: 'true',
