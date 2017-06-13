@@ -155,6 +155,28 @@ describe('screener-runner/src/ci', function() {
       });
     });
 
+    it('should overwrite source if property is empty string', function() {
+      process.env = {
+        CI: 'true',
+        CIRCLECI: 'true',
+        CIRCLE_BUILD_NUM: 'circle-build',
+        CIRCLE_BRANCH: 'circle-branch',
+        CIRCLE_SHA1: 'commit'
+      };
+      var result = CI.setVars({branch: ''});
+      expect(result).to.deep.equal({
+        build: 'circle-build',
+        branch: 'circle-branch',
+        commit: 'commit'
+      });
+      result = CI.setVars({build: null});
+      expect(result).to.deep.equal({
+        build: 'circle-build',
+        branch: 'circle-branch',
+        commit: 'commit'
+      });
+    });
+
     it('should not overwrite source if property already exists', function() {
       process.env = {
         CI: 'true',

@@ -1,8 +1,17 @@
 var assign = require('lodash/assign');
+var clone = require('lodash/clone');
 
 exports.setVars = function(source) {
+  var copy = clone(source);
+  // clear empty build or branch
+  if (!copy.build) {
+    delete copy.build;
+  }
+  if (!copy.branch) {
+    delete copy.branch;
+  }
   // get and inject CI vars
-  return assign(exports.getVars(), source);
+  return assign(exports.getVars(), copy);
 };
 
 exports.getVars = function() {
