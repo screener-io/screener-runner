@@ -25,6 +25,11 @@ if (!fs.existsSync(configPath)) {
 
 var config = require(configPath);
 
+if (config === false) {
+  console.log('Config is false. Exiting...');
+  process.exit();
+}
+
 Runner.run(config)
   .then(function(response) {
     console.log(response);
