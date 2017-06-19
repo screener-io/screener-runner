@@ -8,13 +8,13 @@ describe('screener-runner/src/ci', function() {
         JENKINS_URL: 'jenkins-url',
         BUILD_NUMBER: 'jenkins-build',
         GIT_BRANCH: 'jenkins-branch',
-        GIT_COMMIT: 'commit'
+        GIT_COMMIT: 'jenkins-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'jenkins-build',
         branch: 'jenkins-branch',
-        commit: 'commit'
+        commit: 'jenkins-commit'
       });
     });
 
@@ -24,13 +24,13 @@ describe('screener-runner/src/ci', function() {
         CIRCLECI: 'true',
         CIRCLE_BUILD_NUM: 'circle-build',
         CIRCLE_BRANCH: 'circle-branch',
-        CIRCLE_SHA1: 'commit'
+        CIRCLE_SHA1: 'circle-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'circle-build',
         branch: 'circle-branch',
-        commit: 'commit'
+        commit: 'circle-commit'
       });
     });
 
@@ -40,13 +40,13 @@ describe('screener-runner/src/ci', function() {
         TRAVIS: 'true',
         TRAVIS_BUILD_NUMBER: 'travis-build',
         TRAVIS_BRANCH: 'travis-branch',
-        TRAVIS_COMMIT: 'commit'
+        TRAVIS_COMMIT: 'travis-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'travis-build',
         branch: 'travis-branch',
-        commit: 'commit'
+        commit: 'travis-commit'
       });
     });
 
@@ -56,25 +56,25 @@ describe('screener-runner/src/ci', function() {
         CI_NAME: 'codeship',
         CI_BUILD_NUMBER: 'codeship-build',
         CI_BRANCH: 'codeship-branch',
-        CI_COMMIT_ID: 'commit'
+        CI_COMMIT_ID: 'codeship-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'codeship-build',
         branch: 'codeship-branch',
-        commit: 'commit'
+        commit: 'codeship-commit'
       });
     });
 
     it('should return branch from Bitbucket Pipelines', function() {
       process.env = {
-        BITBUCKET_COMMIT: 'commit',
+        BITBUCKET_COMMIT: 'bitbucket-commit',
         BITBUCKET_BRANCH: 'bitbucket-branch'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         branch: 'bitbucket-branch',
-        commit: 'commit'
+        commit: 'bitbucket-commit'
       });
     });
 
@@ -84,13 +84,13 @@ describe('screener-runner/src/ci', function() {
         DRONE: 'true',
         DRONE_BUILD_NUMBER: 'drone-build',
         DRONE_BRANCH: 'drone-branch',
-        DRONE_COMMIT: 'commit'
+        DRONE_COMMIT: 'drone-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'drone-build',
         branch: 'drone-branch',
-        commit: 'commit'
+        commit: 'drone-commit'
       });
     });
 
@@ -100,13 +100,13 @@ describe('screener-runner/src/ci', function() {
         SEMAPHORE: 'true',
         SEMAPHORE_BUILD_NUMBER: 'semaphore-build',
         BRANCH_NAME: 'semaphore-branch',
-        REVISION: 'commit'
+        REVISION: 'semaphore-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'semaphore-build',
         branch: 'semaphore-branch',
-        commit: 'commit'
+        commit: 'semaphore-commit'
       });
     });
 
@@ -116,13 +116,29 @@ describe('screener-runner/src/ci', function() {
         GITLAB_CI: 'true',
         CI_JOB_ID: 'gitlab-build',
         CI_COMMIT_REF_NAME: 'gitlab-branch',
-        CI_COMMIT_SHA: 'commit'
+        CI_COMMIT_SHA: 'gitlab-commit'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'gitlab-build',
         branch: 'gitlab-branch',
-        commit: 'commit'
+        commit: 'gitlab-commit'
+      });
+    });
+
+    it('should return build/branch from Buildkite', function() {
+      process.env = {
+        CI: 'true',
+        BUILDKITE: 'true',
+        BUILDKITE_BUILD_NUMBER: 'buildkite-build',
+        BUILDKITE_BRANCH: 'buildkite-branch',
+        BUILDKITE_COMMIT: 'buildkite-commit'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'buildkite-build',
+        branch: 'buildkite-branch',
+        commit: 'buildkite-commit'
       });
     });
 
