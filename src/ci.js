@@ -79,6 +79,14 @@ exports.getVars = function() {
       commit: env.CI_COMMIT_SHA || env.CI_BUILD_REF
     };
   }
+  // Buildkite
+  if (env.CI === 'true' && env.BUILDKITE === 'true') {
+    return {
+      build: env.BUILDKITE_BUILD_NUMBER,
+      branch: env.BUILDKITE_BRANCH,
+      commit: env.BUILDKITE_COMMIT
+    };
+  }
   // if no matches, return empty object
   return {};
 };
