@@ -80,34 +80,6 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should throw error when no states', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo'})
-        .catch(function(err) {
-          expect(err.message).to.equal('child "states" fails because ["states" is required]');
-        });
-    });
-
-    it('should allow states with no values', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: []})
-        .catch(function() {
-          throw new Error('Should not be here');
-        });
-    });
-
-    it('should throw error when states item is incorrect shape', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{}]})
-        .catch(function(err) {
-          expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" is required]]]');
-        });
-    });
-
-    it('should allow states with steps', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', steps: steps}, {url: 'http://url.com', name: 'name'}]})
-        .catch(function() {
-          throw new Error('Should not be here');
-        });
-    });
-
     it('should throw error when tunnel exists but host is not set', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {}})
         .catch(function(err) {
@@ -162,6 +134,50 @@ describe('screener-runner/src/validate', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], failureExitCode: 256})
           .catch(function(err) {
             expect(err.message).to.equal('child "failureExitCode" fails because ["failureExitCode" must be less than or equal to 255]');
+          });
+      });
+    });
+
+    describe('validate.states', function() {
+      it('should throw error when no states', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo'})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "states" fails because ["states" is required]');
+          });
+      });
+
+      it('should allow states with no values', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: []})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should throw error when states item is incorrect shape', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{}]})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" is required]]]');
+          });
+      });
+
+      it('should allow states with correct shape object', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when state name is > 200 chars', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title.'}]})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "name" fails because ["name" length must be less than or equal to 200 characters long]]]');
+          });
+      });
+
+      it('should allow states with steps', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', steps: steps}, {url: 'http://url.com', name: 'name'}]})
+          .catch(function() {
+            throw new Error('Should not be here');
           });
       });
     });

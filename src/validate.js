@@ -32,7 +32,7 @@ var sauceSchema = exports.sauceSchema = Joi.object().keys({
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
-    name: Joi.string().required()
+    name: Joi.string().max(200).required()
   }),
   Joi.object().keys({
     type: Joi.string().valid(['clickElement', 'moveTo', 'ignoreElements', 'waitForElementPresent']).required(),
@@ -83,7 +83,7 @@ var runnerSchema = Joi.object().keys({
   states: Joi.array().min(0).items(
     Joi.object().keys({
       url: Joi.string().uri().required(),
-      name: Joi.string().max(100).required(),
+      name: Joi.string().max(200).required(),
       steps: stepsSchema
     })
   ).required(),
