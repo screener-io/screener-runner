@@ -3,12 +3,15 @@ var clone = require('lodash/clone');
 
 exports.setVars = function(source) {
   var copy = clone(source);
-  // clear empty build or branch
+  // clear empty build, branch or commit
   if (!copy.build) {
     delete copy.build;
   }
   if (!copy.branch) {
     delete copy.branch;
+  }
+  if (!copy.commit) {
+    delete copy.commit;
   }
   // get and inject CI vars
   return assign(exports.getVars(), copy);

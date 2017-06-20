@@ -177,19 +177,25 @@ describe('screener-runner/src/ci', function() {
         CIRCLECI: 'true',
         CIRCLE_BUILD_NUM: 'circle-build',
         CIRCLE_BRANCH: 'circle-branch',
-        CIRCLE_SHA1: 'commit'
+        CIRCLE_SHA1: 'circle-commit'
       };
       var result = CI.setVars({branch: ''});
       expect(result).to.deep.equal({
         build: 'circle-build',
         branch: 'circle-branch',
-        commit: 'commit'
+        commit: 'circle-commit'
       });
       result = CI.setVars({build: null});
       expect(result).to.deep.equal({
         build: 'circle-build',
         branch: 'circle-branch',
-        commit: 'commit'
+        commit: 'circle-commit'
+      });
+      result = CI.setVars({commit: ''});
+      expect(result).to.deep.equal({
+        build: 'circle-build',
+        branch: 'circle-branch',
+        commit: 'circle-commit'
       });
     });
 
@@ -199,17 +205,23 @@ describe('screener-runner/src/ci', function() {
         CIRCLECI: 'true',
         CIRCLE_BUILD_NUM: 'circle-build',
         CIRCLE_BRANCH: 'circle-branch',
-        CIRCLE_SHA1: 'commit'
+        CIRCLE_SHA1: 'circle-commit'
       };
       var result = CI.setVars({branch: 'branch'});
       expect(result).to.deep.equal({
         build: 'circle-build',
         branch: 'branch',
-        commit: 'commit'
+        commit: 'circle-commit'
       });
       result = CI.setVars({build: 'build'});
       expect(result).to.deep.equal({
         build: 'build',
+        branch: 'circle-branch',
+        commit: 'circle-commit'
+      });
+      result = CI.setVars({commit: 'commit'});
+      expect(result).to.deep.equal({
+        build: 'circle-build',
         branch: 'circle-branch',
         commit: 'commit'
       });
