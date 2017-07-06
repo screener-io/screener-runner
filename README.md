@@ -216,25 +216,27 @@ module.exports = {
 
 **Important Notes about Cross Browser Testing:**
 
-- **Performance Warning:** Cross Browser Testing with Sauce Labs will be slower than regular Screener visual regression tests, and so it is not recommended to run on every commit.
-- Cross Browser Testing, in most cases, does not need to be run continuously (unlike visual regression testing, which should be run continuously on commit). You may only want to run cross browser tests at certain times, such as when deploying to a staging environment.
-- Cross Browser Testing requires a valid Sauce Labs account, and access to enough concurrency in your Sauce account to run Screener tests. Each browser/resolution combination will use one concurrent machine.
-- Screener's auto-parallelization is disabled when Cross Browser Testing, to reduce the number of concurrent browsers required in your Sauce account.
+- Cross Browser Testing with Sauce Labs will be slower than regular Screener visual regression tests, and so it is not recommended to run on every commit.
+- You may want to limit cross browser testing to certain scenarios, such as only when merging into master (see example below).
+- Requirements: A valid Sauce Labs account, and access to enough concurrency in your Sauce account to run Screener tests. Each browser/resolution combination will use one concurrent machine.
+- Screener's auto-parallelization is disabled when Cross Browser Testing to reduce the number of concurrent browsers required in your Sauce account.
 
 **Overview**
 
-For cross browser testing, Screener integrates with [Sauce Labs](https://saucelabs.com/) to provide access to additional browsers. By default, Screener runs tests against Chrome browser, which does *not* require a Sauce account.
+For cross browser testing, Screener integrates with [Sauce Labs](https://saucelabs.com/) to provide access to additional browsers. By default, Screener runs tests against the Chrome browser, which does **not** require a Sauce account. Screener provides Chrome browsers and device emulation out-of-the-box.
 
-To test against multiple browsers, you can add the `browsers` and `sauce` properties to your screener configuration file. Browsers added *must* match one of the supported browsers/versions in the browser table below.
+To test against multiple browsers, add the `browsers` and `sauce` properties to your screener configuration file. Browsers added *must* match one of the supported browsers/versions in the browser table below.
 
 Here is a CircleCI example that only runs cross browser tests when committing into `master` branch:
 
 ```javascript
-var browsers;
+var config = {
+  // regular screener config
+};
 
 // only run cross browser tests when merging into ‘master’ branch
 if (process.env.CIRCLE_BRANCH === 'master') {
-  browsers = [
+  config.browsers = [
     {
       browserName: 'chrome'
     },
@@ -242,18 +244,14 @@ if (process.env.CIRCLE_BRANCH === 'master') {
       browserName: 'internet explorer',
       version: '11.103'
     }
-  ]
-}
-
-module.exports = {
-  ...
-
-  browsers: browsers,
-  sauce: {
+  ];
+  config.sauce = {
     username: 'sauce_user',
     accessKey: 'sauce_access_key'
-  }
-};
+  };
+}
+
+module.exports = config;
 ```
 
 **Supported Browsers**
@@ -261,10 +259,10 @@ module.exports = {
 | browserName  | version |
 | ------------- | ------------- |
 | chrome | *-do not set-* |
+| firefox | 54.0 |
 | firefox | 53.0 |
 | firefox | 52.0 |
 | firefox | 51.0 |
-| firefox | 50.0 |
 | internet explorer | 11.103 |
 | microsoftedge | 14.14393 |
 | safari | 10.0 |
