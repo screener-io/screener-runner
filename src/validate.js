@@ -93,6 +93,7 @@ var runnerSchema = Joi.object().keys({
     gzip: Joi.boolean(),
     cache: Joi.boolean()
   }),
+  baseBranch: Joi.string().max(100),
   initialBaselineBranch: Joi.string().max(100),
   diffOptions: Joi.object().keys({
     structure: Joi.boolean(),
