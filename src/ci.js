@@ -20,7 +20,7 @@ exports.setVars = function(source) {
 exports.getVars = function() {
   var env = process.env;
   // Jenkins
-  if (typeof env.JENKINS_URL === 'string' && env.JENKINS_URL.length > 0) {
+  if ((typeof env.JENKINS_URL === 'string' && env.JENKINS_URL.length > 0) || (typeof env.JENKINS_HOME === 'string' && env.JENKINS_HOME.length > 0)) {
     return {
       build: env.BUILD_NUMBER,
       branch: env.GIT_BRANCH,

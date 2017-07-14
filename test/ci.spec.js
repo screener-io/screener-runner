@@ -16,6 +16,20 @@ describe('screener-runner/src/ci', function() {
         branch: 'jenkins-branch',
         commit: 'jenkins-commit'
       });
+
+      process.env = {
+        JENKINS_URL: '',
+        JENKINS_HOME: 'jenkins-url',
+        BUILD_NUMBER: 'jenkins-build',
+        GIT_BRANCH: 'jenkins-branch',
+        GIT_COMMIT: 'jenkins-commit'
+      };
+      result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'jenkins-build',
+        branch: 'jenkins-branch',
+        commit: 'jenkins-commit'
+      });
     });
 
     it('should return build/branch from CircleCI', function() {
