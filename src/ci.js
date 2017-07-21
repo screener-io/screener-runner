@@ -39,8 +39,8 @@ exports.getVars = function() {
   if (env.CI === 'true' && env.TRAVIS === 'true') {
     return {
       build: env.TRAVIS_BUILD_NUMBER,
-      branch: env.TRAVIS_BRANCH,
-      commit: env.TRAVIS_COMMIT
+      branch: env.TRAVIS_PULL_REQUEST_BRANCH || env.TRAVIS_BRANCH,
+      commit: env.TRAVIS_PULL_REQUEST_SHA || env.TRAVIS_COMMIT
     };
   }
   // Codeship
