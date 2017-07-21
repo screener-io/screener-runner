@@ -54,13 +54,33 @@ describe('screener-runner/src/ci', function() {
         TRAVIS: 'true',
         TRAVIS_BUILD_NUMBER: 'travis-build',
         TRAVIS_BRANCH: 'travis-branch',
-        TRAVIS_COMMIT: 'travis-commit'
+        TRAVIS_COMMIT: 'travis-commit',
+        TRAVIS_PULL_REQUEST_BRANCH: '',
+        TRAVIS_PULL_REQUEST_SHA: ''
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'travis-build',
         branch: 'travis-branch',
         commit: 'travis-commit'
+      });
+    });
+
+    it('should return PR build/branch from Travis CI', function() {
+      process.env = {
+        CI: 'true',
+        TRAVIS: 'true',
+        TRAVIS_BUILD_NUMBER: 'travis-build',
+        TRAVIS_BRANCH: 'travis-branch',
+        TRAVIS_COMMIT: 'travis-commit',
+        TRAVIS_PULL_REQUEST_BRANCH: 'travis-pr-branch',
+        TRAVIS_PULL_REQUEST_SHA: 'travis-pr-commit'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'travis-build',
+        branch: 'travis-pr-branch',
+        commit: 'travis-pr-commit'
       });
     });
 
