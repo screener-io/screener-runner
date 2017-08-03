@@ -73,6 +73,7 @@ var runnerSchema = Joi.object().keys({
   browsers: browsersSchema,
   cssAnimations: Joi.boolean(),
   ignore: Joi.string(),
+  hide: Joi.string(),
   includeRules: Joi.array().min(0).items(
     Joi.string(),
     Joi.object().type(RegExp)
