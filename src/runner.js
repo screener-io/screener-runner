@@ -96,6 +96,9 @@ exports.run = function(config) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
       var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode']);
+      if (typeof payload.beforeEachScript === 'function') {
+        payload.beforeEachScript = payload.beforeEachScript.toString();
+      }
       console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per ' + (config.browsers ? 'browser/' : '') + 'resolution');
       if (config.browsers) {
         console.log('Browsers:');

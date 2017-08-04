@@ -88,10 +88,31 @@ describe('screener-runner/src/runner', function() {
   });
 
   describe('Runner.run', function() {
-    it('should run test and wait for succesful test status to return', function() {
+    it('should run test and wait for successful test status to return', function() {
       return Runner.run(config)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(response).to.equal('status');
+        });
+    });
+
+    it('should convert beforeEachScript to string', function() {
+      Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
+        createBuildWithRetry: function(apiKey, payload) {
+          expect(typeof payload.beforeEachScript).to.equal('string');
+          expect(payload.beforeEachScript).to.equal('function () { console.log(\'hello\'); }');
+          return Promise.resolve({
+            project: 'project-id',
+            build: 'build-id'
+          });
+        },
+        waitForBuild: apiMock.waitForBuild
+      });
+      var tmpConfig = JSON.parse(JSON.stringify(config));
+      tmpConfig.beforeEachScript = function() { console.log('hello'); };
+      return Runner.run(tmpConfig)
+        .then(function(response) {
           expect(response).to.equal('status');
         });
     });
