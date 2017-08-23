@@ -101,7 +101,8 @@ var runnerSchema = Joi.object().keys({
     layout: Joi.boolean(),
     style: Joi.boolean(),
     content: Joi.boolean(),
-    minLayoutPosition: Joi.number().integer().min(0)
+    minLayoutPosition: Joi.number().integer().min(0),
+    minLayoutDimension: Joi.number().integer().min(0)
   }),
   sauce: sauceSchema,
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
