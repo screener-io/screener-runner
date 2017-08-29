@@ -51,6 +51,7 @@ var displayBrowser = function(browser) {
 };
 
 exports.run = function(config) {
+  var timer;
   // create copy of config
   config = cloneDeep(config);
   return Validate.runnerConfig(config)
@@ -122,9 +123,12 @@ exports.run = function(config) {
       config.branch = response.branch;
       console.log('Waiting for build #' + config.build + ' on ' + config.branch + ' to complete...\n');
       console.log('View progress via Screener\'s Dashboard => https://screener.io/v2/dashboard\n');
+      // output to ensure CI does not timeout
+      timer = setInterval(function() { console.log('.'); }, 120*1000);
       return api.waitForBuild(config.apiKey, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
     })
     .then(function(response) {
+      clearInterval(timer);
       if (config.tunnel) {
         console.log('Disconnecting tunnel');
         Tunnel.disconnect();
