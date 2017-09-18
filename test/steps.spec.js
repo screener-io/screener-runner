@@ -51,6 +51,54 @@ describe('screener-runner/src/steps', function() {
     });
   });
 
+  describe('Steps.prototype.mouseDown', function() {
+    it('should add mouseDown step', function() {
+      var test = new Steps().mouseDown();
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'clickAndHoldElement'
+        }
+      ]);
+    });
+
+    it('should add mouseDown step with optional selector', function() {
+      var test = new Steps().mouseDown('selector');
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'clickAndHoldElement',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          }
+        }
+      ]);
+    });
+  });
+
+  describe('Steps.prototype.mouseUp', function() {
+    it('should add mouseUp step', function() {
+      var test = new Steps().mouseUp();
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'releaseElement'
+        }
+      ]);
+    });
+
+    it('should add mouseUp step with optional selector', function() {
+      var test = new Steps().mouseUp('selector');
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'releaseElement',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          }
+        }
+      ]);
+    });
+  });
+
   describe('Steps.prototype.setValue', function() {
     it('should add setValue step', function() {
       var test = new Steps().setValue('selector', 'text');
