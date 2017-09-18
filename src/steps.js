@@ -35,6 +35,34 @@ Steps.prototype.hover = function(selector) {
   return this;
 };
 
+Steps.prototype.mouseDown = function(selector) {
+  var step = {
+    type: 'clickAndHoldElement'
+  };
+  if (selector) {
+    step.locator = {
+      type: 'css selector',
+      value: selector
+    };
+  }
+  this.steps.push(step);
+  return this;
+};
+
+Steps.prototype.mouseUp = function(selector) {
+  var step = {
+    type: 'releaseElement'
+  };
+  if (selector) {
+    step.locator = {
+      type: 'css selector',
+      value: selector
+    };
+  }
+  this.steps.push(step);
+  return this;
+};
+
 Steps.prototype.setValue = function(selector, text) {
   var step = {
     type: 'setElementText',

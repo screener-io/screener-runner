@@ -35,7 +35,7 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     name: Joi.string().max(200).required()
   }),
   Joi.object().keys({
-    type: Joi.string().valid(['clickElement', 'moveTo', 'ignoreElements', 'waitForElementPresent']).required(),
+    type: Joi.string().valid(['clickElement', 'moveTo', 'clickAndHoldElement', 'releaseElement', 'ignoreElements', 'waitForElementPresent']).required(),
     locator: Joi.object().keys({
       type: Joi.string().valid('css selector').required(),
       value: Joi.string().required()
