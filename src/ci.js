@@ -40,7 +40,8 @@ exports.getVars = function() {
     return {
       build: env.TRAVIS_BUILD_NUMBER,
       branch: env.TRAVIS_PULL_REQUEST_BRANCH || env.TRAVIS_BRANCH,
-      commit: env.TRAVIS_PULL_REQUEST_SHA || env.TRAVIS_COMMIT
+      commit: env.TRAVIS_PULL_REQUEST_SHA || env.TRAVIS_COMMIT,
+      repoSlug: env.TRAVIS_REPO_SLUG
     };
   }
   // Codeship

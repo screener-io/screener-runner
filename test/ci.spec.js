@@ -56,13 +56,15 @@ describe('screener-runner/src/ci', function() {
         TRAVIS_BRANCH: 'travis-branch',
         TRAVIS_COMMIT: 'travis-commit',
         TRAVIS_PULL_REQUEST_BRANCH: '',
-        TRAVIS_PULL_REQUEST_SHA: ''
+        TRAVIS_PULL_REQUEST_SHA: '',
+        TRAVIS_REPO_SLUG: 'owner/repo'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'travis-build',
         branch: 'travis-branch',
-        commit: 'travis-commit'
+        commit: 'travis-commit',
+        repoSlug: 'owner/repo'
       });
     });
 
@@ -74,13 +76,15 @@ describe('screener-runner/src/ci', function() {
         TRAVIS_BRANCH: 'travis-branch',
         TRAVIS_COMMIT: 'travis-commit',
         TRAVIS_PULL_REQUEST_BRANCH: 'travis-pr-branch',
-        TRAVIS_PULL_REQUEST_SHA: 'travis-pr-commit'
+        TRAVIS_PULL_REQUEST_SHA: 'travis-pr-commit',
+        TRAVIS_REPO_SLUG: 'owner/repo'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
         build: 'travis-build',
         branch: 'travis-pr-branch',
-        commit: 'travis-pr-commit'
+        commit: 'travis-pr-commit',
+        repoSlug: 'owner/repo'
       });
     });
 
