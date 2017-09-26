@@ -35,6 +35,14 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     name: Joi.string().max(200).required()
   }),
   Joi.object().keys({
+    type: Joi.string().valid('cropScreenshot').required(),
+    name: Joi.string().max(200).required(),
+    locator: Joi.object().keys({
+      type: Joi.string().valid('css selector').required(),
+      value: Joi.string().required()
+    }).required()
+  }),
+  Joi.object().keys({
     type: Joi.string().valid(['clickElement', 'moveTo', 'clickAndHoldElement', 'releaseElement', 'ignoreElements', 'waitForElementPresent']).required(),
     locator: Joi.object().keys({
       type: Joi.string().valid('css selector').required(),

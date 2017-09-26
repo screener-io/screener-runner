@@ -19,6 +19,20 @@ describe('screener-runner/src/steps', function() {
         }
       ]);
     });
+
+    it('should add cropped snapshot step', function() {
+      var test = new Steps().snapshot('name', {cropTo: '.selector'});
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'cropScreenshot',
+          name: 'name',
+          locator: {
+            type: 'css selector',
+            value: '.selector'
+          }
+        }
+      ]);
+    });
   });
 
   describe('Steps.prototype.click', function() {

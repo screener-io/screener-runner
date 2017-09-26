@@ -2,11 +2,18 @@ function Steps() {
   this.steps = [];
 }
 
-Steps.prototype.snapshot = function(name) {
+Steps.prototype.snapshot = function(name, opts) {
   var step = {
     type: 'saveScreenshot',
     name: name
   };
+  if (opts && typeof opts.cropTo === 'string') {
+    step.type = 'cropScreenshot';
+    step.locator = {
+      type: 'css selector',
+      value: opts.cropTo
+    };
+  }
   this.steps.push(step);
   return this;
 };
