@@ -133,7 +133,7 @@ exports.run = function(config) {
         console.log('Disconnecting tunnel');
         Tunnel.disconnect();
       }
-      if (response.indexOf('fail') >= 0) {
+      if (response.indexOf('fail') >= 0 && config.failureExitCode !== 0) {
         throw new Error(response);
       }
       return response;
