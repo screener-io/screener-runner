@@ -180,6 +180,21 @@ describe('screener-runner/src/ci', function() {
       });
     });
 
+    it('should return build/branch from Visual Studio Build', function() {
+      process.env = {
+        TF_BUILD: 'True',
+        BUILD_BUILDID: 'vsts-build',
+        BUILD_SOURCEBRANCHNAME: 'vsts-branch',
+        BUILD_SOURCEVERSION: 'vsts-commit'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'vsts-build',
+        branch: 'vsts-branch',
+        commit: 'vsts-commit'
+      });
+    });
+
     it('should return empty object if no matches', function() {
       process.env = {
         CI: 'true',

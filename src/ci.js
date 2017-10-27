@@ -91,6 +91,14 @@ exports.getVars = function() {
       commit: env.BUILDKITE_COMMIT
     };
   }
+  // Visual Studio Build
+  if (env.TF_BUILD === 'True') {
+    return {
+      build: env.BUILD_BUILDID,
+      branch: env.BUILD_SOURCEBRANCHNAME,
+      commit: env.BUILD_SOURCEVERSION
+    };
+  }
   // if no matches, return empty object
   return {};
 };
