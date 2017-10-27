@@ -54,7 +54,7 @@ var createBuild = exports.createBuild = function(apiKey, payload) {
 };
 
 var getBuildStatus = exports.getBuildStatus = function(apiKey, projectId, branch, buildId) {
-  var url = API_URL + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + buildId + '/status';
+  var url = API_URL + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + encodeURIComponent(buildId) + '/status';
   var options = {
     uri: url
   };
