@@ -1,6 +1,6 @@
 {
   "name": "screener-runner",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Test Runner for Screener.io Visual Testing service",
   "repository": {
     "type": "git",
