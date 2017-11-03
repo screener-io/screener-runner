@@ -222,6 +222,13 @@ module.exports = {
       accessKey: 'sauce_access_key'
     }
     ```
+- **vsts:** Optional configuration for integrating with Visual Studio Team Services.
+    - Example:
+    ```javascript
+    vsts: {
+      instance: 'myproject.visualstudio.com'
+    }
+    ```
 
 ### Sauce Labs Integration for Cross Browser Testing
 
