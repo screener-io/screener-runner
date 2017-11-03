@@ -180,7 +180,40 @@ describe('screener-runner/src/ci', function() {
       });
     });
 
-    it('should return build/branch from Visual Studio Build', function() {
+    it('should return build/branch from VSTS', function() {
+      process.env = {
+        TF_BUILD: 'True',
+        BUILD_BUILDID: 'vsts-build',
+        BUILD_SOURCEBRANCHNAME: 'vsts-branch',
+        BUILD_SOURCEVERSION: 'vsts-commit'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'vsts-build',
+        branch: 'vsts-branch',
+        commit: 'vsts-commit'
+      });
+    });
+
+    it('should return PR branch and number from VSTS', function() {
+      process.env = {
+        TF_BUILD: 'True',
+        BUILD_BUILDID: 'vsts-build',
+        SYSTEM_PULLREQUEST_SOURCEBRANCH: 'refs/heads/vsts-branch',
+        SYSTEM_PULLREQUEST_PULLREQUESTID: 1,
+        BUILD_SOURCEBRANCHNAME: 'merge',
+        BUILD_SOURCEVERSION: 'vsts-commit'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'vsts-build',
+        branch: 'vsts-branch',
+        commit: 'vsts-commit',
+        pullRequest: '1'
+      });
+    });
+
+    it('should return build/branch from VSTS', function() {
       process.env = {
         TF_BUILD: 'True',
         BUILD_BUILDID: 'vsts-build',

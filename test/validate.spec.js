@@ -94,6 +94,20 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
+    it('should allow optional vsts config', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], vsts: {instance: 'myproject.visualstudio.com'}})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should throw error when vsts does not have instance', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], vsts: {}})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "vsts" fails because [child "instance" fails because ["instance" is required]]');
+        });
+    });
+
     it('should allow include/exclude rules that are strings', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: ['string'], excludeRules: ['string']})
         .catch(function() {

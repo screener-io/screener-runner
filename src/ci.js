@@ -91,13 +91,23 @@ exports.getVars = function() {
       commit: env.BUILDKITE_COMMIT
     };
   }
-  // Visual Studio Build
+  // Visual Studio Team Services
   if (env.TF_BUILD === 'True') {
-    return {
+    var branchName = env.SYSTEM_PULLREQUEST_SOURCEBRANCH || env.BUILD_SOURCEBRANCHNAME;
+    // remove prefix if exists
+    if (branchName.indexOf('refs/heads/') === 0) {
+      branchName = branchName.replace('refs/heads/', '');
+    }
+    var result = {
       build: env.BUILD_BUILDID,
-      branch: env.BUILD_SOURCEBRANCHNAME,
-      commit: env.BUILD_SOURCEVERSION
+      branch: branchName,
+      commit: env.BUILD_SOURCEVERSION,
     };
+    // get pull request id if exists
+    if (env.SYSTEM_PULLREQUEST_PULLREQUESTID) {
+      result.pullRequest = env.SYSTEM_PULLREQUEST_PULLREQUESTID.toString();
+    }
+    return result;
   }
   // if no matches, return empty object
   return {};

@@ -29,6 +29,10 @@ var sauceSchema = exports.sauceSchema = Joi.object().keys({
   accessKey: Joi.string().required()
 });
 
+var vstsSchema = exports.vstsSchema = Joi.object().keys({
+  instance: Joi.string().required()
+});
+
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
@@ -74,6 +78,7 @@ var runnerSchema = Joi.object().keys({
   build: Joi.string().max(40),
   branch: Joi.string().max(100),
   commit: Joi.string(),
+  pullRequest: Joi.string(),
   resolution: resolutionSchema,
   resolutions: Joi.array().min(1).items(
     resolutionSchema
@@ -113,6 +118,7 @@ var runnerSchema = Joi.object().keys({
     minLayoutDimension: Joi.number().integer().min(0)
   }),
   sauce: sauceSchema,
+  vsts: vstsSchema,
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
   beforeEachScript: [Joi.func(), Joi.string()]
 }).without('resolutions', ['resolution']).with('browsers', ['sauce']).required();

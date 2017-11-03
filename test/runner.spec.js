@@ -133,6 +133,7 @@ describe('screener-runner/src/runner', function() {
             ],
             build: 'build-id',
             branch: 'git-branch',
+            pullRequest: '1',
             states: config.states,
             sauce: sauceCreds
           });
@@ -149,6 +150,7 @@ describe('screener-runner/src/runner', function() {
         { browserName: 'firefox', version: '53.0' }
       ];
       tmpConfig.sauce = sauceCreds;
+      tmpConfig.pullRequest = '1';
       return Runner.run(tmpConfig)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
