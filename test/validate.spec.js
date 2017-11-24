@@ -225,6 +225,13 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should allow with sauce.maxConcurrent', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
       it('should allow multiple unique browsers', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function() {

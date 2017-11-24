@@ -26,7 +26,8 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
 
 var sauceSchema = exports.sauceSchema = Joi.object().keys({
   username: Joi.string().required(),
-  accessKey: Joi.string().required()
+  accessKey: Joi.string().required(),
+  maxConcurrent: Joi.number()
 });
 
 var vstsSchema = exports.vstsSchema = Joi.object().keys({
