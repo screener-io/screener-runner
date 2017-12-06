@@ -64,7 +64,14 @@ exports.run = function(config) {
       }
       config = CI.setVars(config);
       if (config.tunnel) {
-        return api.getTunnelToken(config.apiKey);
+        return api.getTunnelToken(config.apiKey)
+          .then(function(response) {
+            // if no token in response, try again
+            if (!response || !response.token) {
+              return api.getTunnelToken(config.apiKey);
+            }
+            return response;
+          });
       } else {
         return Promise.resolve();
       }
