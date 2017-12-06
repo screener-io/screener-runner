@@ -3,6 +3,9 @@ var Promise = require('bluebird');
 var url = require('url');
 
 exports.connect = function(host, token) {
+  if (!token) {
+    return Promise.reject(new Error('No Tunnel Token'));
+  }
   var urlObj = url.parse('http://' + host);
   var options = {
     addr: urlObj.hostname + ':' + (urlObj.port || 80),

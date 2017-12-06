@@ -5,6 +5,13 @@ var Tunnel = rewire('../src/tunnel');
 
 describe('screener-runner/src/tunnel', function() {
   describe('Tunnel.connect', function() {
+    it('should error when no token', function() {
+      return Tunnel.connect('localhost:8080')
+        .catch(function(err) {
+          expect(err.message).to.equal('No Tunnel Token');
+        });
+    });
+
     it('should pass host/token and return tunnel url on success', function() {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
