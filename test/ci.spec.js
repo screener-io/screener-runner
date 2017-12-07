@@ -30,6 +30,22 @@ describe('screener-runner/src/ci', function() {
         branch: 'jenkins-branch',
         commit: 'jenkins-commit'
       });
+
+      process.env = {
+        JENKINS_URL: '',
+        JENKINS_HOME: 'jenkins-url',
+        BUILD_NUMBER: 'jenkins-build',
+        ghprbSourceBranch: 'prb-branch',
+        GIT_BRANCH: 'jenkins-branch',
+        ghprbActualCommit: 'prb-commit',
+        GIT_COMMIT: 'jenkins-commit'
+      };
+      result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'jenkins-build',
+        branch: 'prb-branch',
+        commit: 'prb-commit'
+      });
     });
 
     it('should return build/branch from CircleCI', function() {
