@@ -23,8 +23,8 @@ exports.getVars = function() {
   if ((typeof env.JENKINS_URL === 'string' && env.JENKINS_URL.length > 0) || (typeof env.JENKINS_HOME === 'string' && env.JENKINS_HOME.length > 0)) {
     return {
       build: env.BUILD_NUMBER,
-      branch: env.GIT_BRANCH,
-      commit: env.GIT_COMMIT
+      branch: env.ghprbSourceBranch || env.GIT_BRANCH,
+      commit: env.ghprbActualCommit || env.GIT_COMMIT
     };
   }
   // CircleCI
