@@ -10,7 +10,8 @@ exports.connect = function(host, token) {
   var options = {
     addr: urlObj.hostname + ':' + (urlObj.port || 80),
     host_header: urlObj.hostname,
-    authtoken: token
+    authtoken: token,
+    configPath: __dirname + '/ngrok.yml'
   };
   var connect = Promise.promisify(ngrok.connect);
   return connect(options)
