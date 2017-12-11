@@ -15,6 +15,7 @@ describe('screener-runner/src/tunnel', function() {
     it('should pass host/token and return tunnel url on success', function() {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
+          delete options.configPath;
           expect(options).to.deep.equal({
             addr: 'localhost:8080',
             host_header: 'localhost',
@@ -32,6 +33,7 @@ describe('screener-runner/src/tunnel', function() {
     it('should default to port 80 if port not set', function() {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
+          delete options.configPath;
           expect(options).to.deep.equal({
             addr: 'localhost:80',
             host_header: 'localhost',
