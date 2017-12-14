@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var clone = require('lodash/clone');
 var Runner = rewire('../src/runner');
 var Tunnel = require('../src/tunnel');
+var pkg = require('../package.json');
 
 var config = {
   apiKey: 'api-key',
@@ -55,7 +56,10 @@ var apiMock = {
       ],
       build: 'build-id',
       branch: 'git-branch',
-      states: config.states
+      states: config.states,
+      meta: {
+        'screener-runner': pkg.version
+      }
     });
     return Promise.resolve({
       project: 'project-id',
@@ -135,7 +139,10 @@ describe('screener-runner/src/runner', function() {
             branch: 'git-branch',
             pullRequest: '1',
             states: config.states,
-            sauce: sauceCreds
+            sauce: sauceCreds,
+            meta: {
+              'screener-runner': pkg.version
+            }
           });
           return Promise.resolve({
             project: 'project-id',
@@ -188,7 +195,10 @@ describe('screener-runner/src/runner', function() {
                 url: 'http://domain.com/path',
                 name: 'State 2'
               }
-            ]
+            ],
+            meta: {
+              'screener-runner': pkg.version
+            }
           });
           return Promise.resolve({
             project: 'project-id',
