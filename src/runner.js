@@ -7,6 +7,7 @@ var GzipProxy = require('./gzip-proxy');
 var Promise = require('bluebird');
 var cloneDeep = require('lodash/cloneDeep');
 var omit = require('lodash/omit');
+var pkg = require('../package.json');
 
 var MAX_MS = 30 * 60 * 1000; // max 30 mins
 
@@ -56,6 +57,9 @@ exports.run = function(config) {
   config = cloneDeep(config);
   return Validate.runnerConfig(config)
     .then(function() {
+      // add package version
+      if (!config.meta) config.meta = {};
+      config.meta['screener-runner'] = pkg.version;
       // apply filtering rules
       config.states = Rules.filter(config.states, 'name', config.includeRules, config.excludeRules);
       // cancel if there are 0 states
