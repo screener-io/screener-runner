@@ -18,7 +18,8 @@ describe('screener-runner/src/tunnel', function() {
           expect(options).to.deep.equal({
             addr: 'localhost:8080',
             host_header: 'localhost',
-            authtoken: 'token'
+            authtoken: 'token',
+            bind_tls: true
           });
           cb(null, 'https://tunnel-url');
         }
@@ -35,7 +36,8 @@ describe('screener-runner/src/tunnel', function() {
           expect(options).to.deep.equal({
             addr: 'localhost:80',
             host_header: 'localhost',
-            authtoken: 'token'
+            authtoken: 'token',
+            bind_tls: true
           });
           cb(null, 'https://tunnel-url');
         }

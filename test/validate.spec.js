@@ -204,13 +204,6 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should error when browsers is set without sauce', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }]})
-          .catch(function(err) {
-            expect(err.message).to.equal('"browsers" missing required peer "sauce"');
-          });
-      });
-
       it('should error when browsers are not unique', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'chrome' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function(err) {
@@ -218,22 +211,36 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should allow screener browsers with no version', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow firefox browser with or without version to be backward compatible', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'firefox', version: '57.0' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
       it('should allow browsers with sauce config', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function() {
             throw new Error('Should not be here');
           });
       });
 
       it('should allow with sauce.maxConcurrent', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
           .catch(function() {
             throw new Error('Should not be here');
           });
       });
 
       it('should allow multiple unique browsers', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox', version: '53.0' }], sauce: { username: 'user', accessKey: 'key' }})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function() {
             throw new Error('Should not be here');
           });

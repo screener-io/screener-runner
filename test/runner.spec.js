@@ -128,8 +128,8 @@ describe('screener-runner/src/runner', function() {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
             browsers: [
-              { browserName: 'chrome' },
-              { browserName: 'firefox', version: '53.0' }
+              { browserName: 'firefox' },
+              { browserName: 'safari', version: '11.0' }
             ],
             resolutions: [
               '1024x768',
@@ -153,8 +153,8 @@ describe('screener-runner/src/runner', function() {
       });
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.browsers = [
-        { browserName: 'chrome' },
-        { browserName: 'firefox', version: '53.0' }
+        { browserName: 'firefox' },
+        { browserName: 'safari', version: '11.0' }
       ];
       tmpConfig.sauce = sauceCreds;
       tmpConfig.pullRequest = '1';
