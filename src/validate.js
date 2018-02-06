@@ -16,7 +16,7 @@ var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
 
 var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   Joi.object().keys({
-    browserName: Joi.string().valid(['chrome']).required()
+    browserName: Joi.string().valid(['chrome', 'firefox']).required()
   }),
   Joi.object().keys({
     browserName: Joi.string().valid(['firefox', 'safari', 'microsoftedge', 'internet explorer']).required(),
@@ -123,7 +123,7 @@ var runnerSchema = Joi.object().keys({
   meta: Joi.object(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
   beforeEachScript: [Joi.func(), Joi.string()]
-}).without('resolutions', ['resolution']).with('browsers', ['sauce']).required();
+}).without('resolutions', ['resolution']).required();
 
 exports.runnerConfig = function(value) {
   var validator = Promise.promisify(Joi.validate);
