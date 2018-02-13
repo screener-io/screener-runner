@@ -104,6 +104,27 @@ describe('screener-runner/src/ci', function() {
       });
     });
 
+    it('should return PR build/branch from Travis CI with slug prefix when PR source branch and destination branch are equal', function() {
+      process.env = {
+        CI: 'true',
+        TRAVIS: 'true',
+        TRAVIS_BUILD_NUMBER: 'travis-build',
+        TRAVIS_BRANCH: 'travis-branch',
+        TRAVIS_COMMIT: 'travis-commit',
+        TRAVIS_PULL_REQUEST_BRANCH: 'travis-branch',
+        TRAVIS_PULL_REQUEST_SHA: 'travis-pr-commit',
+        TRAVIS_PULL_REQUEST_SLUG: 'pr/owner/repo',
+        TRAVIS_REPO_SLUG: 'owner/repo'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'travis-build',
+        branch: 'pr/owner/repo:travis-branch',
+        commit: 'travis-pr-commit',
+        repoSlug: 'owner/repo'
+      });
+    });
+
     it('should return build/branch from Codeship', function() {
       process.env = {
         CI: 'true',
