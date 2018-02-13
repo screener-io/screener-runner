@@ -37,9 +37,15 @@ exports.getVars = function() {
   }
   // Travis CI
   if (env.CI === 'true' && env.TRAVIS === 'true') {
+    var fullBranchName = env.TRAVIS_PULL_REQUEST_BRANCH || env.TRAVIS_BRANCH;
+    var prSlug = env.TRAVIS_PULL_REQUEST_SLUG;
+    // if PR src and dest branches are equal, prefix with slug to differentiate 
+    if (prSlug && env.TRAVIS_PULL_REQUEST_BRANCH === env.TRAVIS_BRANCH) {
+      fullBranchName = prSlug + ':' + fullBranchName;
+    }
     return {
       build: env.TRAVIS_BUILD_NUMBER,
-      branch: env.TRAVIS_PULL_REQUEST_BRANCH || env.TRAVIS_BRANCH,
+      branch: fullBranchName,
       commit: env.TRAVIS_PULL_REQUEST_SHA || env.TRAVIS_COMMIT,
       repoSlug: env.TRAVIS_REPO_SLUG
     };
