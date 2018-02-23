@@ -121,6 +121,7 @@ var runnerSchema = Joi.object().keys({
   sauce: sauceSchema,
   vsts: vstsSchema,
   meta: Joi.object(),
+  failOnNewStates: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
   beforeEachScript: [Joi.func(), Joi.string()]
 }).without('resolutions', ['resolution']).required();
