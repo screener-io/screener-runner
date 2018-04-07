@@ -2,6 +2,15 @@ function Steps() {
   this.steps = [];
 }
 
+Steps.prototype.url = function(url) {
+  var step = {
+    type: 'url',
+    url: url
+  };
+  this.steps.push(step);
+  return this;
+};
+
 Steps.prototype.snapshot = function(name, opts) {
   var step = {
     type: 'saveScreenshot',
