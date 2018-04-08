@@ -9,6 +9,18 @@ describe('screener-runner/src/steps', function() {
     });
   });
 
+  describe('Steps.prototype.url', function() {
+    it('should add url step', function() {
+      var test = new Steps().url('https://screener.io');
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'url',
+          url: 'https://screener.io'
+        }
+      ]);
+    });
+  });
+
   describe('Steps.prototype.snapshot', function() {
     it('should add snapshot step', function() {
       var test = new Steps().snapshot('name');
@@ -195,6 +207,7 @@ describe('screener-runner/src/steps', function() {
   describe('Steps.prototype.end', function() {
     it('should return steps', function() {
       var result = new Steps()
+        .url('https://screener.io')
         .snapshot('State Name')
         .click('selector')
         .hover('selector')
@@ -206,6 +219,10 @@ describe('screener-runner/src/steps', function() {
         .wait('msOrSelector')
         .end();
       expect(result).to.deep.equal([
+        {
+          type: 'url',
+          url: 'https://screener.io'
+        },
         {
           type: 'saveScreenshot',
           name: 'State Name'

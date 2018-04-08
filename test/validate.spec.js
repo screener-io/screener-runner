@@ -3,6 +3,10 @@ var Validate = require('../src/validate');
 
 var steps = [
   {
+    type: 'url',
+    url: 'http://url.com'
+  },
+  {
     type: 'saveScreenshot',
     name: 'State Name'
   },
@@ -88,7 +92,7 @@ describe('screener-runner/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', meta: {'screener-storybook': '0.9.15'}, hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', diffOptions: {}, failOnNewStates: true, beforeEachScript: function() {}})
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', meta: {'screener-storybook': '0.9.15'}, hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', diffOptions: {}, failOnNewStates: true, disableAutoSnapshots: true, newSessionForEachState: true, beforeEachScript: function() {}})
         .catch(function() {
           throw new Error('Should not be here');
         });
@@ -363,6 +367,28 @@ describe('screener-runner/src/validate', function() {
       ];
       var result = Validate.steps(testSteps);
       expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+    });
+
+    it('should error with invalid url format', function() {
+      var steps = [
+        {
+          type: 'url',
+          url: '/path'
+        }
+      ];
+      var result = Validate.steps(steps);
+      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+    });
+
+    it('should allow valid url format', function() {
+      var steps = [
+        {
+          type: 'url',
+          url: 'http://url.com'
+        }
+      ];
+      var result = Validate.steps(steps);
+      expect(result.error).to.equal(null);
     });
 
     it('should allow all valid types', function() {
