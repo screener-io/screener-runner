@@ -77,6 +77,7 @@ Screener-Runner provides a fluent API for adding steps. Methods with selectors h
 
 The following methods are currently available:
 
+- `url(url)`: this will load a new url.
 - `click(selector)`: this will click on the first element matching the provided css selector.
 - `snapshot(name, [options])`: this will capture a visual snapshot.
      - Optional `options` param can contain a `cropTo` field:
@@ -250,6 +251,8 @@ module.exports = {
     }
     ```
 - **failOnNewStates:** Option to set build to failure when `new` states are found.
+- **disableAutoSnapshots:** Option to disable initial visual snapshots automatically captured for each state. Defaults to false.
+- **newSessionForEachState:** Option to start a new test session for each state. Defaults to false.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
     - To NOT fail a CI build on Screener failure, set to 0. Example:
     ```javascript

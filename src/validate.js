@@ -36,6 +36,10 @@ var vstsSchema = exports.vstsSchema = Joi.object().keys({
 
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
+    type: Joi.string().valid('url').required(),
+    url: Joi.string().uri().required()
+  }),
+  Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
     name: Joi.string().max(200).required()
   }),
@@ -122,6 +126,8 @@ var runnerSchema = Joi.object().keys({
   vsts: vstsSchema,
   meta: Joi.object(),
   failOnNewStates: Joi.boolean(),
+  disableAutoSnapshots: Joi.boolean(),
+  newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
   beforeEachScript: [Joi.func(), Joi.string()]
 }).without('resolutions', ['resolution']).required();
