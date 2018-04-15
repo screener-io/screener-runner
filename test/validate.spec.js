@@ -229,6 +229,13 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should error when both sauce and browserStack options are present', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }, browserStack: { username: 'user', accessKey: 'key' }})
+          .catch(function(err) {
+            expect(err.message).to.equal('"sauce" conflict with forbidden peer "browserStack"');
+          });
+      });
+
       it('should allow browsers with sauce config', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function() {
@@ -243,8 +250,22 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should allow browsers with browserStack config', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], browserStack: { username: 'user', accessKey: 'key' }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow with browserStack.maxConcurrent', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], browserStack: { username: 'user', accessKey: 'key', maxConcurrent: 10 }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
       it('should allow multiple unique browsers', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox' }, { browserName: 'internet explorer', version: '11' }]})
           .catch(function() {
             throw new Error('Should not be here');
           });
