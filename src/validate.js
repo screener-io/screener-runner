@@ -34,6 +34,12 @@ var vstsSchema = exports.vstsSchema = Joi.object().keys({
   instance: Joi.string().required()
 });
 
+var browserStackSchema = exports.browserStackSchema = Joi.object().keys({
+  username: Joi.string().required(),
+  accessKey: Joi.string().required(),
+  maxConcurrent: Joi.number()
+});
+
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('url').required(),
@@ -124,13 +130,17 @@ var runnerSchema = Joi.object().keys({
   }),
   sauce: sauceSchema,
   vsts: vstsSchema,
+  browserStack: browserStackSchema,
   meta: Joi.object(),
   failOnNewStates: Joi.boolean(),
   disableAutoSnapshots: Joi.boolean(),
   newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
   beforeEachScript: [Joi.func(), Joi.string()]
-}).without('resolutions', ['resolution']).required();
+})
+.without('resolutions', ['resolution'])
+.without('sauce', ['browserStack'])
+.required();
 
 exports.runnerConfig = function(value) {
   var validator = Promise.promisify(Joi.validate);
