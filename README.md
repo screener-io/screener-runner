@@ -272,6 +272,7 @@ module.exports = {
       }
     ]
     ```
+- **ieNativeEvents:** Option to enable native events in Internet Explorer browser. Defaults to false.
 - **sauce:** Optional Sauce Labs credentials for Cross Browser Testing.
     - Example:
     ```javascript
