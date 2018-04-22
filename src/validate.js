@@ -136,7 +136,8 @@ var runnerSchema = Joi.object().keys({
   disableAutoSnapshots: Joi.boolean(),
   newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
-  beforeEachScript: [Joi.func(), Joi.string()]
+  beforeEachScript: [Joi.func(), Joi.string()],
+  ieNativeEvents: Joi.boolean()
 })
 .without('resolutions', ['resolution'])
 .without('sauce', ['browserStack'])
