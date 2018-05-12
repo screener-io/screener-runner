@@ -111,19 +111,21 @@ exports.run = function(config) {
       if (typeof payload.beforeEachScript === 'function') {
         payload.beforeEachScript = payload.beforeEachScript.toString();
       }
-      console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per ' + (config.browsers ? 'browser/' : '') + 'resolution');
-      if (config.browsers) {
-        console.log('Browsers:');
-        config.browsers.forEach(function(browser, index) {
-          console.log('  ' + (index + 1) + '. ' + displayBrowser(browser));
-        });
-      }
-      if (config.resolution || config.resolutions) {
-        payload.resolutions = config.resolutions || [config.resolution];
-        console.log('Resolutions:');
-        payload.resolutions.forEach(function(resolution, index) {
-          console.log('  ' + (index + 1) + '. ' + displayResolution(resolution));
-        });
+      if (!config.shots) {
+        console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per ' + (config.browsers ? 'browser/' : '') + 'resolution');
+        if (config.browsers) {
+          console.log('Browsers:');
+          config.browsers.forEach(function(browser, index) {
+            console.log('  ' + (index + 1) + '. ' + displayBrowser(browser));
+          });
+        }
+        if (config.resolution || config.resolutions) {
+          payload.resolutions = config.resolutions || [config.resolution];
+          console.log('Resolutions:');
+          payload.resolutions.forEach(function(resolution, index) {
+            console.log('  ' + (index + 1) + '. ' + displayResolution(resolution));
+          });
+        }
       }
       console.log('\nCreating build for ' + config.projectRepo);
       return api.createBuildWithRetry(config.apiKey, payload).timeout(MAX_MS, 'Timeout waiting for Build');
