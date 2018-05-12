@@ -198,6 +198,20 @@ describe('screener-runner/src/validate', function() {
             throw new Error('Should not be here');
           });
       });
+
+      it('should allow states with shotsIndex', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', shotsIndex: 0}]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when shotsIndex < 0', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', shotsIndex: -1}]})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "shotsIndex" fails because ["shotsIndex" must be larger than or equal to 0]]]');
+          });
+      });
     });
 
     describe('validate.browsers', function() {
@@ -358,6 +372,43 @@ describe('screener-runner/src/validate', function() {
             expect(err.message).to.equal('child "resolution" fails because ["resolution" must be a string, "deviceName" is not allowed, "width" is not allowed, "height" is not allowed]');
           });
       });
+    });
+  });
+
+  describe('validate.shots', function() {
+    it('should throw error when shots is empty', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: []})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "shots" fails because ["shots" must contain at least 1 items]');
+        });
+    });
+
+    it('should throw error when required fields are missing', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name'}]})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "shots" fails because ["shots" at position 0 fails because [child "resolution" fails because ["resolution" is required]]]');
+        });
+    });
+
+    it('should allow shots items with name, resolution, shotsDir', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}, {name: 'name2', resolution: '1024x768', shotsDir: '/tmp/shots'}]})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should error when resolution is invalid format', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: 'desktop', shotsDir: '/tmp/shots'}]})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "shots" fails because ["shots" at position 0 fails because [child "resolution" fails because ["resolution" with value "desktop" fails to match the resolution pattern]]]');
+        });
+    });
+
+    it('should error when duplicate shots items are found', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}, {name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}]})
+        .catch(function(err) {
+          expect(err.message).to.equal('child "shots" fails because ["shots" position 1 contains a duplicate value]');
+        });
     });
   });
 

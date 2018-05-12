@@ -40,6 +40,17 @@ var browserStackSchema = exports.browserStackSchema = Joi.object().keys({
   maxConcurrent: Joi.number()
 });
 
+var uniqShotGroup = function(a, b) {
+  return a.name === b.name && a.resolution === b.resolution;
+};
+var shotsSchema = exports.shotsSchema = Joi.array().min(1).items(
+  Joi.object().keys({
+    name: Joi.string().required(),
+    resolution: Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution').required(),
+    shotsDir: Joi.string().required()
+  })
+).unique(uniqShotGroup);
+
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('url').required(),
@@ -83,6 +94,16 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   })
 );
 
+var includeRulesSchema = exports.includeRulesSchema = Joi.array().min(0).items(
+  Joi.string(),
+  Joi.object().type(RegExp)
+);
+
+var excludeRulesSchema = exports.excludeRulesSchema = Joi.array().min(0).items(
+  Joi.string(),
+  Joi.object().type(RegExp)
+);
+
 var runnerSchema = Joi.object().keys({
   apiKey: Joi.string().required(),
   projectRepo: Joi.string().max(100).required(),
@@ -98,19 +119,15 @@ var runnerSchema = Joi.object().keys({
   cssAnimations: Joi.boolean(),
   ignore: Joi.string(),
   hide: Joi.string(),
-  includeRules: Joi.array().min(0).items(
-    Joi.string(),
-    Joi.object().type(RegExp)
-  ),
-  excludeRules: Joi.array().min(0).items(
-    Joi.string(),
-    Joi.object().type(RegExp)
-  ),
+  includeRules: includeRulesSchema,
+  excludeRules: excludeRulesSchema,
+  shots: shotsSchema,
   states: Joi.array().min(0).items(
     Joi.object().keys({
       url: Joi.string().uri().required(),
       name: Joi.string().max(200).required(),
-      steps: stepsSchema
+      steps: stepsSchema,
+      shotsIndex: Joi.number().integer().min(0)
     })
   ).required(),
   tunnel: Joi.object().keys({
