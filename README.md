@@ -176,7 +176,7 @@ module.exports = {
 | firefox | *-do not set-* | |
 | internet explorer | 11 | |
 | microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
-| safari | 11.0 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
+| safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) or [BrowserStack](https://screener.io/v2/docs/browserstack) Integration |
 
 
 
@@ -268,7 +268,7 @@ module.exports = {
       },
       {
         browserName: 'safari',
-        version: '11.0'
+        version: '11.1'
       }
     ]
     ```
