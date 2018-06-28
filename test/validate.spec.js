@@ -92,7 +92,7 @@ describe('screener-runner/src/validate', function() {
     });
 
     it('should allow adding optional fields', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', meta: {'screener-storybook': '0.9.15'}, hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', diffOptions: {}, failOnNewStates: true, disableAutoSnapshots: true, newSessionForEachState: true, beforeEachScript: function() {}, ieNativeEvents: true})
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {host: 'host'}, build: 'build', branch: 'branch', commit: 'commit', resolution: '1280x1024', cssAnimations: true, ignore: 'ignore', meta: {'screener-storybook': '0.9.15'}, hide: 'hide', includeRules: [], excludeRules: [], initialBaselineBranch: 'master', baseBranch: 'master', diffOptions: {compareSVGDOM: true}, failOnNewStates: true, disableAutoSnapshots: true, newSessionForEachState: true, beforeEachScript: function() {}, ieNativeEvents: true})
         .catch(function() {
           throw new Error('Should not be here');
         });
