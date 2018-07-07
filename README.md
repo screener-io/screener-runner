@@ -253,6 +253,7 @@ module.exports = {
     ```
 - **failOnNewStates:** Option to set build to failure when `new` states are found.
 - **disableAutoSnapshots:** Option to disable initial visual snapshots automatically captured for each state. Defaults to false.
+- **disableBranchBaseline:** Option to disable independent baseline for each feature branch, and only use base branch as baseline. Must be used with `baseBranch` option. Defaults to false.
 - **newSessionForEachState:** Option to start a new test session for each state. Defaults to false.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
     - To NOT fail a CI build on Screener failure, set to 0. Example:
