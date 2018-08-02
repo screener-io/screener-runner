@@ -106,7 +106,7 @@ Each resolution item in the array is either:
 - A string in the format: `<width>x<height>`. Example: `1024x768`
 - Or an object with Device details: `deviceName` and optional `deviceOrientation`
 
-`deviceName` value can be one of: iPhone 4, iPhone 5, iPhone 6, iPhone 6 Plus, iPad, iPad Pro, Galaxy S5, Nexus 4, Nexus 5, Nexus 5X, Nexus 6P, Nexus 7, Nexus 10
+`deviceName` value can be one of: iPhone 4, iPhone 5, iPhone 6, iPhone 6 Plus, iPhone 7, iPhone 7 Plus, iPhone 8, iPhone 8 Plus, iPhone X, iPad, iPad Pro, Galaxy S6, Galaxy S7, Galaxy S8, Nexus 4, Nexus 5, Nexus 5X, Nexus 6P, Nexus 7, Nexus 10
 
 
 Here is an example:
