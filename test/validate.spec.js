@@ -33,6 +33,14 @@ var steps = [
     text: 'text'
   },
   {
+    type: 'setElementText',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    },
+    text: '' // should allow empty string
+  },
+  {
     type: 'executeScript',
     code: 'code'
   },
