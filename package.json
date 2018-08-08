@@ -34,7 +34,7 @@
     "connect": "~3.5.0",
     "http-proxy": "~1.16.2",
     "joi": "~9.2.0",
-    "lodash": "~4.16.6",
+    "lodash": "~4.17.5",
     "ngrok": "screener-io/ngrok",
     "portfinder": "~1.0.10",
     "request": "~2.78.0",
