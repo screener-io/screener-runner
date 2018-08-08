@@ -81,7 +81,7 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
       type: Joi.string().valid('css selector').required(),
       value: Joi.string().required()
     }),
-    text: Joi.string().required()
+    text: Joi.string().allow('').required()
   }),
   Joi.object().keys({
     type: Joi.string().valid('executeScript').required(),
