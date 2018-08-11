@@ -1,35 +1,38 @@
 var Promise = require('bluebird');
-var rp = require('request-promise');
+var requestretry = require('requestretry');
 var extend = require('lodash/extend');
 
 var API_URL = 'https://screener.io/api/v2';
 var RETRY_MS = 30 * 1000;
 var POLL_MS = 2500;
 
-var checkStatus = function(body, response) {
-  if (typeof body === 'string' && body.indexOf('{"error":') === 0) {
-    try {
-      body = JSON.parse(body);
-    } catch (ex) { /**/ }
-  }
-  if (typeof body === 'object' && body.error && body.error.message) {
-    throw new Error(body.error.message);
-  } else if (response.statusCode !== 200) {
-    throw new Error('Response Code ' + response.statusCode);
-  } else {
-    return body;
-  }
-};
-
 var request = function(apiKey, options) {
   var defaults = {
     method: 'GET',
-    transform: checkStatus,
     headers: {
       'x-api-key': apiKey
-    }
+    },
+    maxAttempts: 10
   };
-  return rp(extend(defaults, options));
+  return new Promise(function(resolve, reject) {
+    requestretry(extend(defaults, options), function(err, response, body) {
+      if (err) {
+        return reject(err);
+      }
+      if (typeof body === 'string' && body.indexOf('{"error":') === 0) {
+        try {
+          body = JSON.parse(body);
+        } catch (ex) { /**/ }
+      }
+      if (typeof body === 'object' && body.error && body.error.message) {
+        reject(new Error('Error: ' + body.error.message));
+      } else if (response.statusCode !== 200) {
+        reject(new Error('Error: Response Code ' + response.statusCode));
+      } else {
+        resolve(body);
+      }
+    });
+  });
 };
 
 exports.getTunnelToken = function(apiKey) {
