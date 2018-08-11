@@ -37,8 +37,8 @@
     "lodash": "~4.17.5",
     "ngrok": "screener-io/ngrok",
     "portfinder": "~1.0.10",
-    "request": "~2.78.0",
-    "request-promise": "~4.1.1"
+    "request": "~2.87.0",
+    "requestretry": "~2.0.2"
   },
   "devDependencies": {
     "chai": "~3.5.0",
