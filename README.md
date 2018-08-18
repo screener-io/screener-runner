@@ -265,9 +265,10 @@ module.exports = {
       compareSVGDOM: false // Pass if SVG DOM is the same. Defaults to false.
     }
     ```
-- **failOnNewStates:** Option to set build to failure when `new` states are found.
+- **failOnNewStates:** Option to set build to failure when `new` states are found, and to disable using `new` states as a baseline.
 - **disableAutoSnapshots:** Option to disable initial visual snapshots automatically captured for each state. Defaults to false.
 - **disableBranchBaseline:** Option to disable independent baseline for each feature branch, and only use base branch as baseline. Must be used with `baseBranch` option. Defaults to false.
+- **useNewerBaseBranch:** Option to compare changed state in feature branch to either `latest` or `accepted` state in newer base branch. Must be used with `baseBranch` option. Defaults to `accepted`.
 - **newSessionForEachState:** Option to start a new test session for each state. Defaults to false.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
     - To NOT fail a CI build on Screener failure, set to 0. Example:
