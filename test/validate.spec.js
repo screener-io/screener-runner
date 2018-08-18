@@ -120,6 +120,20 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
+    it('should allow useNewerBaseBranch option when baseBranch is set', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], useNewerBaseBranch: 'latest', baseBranch: 'master'})
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
+    });
+
+    it('should not allow useNewerBaseBranch option when baseBranch is not set', function() {
+      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], useNewerBaseBranch: 'latest'})
+        .catch(function(err) {
+          expect(err.message).to.equal('"useNewerBaseBranch" missing required peer "baseBranch"');
+        });
+    });
+
     it('should allow optional vsts config', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], vsts: {instance: 'myproject.visualstudio.com'}})
         .catch(function() {

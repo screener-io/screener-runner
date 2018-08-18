@@ -138,6 +138,7 @@ var runnerSchema = Joi.object().keys({
   baseBranch: Joi.string().max(100),
   initialBaselineBranch: Joi.string().max(100),
   disableBranchBaseline: Joi.boolean(),
+  useNewerBaseBranch: Joi.string().valid(['accepted', 'latest']),
   diffOptions: Joi.object().keys({
     structure: Joi.boolean(),
     layout: Joi.boolean(),
@@ -162,6 +163,7 @@ var runnerSchema = Joi.object().keys({
 .without('resolutions', ['resolution'])
 .without('sauce', ['browserStack'])
 .with('disableBranchBaseline', ['baseBranch'])
+.with('useNewerBaseBranch', ['baseBranch'])
 .required();
 
 exports.runnerConfig = function(value) {
