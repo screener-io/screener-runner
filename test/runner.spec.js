@@ -225,12 +225,12 @@ describe('screener-runner/src/runner', function() {
         getTunnelToken: apiMock.getTunnelToken,
         createBuildWithRetry: apiMock.createBuildWithRetry,
         waitForBuild: function() {
-          return Promise.resolve('failed');
+          return Promise.resolve('Build failed.');
         }
       });
       return Runner.run(config)
         .catch(function(err) {
-          expect(err.message).to.equal('failed');
+          expect(err.message).to.equal('Build failed.');
         });
     });
   });
