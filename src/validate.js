@@ -154,6 +154,7 @@ var runnerSchema = Joi.object().keys({
   browserStack: browserStackSchema,
   meta: Joi.object(),
   failOnNewStates: Joi.boolean(),
+  alwaysAcceptBaseBranch: Joi.boolean(),
   disableAutoSnapshots: Joi.boolean(),
   newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
@@ -164,6 +165,7 @@ var runnerSchema = Joi.object().keys({
 .without('sauce', ['browserStack'])
 .with('disableBranchBaseline', ['baseBranch'])
 .with('useNewerBaseBranch', ['baseBranch'])
+.with('alwaysAcceptBaseBranch', ['baseBranch'])
 .required();
 
 exports.runnerConfig = function(value) {
