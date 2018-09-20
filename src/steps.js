@@ -137,6 +137,24 @@ Steps.prototype.wait = function(msOrSelector) {
   return this;
 };
 
+Steps.prototype.rtl = function() {
+  var step = {
+    type: 'executeScript',
+    code: 'document.documentElement.dir = "rtl";'
+  };
+  this.steps.push(step);
+  return this;
+};
+
+Steps.prototype.ltr = function() {
+  var step = {
+    type: 'executeScript',
+    code: 'document.documentElement.dir = "ltr";'
+  };
+  this.steps.push(step);
+  return this;
+};
+
 Steps.prototype.end = function() {
   return this.steps;
 };
