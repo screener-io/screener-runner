@@ -204,6 +204,30 @@ describe('screener-runner/src/steps', function() {
     });
   });
 
+  describe('Steps.prototype.rtl', function() {
+    it('should add script to set direction to rtl', function() {
+      var test = new Steps().rtl();
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'executeScript',
+          code: 'document.documentElement.dir = "rtl";'
+        }
+      ]);
+    });
+  });
+
+  describe('Steps.prototype.ltr', function() {
+    it('should add script to set direction to ltr', function() {
+      var test = new Steps().ltr();
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'executeScript',
+          code: 'document.documentElement.dir = "ltr";'
+        }
+      ]);
+    });
+  });
+
   describe('Steps.prototype.end', function() {
     it('should return steps', function() {
       var result = new Steps()
