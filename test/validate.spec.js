@@ -334,6 +334,20 @@ describe('screener-runner/src/validate', function() {
             throw new Error('Should not be here');
           });
       });
+
+      it('should allow browser includeRules', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox' }, { browserName: 'internet explorer', version: '11', includeRules: [/^Button/] }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow browser excludeRules', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'firefox' }, { browserName: 'internet explorer', version: '11', excludeRules: [/^Button/] }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
     });
 
     describe('validate.resolutions', function() {

@@ -1,6 +1,16 @@
 var Joi = require('joi');
 var Promise = require('bluebird');
 
+var includeRulesSchema = exports.includeRulesSchema = Joi.array().min(0).items(
+  Joi.string(),
+  Joi.object().type(RegExp)
+);
+
+var excludeRulesSchema = exports.excludeRulesSchema = Joi.array().min(0).items(
+  Joi.string(),
+  Joi.object().type(RegExp)
+);
+
 var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
   Joi.string().regex(/^[0-9]{3,4}x[0-9]{3,4}$/, 'resolution'),
   Joi.object().keys({
@@ -16,11 +26,15 @@ var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
 
 var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   Joi.object().keys({
-    browserName: Joi.string().valid(['chrome', 'firefox']).required()
+    browserName: Joi.string().valid(['chrome', 'firefox']).required(),
+    includeRules: includeRulesSchema,
+    excludeRules: excludeRulesSchema,
   }),
   Joi.object().keys({
     browserName: Joi.string().valid(['firefox', 'safari', 'microsoftedge', 'internet explorer']).required(),
-    version: Joi.string().required()
+    version: Joi.string().required(),
+    includeRules: includeRulesSchema,
+    excludeRules: excludeRulesSchema,
   })
 );
 
@@ -92,16 +106,6 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     type: Joi.string().valid('pause').required(),
     waitTime: Joi.number().required()
   })
-);
-
-var includeRulesSchema = exports.includeRulesSchema = Joi.array().min(0).items(
-  Joi.string(),
-  Joi.object().type(RegExp)
-);
-
-var excludeRulesSchema = exports.excludeRulesSchema = Joi.array().min(0).items(
-  Joi.string(),
-  Joi.object().type(RegExp)
 );
 
 var runnerSchema = Joi.object().keys({
