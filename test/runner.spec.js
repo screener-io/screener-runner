@@ -165,6 +165,50 @@ describe('screener-runner/src/runner', function() {
         });
     });
 
+    it('should convert browser includeRules/excludeRules regex to objects', function() {
+      Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
+        createBuildWithRetry: function(apiKey, payload) {
+          expect(payload).to.deep.equal({
+            projectRepo: 'repo',
+            browsers: [
+              { browserName: 'firefox', includeRules: [{source: '^Button', flags: ''}, 'Component'] },
+              { browserName: 'safari', version: '11.0', excludeRules: [{source: '^Button', flags: ''}, 'Component'] }
+            ],
+            resolutions: [
+              '1024x768',
+              { deviceName: 'iPhone 6' }
+            ],
+            build: 'build-id',
+            branch: 'git-branch',
+            pullRequest: '1',
+            states: config.states,
+            sauce: sauceCreds,
+            meta: {
+              'screener-runner': pkg.version
+            }
+          });
+          return Promise.resolve({
+            project: 'project-id',
+            build: 'build-id'
+          });
+        },
+        waitForBuild: apiMock.waitForBuild
+      });
+      var tmpConfig = JSON.parse(JSON.stringify(config));
+      tmpConfig.browsers = [
+        { browserName: 'firefox', includeRules: [/^Button/, 'Component'] },
+        { browserName: 'safari', version: '11.0', excludeRules: [/^Button/, 'Component'] }
+      ];
+      tmpConfig.sauce = sauceCreds;
+      tmpConfig.pullRequest = '1';
+      return Runner.run(tmpConfig)
+        .then(function(response) {
+          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(response).to.equal('status');
+        });
+    });
+
     it('should cancel test run when there are no states', function() {
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.states = [];
