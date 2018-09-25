@@ -51,6 +51,18 @@ var displayBrowser = function(browser) {
   return result;
 };
 
+var convertRegex = function(array) {
+  return array.map(function(item) {
+    if (item instanceof RegExp) {
+      return {
+        source: item.source,
+        flags: item.flags
+      };
+    }
+    return item;
+  });
+};
+
 exports.run = function(config) {
   var timer;
   // create copy of config
@@ -117,6 +129,16 @@ exports.run = function(config) {
           console.log('Browsers:');
           config.browsers.forEach(function(browser, index) {
             console.log('  ' + (index + 1) + '. ' + displayBrowser(browser));
+          });
+          // convert RegExp into plain objects so that they can be JSON stringified
+          config.browsers = config.browsers.map(function(browser) {
+            if (browser.includeRules) {
+              browser.includeRules = convertRegex(browser.includeRules);
+            }
+            if (browser.excludeRules) {
+              browser.excludeRules = convertRegex(browser.excludeRules);
+            }
+            return browser;
           });
         }
         if (config.resolution || config.resolutions) {
