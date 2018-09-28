@@ -155,6 +155,15 @@ Steps.prototype.ltr = function() {
   return this;
 };
 
+Steps.prototype.cssAnimations = function(isEnabled) {
+  var step = {
+    type: 'cssAnimations',
+    isEnabled: isEnabled
+  };
+  this.steps.push(step);
+  return this;
+};
+
 Steps.prototype.end = function() {
   return this.steps;
 };

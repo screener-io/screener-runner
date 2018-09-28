@@ -66,6 +66,10 @@ var steps = [
       type: 'css selector',
       value: 'msOrSelector'
     }
+  },
+  {
+    type: 'cssAnimations',
+    isEnabled: true
   }
 ];
 
