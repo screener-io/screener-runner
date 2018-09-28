@@ -105,6 +105,10 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('pause').required(),
     waitTime: Joi.number().required()
+  }),
+  Joi.object().keys({
+    type: Joi.string().valid('cssAnimations').required(),
+    isEnabled: Joi.boolean()
   })
 );
 

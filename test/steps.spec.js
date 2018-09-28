@@ -228,6 +228,28 @@ describe('screener-runner/src/steps', function() {
     });
   });
 
+  describe('Steps.prototype.cssAnimations', function() {
+    it('should add script to enable cssAnimations', function() {
+      var test = new Steps().cssAnimations(true);
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'cssAnimations',
+          isEnabled: true
+        }
+      ]);
+    });
+
+    it('should add script to disable cssAnimations', function() {
+      var test = new Steps().cssAnimations(false);
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'cssAnimations',
+          isEnabled: false
+        }
+      ]);
+    });
+  });
+
   describe('Steps.prototype.end', function() {
     it('should return steps', function() {
       var result = new Steps()
