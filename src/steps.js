@@ -92,6 +92,23 @@ Steps.prototype.setValue = function(selector, text) {
   return this;
 };
 
+Steps.prototype.keys = function(selector, keys) {
+  var step = {
+    type: 'sendKeys',
+    locator: {
+      type: 'css selector',
+      value: selector
+    },
+    keys: keys
+  };
+  this.steps.push(step);
+  return this;
+};
+
+Steps.prototype.focus = function(selector) {
+  return this.keys(selector, '');
+};
+
 // isAsync requires a "done()" method to be called
 Steps.prototype.executeScript = function(code, isAsync) {
   var step = {

@@ -98,6 +98,14 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     text: Joi.string().allow('').required()
   }),
   Joi.object().keys({
+    type: Joi.string().valid('sendKeys').required(),
+    locator: Joi.object().keys({
+      type: Joi.string().valid('css selector').required(),
+      value: Joi.string().required()
+    }),
+    keys: Joi.string().allow('').required()
+  }),
+  Joi.object().keys({
     type: Joi.string().valid('executeScript').required(),
     code: Joi.string().required(),
     isAsync: Joi.boolean()

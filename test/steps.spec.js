@@ -1,5 +1,6 @@
 var expect = require('chai').expect;
 var Steps = require('../src/steps');
+var Keys = require('../src/keys');
 
 describe('screener-runner/src/steps', function() {
   describe('new Steps()', function() {
@@ -136,6 +137,38 @@ describe('screener-runner/src/steps', function() {
             value: 'selector'
           },
           text: 'text'
+        }
+      ]);
+    });
+  });
+
+  describe('Steps.prototype.keys', function() {
+    it('should add keys step', function() {
+      var test = new Steps().keys('selector', Keys.enter);
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'sendKeys',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          },
+          keys: Keys.enter
+        }
+      ]);
+    });
+  });
+
+  describe('Steps.prototype.focus', function() {
+    it('should add empty keys step', function() {
+      var test = new Steps().focus('selector');
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'sendKeys',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          },
+          keys: ''
         }
       ]);
     });

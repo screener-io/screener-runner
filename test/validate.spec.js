@@ -41,6 +41,14 @@ var steps = [
     text: '' // should allow empty string
   },
   {
+    type: 'sendKeys',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    },
+    keys: '' // should allow empty string
+  },
+  {
     type: 'executeScript',
     code: 'code'
   },
