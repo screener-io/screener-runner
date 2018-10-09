@@ -37,6 +37,10 @@ Runner.run(config)
   })
   .catch(function(err) {
     console.error(err.message || err.toString());
+    if (typeof err.annotate === 'function') {
+      console.error('Annotated Error Details:');
+      console.error(err.annotate());
+    }
     console.error('---');
     console.error('Exiting Screener Runner');
     console.error('Need help? Contact: support@screener.io');
