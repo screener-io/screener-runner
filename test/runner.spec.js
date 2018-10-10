@@ -213,8 +213,8 @@ describe('screener-runner/src/runner', function() {
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.states = [];
       return Runner.run(tmpConfig)
-        .then(function(response) {
-          expect(response).to.equal('No states to test');
+        .catch(function(err) {
+          expect(err.message).to.equal('No states to test');
         });
     });
 
