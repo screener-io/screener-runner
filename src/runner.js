@@ -76,7 +76,7 @@ exports.run = function(config) {
       config.states = Rules.filter(config.states, 'name', config.includeRules, config.excludeRules);
       // cancel if there are 0 states
       if (config.states.length === 0) {
-        throw new Error('no-states');
+        throw new Error('No states to test');
       }
       config = CI.setVars(config);
       if (config.tunnel) {
@@ -172,11 +172,5 @@ exports.run = function(config) {
         throw new Error(response);
       }
       return response;
-    })
-    .catch(function(err) {
-      if (err.message === 'no-states') {
-        return Promise.resolve('No states to test');
-      }
-      throw err;
     });
 };
