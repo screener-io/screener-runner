@@ -1,4 +1,4 @@
-var ngrok = require('ngrok');
+var ngrok = require('screener-ngrok');
 var Promise = require('bluebird');
 var url = require('url');
 
