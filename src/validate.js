@@ -16,11 +16,15 @@ var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
   Joi.object().keys({
     width: Joi.number().min(320).max(1920).required(),
     height: Joi.number().min(320).max(1920).required(),
-    userAgent: Joi.string()
+    userAgent: Joi.string(),
+    includeRules: includeRulesSchema,
+    excludeRules: excludeRulesSchema
   }),
   Joi.object().keys({
     deviceName: Joi.string().required(),
-    deviceOrientation: Joi.string().valid('portrait', 'landscape')
+    deviceOrientation: Joi.string().valid('portrait', 'landscape'),
+    includeRules: includeRulesSchema,
+    excludeRules: excludeRulesSchema
   })
 );
 
@@ -28,13 +32,13 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   Joi.object().keys({
     browserName: Joi.string().valid(['chrome', 'firefox']).required(),
     includeRules: includeRulesSchema,
-    excludeRules: excludeRulesSchema,
+    excludeRules: excludeRulesSchema
   }),
   Joi.object().keys({
     browserName: Joi.string().valid(['firefox', 'safari', 'microsoftedge', 'internet explorer']).required(),
     version: Joi.string().required(),
     includeRules: includeRulesSchema,
-    excludeRules: excludeRulesSchema,
+    excludeRules: excludeRulesSchema
   })
 );
 

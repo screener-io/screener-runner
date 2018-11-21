@@ -63,6 +63,19 @@ var convertRegex = function(array) {
   });
 };
 
+// convert RegExp into plain objects so that they can be JSON stringified
+var convertRules = function(array) {
+  return array.map(function(item) {
+    if (item.includeRules) {
+      item.includeRules = convertRegex(item.includeRules);
+    }
+    if (item.excludeRules) {
+      item.excludeRules = convertRegex(item.excludeRules);
+    }
+    return item;
+  });
+};
+
 exports.run = function(config) {
   var timer;
   // create copy of config
@@ -130,16 +143,7 @@ exports.run = function(config) {
           config.browsers.forEach(function(browser, index) {
             console.log('  ' + (index + 1) + '. ' + displayBrowser(browser));
           });
-          // convert RegExp into plain objects so that they can be JSON stringified
-          config.browsers = config.browsers.map(function(browser) {
-            if (browser.includeRules) {
-              browser.includeRules = convertRegex(browser.includeRules);
-            }
-            if (browser.excludeRules) {
-              browser.excludeRules = convertRegex(browser.excludeRules);
-            }
-            return browser;
-          });
+          config.browsers = convertRules(config.browsers);
         }
         if (config.resolution || config.resolutions) {
           payload.resolutions = config.resolutions || [config.resolution];
@@ -147,6 +151,7 @@ exports.run = function(config) {
           payload.resolutions.forEach(function(resolution, index) {
             console.log('  ' + (index + 1) + '. ' + displayResolution(resolution));
           });
+          payload.resolutions = convertRules(payload.resolutions);
         }
       }
       console.log('\nCreating build for ' + config.projectRepo);
