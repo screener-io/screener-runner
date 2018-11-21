@@ -232,6 +232,7 @@ module.exports = {
       /^Component/
     ]
     ```
+    - Note: `includeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
 - **excludeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
     - Example:
     ```javascript
@@ -239,6 +240,7 @@ module.exports = {
       /^Component/
     ]
     ```
+    - Note: `includeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
 - **tunnel.host:** The internal host to tunnel. If this is set, an encrypted tunnel will be automatically started by screener-runner to the specified host.
     - Example:
     ```javascript
