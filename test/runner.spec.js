@@ -209,6 +209,42 @@ describe('screener-runner/src/runner', function() {
         });
     });
 
+    it('should convert resolution includeRules/excludeRules regex to objects', function() {
+      Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
+        createBuildWithRetry: function(apiKey, payload) {
+          expect(payload).to.deep.equal({
+            projectRepo: 'repo',
+            resolutions: [
+              { width: 1024, height: 768, includeRules: [{source: '^Button', flags: ''}, 'Component']},
+              { deviceName: 'iPhone 6', excludeRules: [{source: '^Button', flags: ''}, 'Component'] }
+            ],
+            build: 'build-id',
+            branch: 'git-branch',
+            states: config.states,
+            meta: {
+              'screener-runner': pkg.version
+            }
+          });
+          return Promise.resolve({
+            project: 'project-id',
+            build: 'build-id'
+          });
+        },
+        waitForBuild: apiMock.waitForBuild
+      });
+      var tmpConfig = JSON.parse(JSON.stringify(config));
+      tmpConfig.resolutions = [
+        { width: 1024, height: 768, includeRules: [/^Button/, 'Component'] },
+        { deviceName: 'iPhone 6', excludeRules: [/^Button/, 'Component'] }
+      ];
+      return Runner.run(tmpConfig)
+        .then(function(response) {
+          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(response).to.equal('status');
+        });
+    });
+
     it('should cancel test run when there are no states', function() {
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.states = [];

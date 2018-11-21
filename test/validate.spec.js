@@ -448,6 +448,20 @@ describe('screener-runner/src/validate', function() {
             expect(err.message).to.equal('child "resolution" fails because ["resolution" must be a string, "deviceName" is not allowed, "width" is not allowed, "height" is not allowed]');
           });
       });
+
+      it('should allow resolution includeRules', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], resolutions: [{ width: 1024, height: 768, includeRules: [/^Button/] }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should allow resolution excludeRules', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], resolutions: [{ deviceName: 'iPhone 6', excludeRules: [/^Button/] }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
     });
   });
 
