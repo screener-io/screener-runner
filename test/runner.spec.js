@@ -18,7 +18,25 @@ var config = {
   states: [
     {
       url: 'http://localhost:8080/path',
-      name: 'State 1'
+      name: 'State 1',
+      steps: [
+        {
+          type: 'url',
+          url: 'http://localhost:8080/path'
+        },
+        {
+          type: 'saveScreenshot',
+          name: 'State 1.1'
+        },
+        {
+          type: 'url',
+          url: 'http://domain.com/path'
+        },
+        {
+          type: 'saveScreenshot',
+          name: 'State 1.2'
+        }
+      ]
     },
     {
       url: 'http://domain.com/path',
@@ -269,7 +287,25 @@ describe('screener-runner/src/runner', function() {
             states: [
               {
                 url: 'https://tunnel-url/path',
-                name: 'State 1'
+                name: 'State 1',
+                steps: [
+                  {
+                    type: 'url',
+                    url: 'https://tunnel-url/path'
+                  },
+                  {
+                    type: 'saveScreenshot',
+                    name: 'State 1.1'
+                  },
+                  {
+                    type: 'url',
+                    url: 'http://domain.com/path'
+                  },
+                  {
+                    type: 'saveScreenshot',
+                    name: 'State 1.2'
+                  }
+                ]
               },
               {
                 url: 'http://domain.com/path',
