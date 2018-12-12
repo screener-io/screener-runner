@@ -14,6 +14,14 @@ var MAX_MS = 30 * 60 * 1000; // max 30 mins
 var transformToTunnelHost = function(states, host, tunnelHost) {
   return states.map(function(state) {
     state.url = Tunnel.transformUrl(state.url, host, tunnelHost);
+    if (state.steps) {
+      state.steps = state.steps.map(function(step) {
+        if (step.type === 'url') {
+          step.url = Tunnel.transformUrl(step.url, host, tunnelHost);
+        }
+        return step;
+      });
+    }
     return state;
   });
 };
