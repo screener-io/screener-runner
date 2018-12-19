@@ -76,6 +76,13 @@ var steps = [
     }
   },
   {
+    type: 'waitForElementNotPresent',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    }
+  },
+  {
     type: 'cssAnimations',
     isEnabled: true
   }
