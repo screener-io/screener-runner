@@ -237,6 +237,21 @@ describe('screener-runner/src/steps', function() {
     });
   });
 
+  describe('Steps.prototype.waitForNotFound', function() {
+    it('should add wait for element not found step', function() {
+      var test = new Steps().waitForNotFound('selector');
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'waitForElementNotPresent',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          }
+        }
+      ]);
+    });
+  });
+
   describe('Steps.prototype.rtl', function() {
     it('should add script to set direction to rtl', function() {
       var test = new Steps().rtl();

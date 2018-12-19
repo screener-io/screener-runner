@@ -154,6 +154,18 @@ Steps.prototype.wait = function(msOrSelector) {
   return this;
 };
 
+Steps.prototype.waitForNotFound = function(selector) {
+  var step = {
+    type: 'waitForElementNotPresent',
+    locator: {
+      type: 'css selector',
+      value: selector
+    }
+  };
+  this.steps.push(step);
+  return this;
+};
+
 Steps.prototype.rtl = function() {
   var step = {
     type: 'executeScript',
