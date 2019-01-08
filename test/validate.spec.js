@@ -38,6 +38,15 @@ var steps = [
       type: 'css selector',
       value: 'selector'
     },
+    text: 'password',
+    isPassword: true
+  },
+  {
+    type: 'setElementText',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    },
     text: '' // should allow empty string
   },
   {
