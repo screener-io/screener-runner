@@ -79,7 +79,7 @@ Steps.prototype.mouseUp = function(selector) {
   return this;
 };
 
-Steps.prototype.setValue = function(selector, text) {
+Steps.prototype.setValue = function(selector, text, options) {
   var step = {
     type: 'setElementText',
     locator: {
@@ -88,6 +88,9 @@ Steps.prototype.setValue = function(selector, text) {
     },
     text: text
   };
+  if (options && options.isPassword) {
+    step.isPassword = true;
+  }
   this.steps.push(step);
   return this;
 };
