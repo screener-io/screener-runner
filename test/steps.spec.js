@@ -140,6 +140,21 @@ describe('screener-runner/src/steps', function() {
         }
       ]);
     });
+
+    it('should add isPassword option', function() {
+      var test = new Steps().setValue('selector', 'text', {isPassword: true});
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'setElementText',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          },
+          text: 'text',
+          isPassword: true
+        }
+      ]);
+    });
   });
 
   describe('Steps.prototype.keys', function() {
