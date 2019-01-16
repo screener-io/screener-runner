@@ -279,6 +279,7 @@ module.exports = {
 - **alwaysAcceptBaseBranch:** Option to automatically accept `new` and `changed` states in base branch. Assumes base branch should always be correct.
 - **disableAutoSnapshots:** Option to disable initial visual snapshots automatically captured for each state. Defaults to false.
 - **disableBranchBaseline:** Option to disable independent baseline for each feature branch, and only use base branch as baseline. Must be used with `baseBranch` option. Defaults to false.
+- **disableConcurrency:** Option to disable running tests concurrently. This may be useful when test flows run concurrently may cause data conflicts or inconsistencies. Defaults to false.
 - **newSessionForEachState:** Option to start a new test session for each state. Defaults to false.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
     - To NOT fail a CI build on Screener failure, set to 0. Example:
