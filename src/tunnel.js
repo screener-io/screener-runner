@@ -7,9 +7,15 @@ exports.connect = function(host, token) {
     return Promise.reject(new Error('No Tunnel Token'));
   }
   var urlObj = url.parse('http://' + host);
+  var port = urlObj.port || 80;
+  var hostHeader = urlObj.hostname;
+  // include port in host header when not default port 80
+  if (port !== 80) {
+    hostHeader += ':' + port;
+  }
   var options = {
-    addr: urlObj.hostname + ':' + (urlObj.port || 80),
-    host_header: urlObj.hostname,
+    addr: urlObj.hostname + ':' + port,
+    host_header: hostHeader,
     bind_tls: true,
     authtoken: token
   };
