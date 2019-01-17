@@ -17,7 +17,7 @@ describe('screener-runner/src/tunnel', function() {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
             addr: 'localhost:8080',
-            host_header: 'localhost',
+            host_header: 'localhost:8080',
             authtoken: 'token',
             bind_tls: true
           });
