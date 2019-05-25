@@ -33,6 +33,13 @@ var steps = [
     text: 'text'
   },
   {
+    type: 'clearElementText',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    }
+  },
+  {
     type: 'setElementText',
     locator: {
       type: 'css selector',
@@ -72,6 +79,9 @@ var steps = [
       type: 'css selector',
       value: 'selector'
     }
+  },
+  {
+    type: 'clearIgnores'
   },
   {
     type: 'pause',

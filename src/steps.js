@@ -95,6 +95,18 @@ Steps.prototype.setValue = function(selector, text, options) {
   return this;
 };
 
+Steps.prototype.clearValue = function(selector) {
+  var step = {
+    type: 'clearElementText',
+    locator: {
+      type: 'css selector',
+      value: selector
+    }
+  };
+  this.steps.push(step);
+  return this;
+};
+
 Steps.prototype.keys = function(selector, keys) {
   var step = {
     type: 'sendKeys',
@@ -132,6 +144,14 @@ Steps.prototype.ignore = function(selector) {
       type: 'css selector',
       value: selector
     }
+  };
+  this.steps.push(step);
+  return this;
+};
+
+Steps.prototype.clearIgnores = function() {
+  var step = {
+    type: 'clearIgnores'
   };
   this.steps.push(step);
   return this;
