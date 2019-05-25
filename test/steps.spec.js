@@ -157,6 +157,22 @@ describe('screener-runner/src/steps', function() {
     });
   });
 
+  describe('Steps.prototype.clearValue', function() {
+    it('should add clearValue step', function() {
+      var test = new Steps().clearValue('selector');
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'clearElementText',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          }
+        }
+      ]);
+    });
+  });
+
+
   describe('Steps.prototype.keys', function() {
     it('should add keys step', function() {
       var test = new Steps().keys('selector', Keys.enter);
@@ -222,6 +238,17 @@ describe('screener-runner/src/steps', function() {
             type: 'css selector',
             value: 'selector'
           }
+        }
+      ]);
+    });
+  });
+
+  describe('Steps.prototype.clearIgnores', function() {
+    it('should add clearIgnores step', function() {
+      var test = new Steps().clearIgnores();
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'clearIgnores'
         }
       ]);
     });
