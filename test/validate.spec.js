@@ -18,6 +18,14 @@ var steps = [
     }
   },
   {
+    type: 'clickElement',
+    locator: {
+      type: 'css selector',
+      value: 'selector'
+    },
+    maxTime: 30000
+  },
+  {
     type: 'moveTo',
     locator: {
       type: 'css selector',
@@ -93,6 +101,14 @@ var steps = [
       type: 'css selector',
       value: 'msOrSelector'
     }
+  },
+  {
+    type: 'waitForElementPresent',
+    locator: {
+      type: 'css selector',
+      value: 'msOrSelector'
+    },
+    maxTime: 120000
   },
   {
     type: 'waitForElementNotPresent',

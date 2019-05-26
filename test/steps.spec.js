@@ -61,6 +61,20 @@ describe('screener-runner/src/steps', function() {
         }
       ]);
     });
+
+    it('should add click step with optional maxTime', function() {
+      var test = new Steps().click('selector', {maxTime: 30000});
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'clickElement',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          },
+          maxTime: 30000
+        }
+      ]);
+    });
   });
 
   describe('Steps.prototype.hover', function() {
@@ -277,6 +291,20 @@ describe('screener-runner/src/steps', function() {
         }
       ]);
     });
+
+    it('should add wait for element step with optional maxTime', function() {
+      var test = new Steps().wait('selector', {maxTime: 120000});
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'waitForElementPresent',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          },
+          maxTime: 120000
+        }
+      ]);
+    });
   });
 
   describe('Steps.prototype.waitForNotFound', function() {
@@ -289,6 +317,20 @@ describe('screener-runner/src/steps', function() {
             type: 'css selector',
             value: 'selector'
           }
+        }
+      ]);
+    });
+
+    it('should add wait for element not found step with optional maxTime', function() {
+      var test = new Steps().waitForNotFound('selector', {maxTime: 120000});
+      expect(test.steps).to.deep.equal([
+        {
+          type: 'waitForElementNotPresent',
+          locator: {
+            type: 'css selector',
+            value: 'selector'
+          },
+          maxTime: 120000
         }
       ]);
     });
