@@ -79,6 +79,11 @@ The following methods are currently available:
 
 - `url(url)`: this will load a new url.
 - `click(selector)`: this will click on the first element matching the provided css selector.
+     - When selector is not found, will automatically retry. Default timeout is 15 seconds.
+     - Optional `options` param can contain a `maxTime` option (in ms):
+     ```javascript
+     .click('.selector', {maxTime: 30000})
+     ```
 - `snapshot(name, [options])`: this will capture a visual snapshot.
      - Optional `options` param can contain a `cropTo` option:
      ```javascript
@@ -99,7 +104,11 @@ The following methods are currently available:
 - `ignore(selector)`: this ignores all elements matching the provided css selector(s).
 - `clearIgnores()`: this resets all ignores added using the ignore(selector) step.
 - `wait(ms)`: this will pause execution for the specified number of ms.
-- `wait(selector)`: this will wait until the element matching the provided css selector is present.
+- `wait(selector)`: this will wait until the element matching the provided css selector is present. Default timeout is 60 seconds.
+     - Optional `options` param can contain a `maxTime` option (in ms):
+     ```javascript
+     .wait('.selector', {maxTime: 90000})
+     ```
 - `waitForNotFound(selector)`: this will wait until the element matching the provided css selector is Not present.
 - `cssAnimations(isEnabled)`: this will override the global cssAnimations option for the current UI state. Set to `true` to enable CSS Animations, and set to `false` to disable.
 - `rtl()`: this will set the current UI state to right-to-left direction.
