@@ -87,7 +87,7 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     }).required()
   }),
   Joi.object().keys({
-    type: Joi.string().valid(['clickElement', 'moveTo', 'clickAndHoldElement', 'releaseElement', 'ignoreElements', 'waitForElementPresent', 'waitForElementNotPresent', 'clearElementText']).required(),
+    type: Joi.string().valid(['moveTo', 'clickAndHoldElement', 'releaseElement', 'ignoreElements', 'clearElementText']).required(),
     locator: Joi.object().keys({
       type: Joi.string().valid('css selector').required(),
       value: Joi.string().required()
@@ -101,6 +101,14 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     }),
     text: Joi.string().allow('').required(),
     isPassword: Joi.boolean()
+  }),
+  Joi.object().keys({
+    type: Joi.string().valid(['clickElement', 'waitForElementPresent', 'waitForElementNotPresent']).required(),
+    locator: Joi.object().keys({
+      type: Joi.string().valid('css selector').required(),
+      value: Joi.string().required()
+    }),
+    maxTime: Joi.number().integer().positive()
   }),
   Joi.object().keys({
     type: Joi.string().valid('sendKeys').required(),
