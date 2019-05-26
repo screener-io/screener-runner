@@ -27,7 +27,7 @@ Steps.prototype.snapshot = function(name, opts) {
   return this;
 };
 
-Steps.prototype.click = function(selector) {
+Steps.prototype.click = function(selector, options) {
   var step = {
     type: 'clickElement',
     locator: {
@@ -35,6 +35,9 @@ Steps.prototype.click = function(selector) {
       value: selector
     }
   };
+  if (options && options.maxTime) {
+    step.maxTime = options.maxTime;
+  }
   this.steps.push(step);
   return this;
 };
@@ -157,7 +160,7 @@ Steps.prototype.clearIgnores = function() {
   return this;
 };
 
-Steps.prototype.wait = function(msOrSelector) {
+Steps.prototype.wait = function(msOrSelector, options) {
   var step;
   if (typeof msOrSelector === 'number') {
     step = {
@@ -172,12 +175,15 @@ Steps.prototype.wait = function(msOrSelector) {
         value: msOrSelector
       }
     };
+    if (options && options.maxTime) {
+      step.maxTime = options.maxTime;
+    }
   }
   this.steps.push(step);
   return this;
 };
 
-Steps.prototype.waitForNotFound = function(selector) {
+Steps.prototype.waitForNotFound = function(selector, options) {
   var step = {
     type: 'waitForElementNotPresent',
     locator: {
@@ -185,6 +191,9 @@ Steps.prototype.waitForNotFound = function(selector) {
       value: selector
     }
   };
+  if (options && options.maxTime) {
+    step.maxTime = options.maxTime;
+  }
   this.steps.push(step);
   return this;
 };
