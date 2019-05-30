@@ -2,7 +2,10 @@ var Promise = require('bluebird');
 var requestretry = require('requestretry');
 var extend = require('lodash/extend');
 
-var API_URL = process.env.SCREENER_API_ENDPOINT ? process.env.SCREENER_API_ENDPOINT : 'https://screener.io/api/v2';
+var API_URL = process.env.SCREENER_API_ENDPOINT ? 
+  process.env.SCREENER_API_ENDPOINT : 
+  'https://screener.io/api/v2';
+
 var RETRY_MS = 30 * 1000;
 var POLL_MS = 2500;
 
