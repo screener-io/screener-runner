@@ -7,6 +7,10 @@ var API_URL = process.env.SCREENER_API_ENDPOINT || 'https://screener.io/api/v2';
 var RETRY_MS = 30 * 1000;
 var POLL_MS = 2500;
 
+var getApiUrl = exports.getApiUrl = function () {
+  return API_URL;
+};
+
 var request = function(apiKey, options) {
   var defaults = {
     method: 'GET',
@@ -101,8 +105,4 @@ var waitForBuild = exports.waitForBuild = function(apiKey, projectId, branch, bu
         throw err;
       }
     });
-};
-
-var getApiUrl = exports.getApiUrl = function () {
-  return API_URL;
 };
