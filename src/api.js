@@ -37,7 +37,7 @@ var request = function(apiKey, options) {
 };
 
 exports.getTunnelToken = function(apiKey) {
-  var url = API_URL + '/tunnel/token';
+  var url = `${getApiUrl()}/tunnel/token`;
   var options = {
     method: 'GET',
     uri: url,
@@ -47,7 +47,7 @@ exports.getTunnelToken = function(apiKey) {
 };
 
 var createBuild = exports.createBuild = function(apiKey, payload) {
-  var url = API_URL + '/projects';
+  var url = `${getApiUrl()}/projects`;
   var options = {
     method: 'POST',
     uri: url,
@@ -58,7 +58,7 @@ var createBuild = exports.createBuild = function(apiKey, payload) {
 };
 
 var getBuildStatus = exports.getBuildStatus = function(apiKey, projectId, branch, buildId) {
-  var url = API_URL + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + encodeURIComponent(buildId) + '/status';
+  var url = getApiUrl() + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + encodeURIComponent(buildId) + '/status';
   var options = {
     uri: url
   };
@@ -101,4 +101,8 @@ var waitForBuild = exports.waitForBuild = function(apiKey, projectId, branch, bu
         throw err;
       }
     });
+};
+
+var getApiUrl = exports.getApiUrl = function () {
+  return API_URL;
 };
