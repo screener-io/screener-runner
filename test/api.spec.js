@@ -206,5 +206,12 @@ describe('screener-runner/src/api', function() {
           expect(err.message).to.equal('Error: Response Code 400');
         });
     });
+
+    it('should use new API endpoint', function() {
+      let NEW_API = 'https://new.screener.io/api/v2';
+      process.env.SCREENER_API_ENDPOINT = NEW_API;
+      api = rewire('../src/api');
+      expect(api.getApiUrl()).to.equal(NEW_API);
+    });
   });
 });
