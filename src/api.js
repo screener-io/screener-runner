@@ -2,9 +2,14 @@ var Promise = require('bluebird');
 var requestretry = require('requestretry');
 var extend = require('lodash/extend');
 
-var API_URL = 'https://screener.io/api/v2';
+var API_URL = process.env.SCREENER_API_ENDPOINT || 'https://screener.io/api/v2';
+
 var RETRY_MS = 30 * 1000;
 var POLL_MS = 2500;
+
+var getApiUrl = exports.getApiUrl = function () {
+  return API_URL;
+};
 
 var request = function(apiKey, options) {
   var defaults = {
@@ -36,7 +41,7 @@ var request = function(apiKey, options) {
 };
 
 exports.getTunnelToken = function(apiKey) {
-  var url = API_URL + '/tunnel/token';
+  var url = `${getApiUrl()}/tunnel/token`;
   var options = {
     method: 'GET',
     uri: url,
@@ -46,7 +51,7 @@ exports.getTunnelToken = function(apiKey) {
 };
 
 var createBuild = exports.createBuild = function(apiKey, payload) {
-  var url = API_URL + '/projects';
+  var url = `${getApiUrl()}/projects`;
   var options = {
     method: 'POST',
     uri: url,
@@ -57,7 +62,7 @@ var createBuild = exports.createBuild = function(apiKey, payload) {
 };
 
 var getBuildStatus = exports.getBuildStatus = function(apiKey, projectId, branch, buildId) {
-  var url = API_URL + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + encodeURIComponent(buildId) + '/status';
+  var url = getApiUrl() + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + encodeURIComponent(buildId) + '/status';
   var options = {
     uri: url
   };

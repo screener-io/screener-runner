@@ -64,6 +64,9 @@ var apiMock = {
       token: 'token'
     });
   },
+  getApiUrl: function() {
+    return 'mock://v2';
+  },
   createBuildWithRetry: function(apiKey, payload) {
     expect(apiKey).to.equal('api-key');
     expect(payload).to.deep.equal({
@@ -121,6 +124,7 @@ describe('screener-runner/src/runner', function() {
     it('should convert beforeEachScript to string', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
+        getApiUrl: apiMock.getApiUrl,
         createBuildWithRetry: function(apiKey, payload) {
           expect(typeof payload.beforeEachScript).to.equal('string');
           expect(payload.beforeEachScript).to.equal('function () { console.log(\'hello\'); }');
@@ -142,6 +146,7 @@ describe('screener-runner/src/runner', function() {
     it('should handle multi-browser test run', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
+        getApiUrl: apiMock.getApiUrl,
         createBuildWithRetry: function(apiKey, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
@@ -186,6 +191,7 @@ describe('screener-runner/src/runner', function() {
     it('should convert browser includeRules/excludeRules regex to objects', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
+        getApiUrl: apiMock.getApiUrl,
         createBuildWithRetry: function(apiKey, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
@@ -230,6 +236,7 @@ describe('screener-runner/src/runner', function() {
     it('should convert resolution includeRules/excludeRules regex to objects', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
+        getApiUrl: apiMock.getApiUrl,
         createBuildWithRetry: function(apiKey, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
@@ -275,6 +282,7 @@ describe('screener-runner/src/runner', function() {
     it('should connect, convert to tunnel urls, and disconnect tunnel when tunnel.host exists', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
+        getApiUrl: apiMock.getApiUrl,
         createBuildWithRetry: function(apiKey, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
@@ -340,6 +348,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         createBuildWithRetry: apiMock.createBuildWithRetry,
+        getApiUrl: apiMock.getApiUrl,
         waitForBuild: function() {
           return Promise.resolve('Build failed.');
         }
