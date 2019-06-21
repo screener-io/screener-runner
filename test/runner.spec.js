@@ -127,7 +127,7 @@ describe('screener-runner/src/runner', function() {
         getApiUrl: apiMock.getApiUrl,
         createBuildWithRetry: function(apiKey, payload) {
           expect(typeof payload.beforeEachScript).to.equal('string');
-          expect(payload.beforeEachScript).to.equal('function () { console.log(\'hello\'); }');
+          expect(payload.beforeEachScript).to.contain('{ console.log(\'hello\'); }');
           return Promise.resolve({
             project: 'project-id',
             build: 'build-id'
