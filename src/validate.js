@@ -194,12 +194,12 @@ var runnerSchema = Joi.object().keys({
   beforeEachScript: [Joi.func(), Joi.string()],
   ieNativeEvents: Joi.boolean()
 })
-.without('resolutions', ['resolution'])
-.without('sauce', ['browserStack'])
-.with('disableBranchBaseline', ['baseBranch'])
-.with('useNewerBaseBranch', ['baseBranch'])
-.with('alwaysAcceptBaseBranch', ['baseBranch'])
-.required();
+  .without('resolutions', ['resolution'])
+  .without('sauce', ['browserStack'])
+  .with('disableBranchBaseline', ['baseBranch'])
+  .with('useNewerBaseBranch', ['baseBranch'])
+  .with('alwaysAcceptBaseBranch', ['baseBranch'])
+  .required();
 
 exports.runnerConfig = function(value) {
   var validator = Promise.promisify(Joi.validate);
