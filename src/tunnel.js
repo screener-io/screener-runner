@@ -2,7 +2,7 @@ var ngrok = require('screener-ngrok');
 var Promise = require('bluebird');
 var url = require('url');
 
-exports.connect = function(host, token) {
+exports.connect = function(host, token, tries = 0) {
   if (!token) {
     return Promise.reject(new Error('No Tunnel Token'));
   }
@@ -21,10 +21,19 @@ exports.connect = function(host, token) {
   };
   var connect = Promise.promisify(ngrok.connect);
   return connect(options)
-    .then((tunnelUrl) => {
+    .then(tunnelUrl => {
       var urlObj = url.parse(tunnelUrl);
       console.log('Connected private encrypted tunnel to ' + host + ' (' + urlObj.host.split('.')[0] + ')');
       return urlObj.host;
+    })
+    .catch(ex => {
+      if (tries < 2) {
+        // on error, wait and retry
+        return Promise.delay(1000).then(() =>
+          exports.connect(host, token, tries + 1)
+        );
+      }
+      throw ex;
     });
 };
 
