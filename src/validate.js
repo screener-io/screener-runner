@@ -45,7 +45,10 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
 var sauceSchema = exports.sauceSchema = Joi.object().keys({
   username: Joi.string().required(),
   accessKey: Joi.string().required(),
-  maxConcurrent: Joi.number()
+  maxConcurrent: Joi.number(),
+  extendedDebugging: Joi.boolean(),
+  tunnelIdentifier: Joi.string(),
+  parentTunnel: Joi.string()
 });
 
 var vstsSchema = exports.vstsSchema = Joi.object().keys({
