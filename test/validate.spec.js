@@ -368,6 +368,13 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should allow with sauce-specific options', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key', maxConcurrent: 10, 'extendedDebugging': true, tunnelIdentifier: 'string', parentTunnel: 'string' }})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
       it('should allow browsers with browserStack config', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], browserStack: { username: 'user', accessKey: 'key' }})
           .catch(function() {
