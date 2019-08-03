@@ -264,6 +264,7 @@ module.exports = {
       host: 'localhost:3000'
     }
     ```
+    - Note: for HTTPS, add the protocol when setting the host: `https://localhost`
     - `gzip` and `cache` options are also available to improve tunnel performance. Example:
     ```javascript
     tunnel: {
