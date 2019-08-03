@@ -6,19 +6,28 @@ exports.connect = function(host, token, tries = 0) {
   if (!token) {
     return Promise.reject(new Error('No Tunnel Token'));
   }
-  var urlObj = url.parse('http://' + host);
-  var port = urlObj.port || 80;
-  var hostHeader = urlObj.hostname;
-  // include port in host header when not default port 80
-  if (port !== 80) {
-    hostHeader += ':' + port;
-  }
+  var href = /^https?:\/\//.test(host) ? host : 'http://' + host;
+  var urlObj = url.parse(href);
   var options = {
-    addr: urlObj.hostname + ':' + port,
-    host_header: hostHeader,
     bind_tls: true,
     authtoken: token
   };
+  // https:
+  if (/^https/.test(urlObj.protocol)) {
+    options.addr = 'https://' + urlObj.hostname;
+    if (urlObj.port) {
+      options.addr += ':' + urlObj.port;
+    }
+    options.host_header = 'rewrite';
+  } else { // http:
+    var port = urlObj.port || 80;
+    options.addr = urlObj.hostname + ':' + port;
+    options.host_header = urlObj.hostname;
+    if (port !== 80) {
+      // include port in host header when not default port 80
+      options.host_header += ':' + port;
+    }
+  }
   var connect = Promise.promisify(ngrok.connect);
   return connect(options)
     .then(tunnelUrl => {
@@ -38,12 +47,13 @@ exports.connect = function(host, token, tries = 0) {
 };
 
 exports.transformUrl = function(origUrl, host, tunnelHost) {
-  var urlObj = url.parse(origUrl);
+  var origUrlObj = url.parse(origUrl);
+  var hostUrlObj = url.parse(/^https?:\/\//.test(host) ? host : 'http://' + host);
   var newUrl = origUrl;
-  if (urlObj.host.toLowerCase() === host.toLowerCase()) {
-    urlObj.protocol = 'https';
-    urlObj.host = tunnelHost;
-    newUrl = url.format(urlObj);
+  if (origUrlObj.host.toLowerCase() === hostUrlObj.host.toLowerCase() && origUrlObj.protocol === hostUrlObj.protocol) {
+    origUrlObj.protocol = 'https';
+    origUrlObj.host = tunnelHost;
+    newUrl = url.format(origUrlObj);
   }
   return newUrl;
 };
