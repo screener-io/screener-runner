@@ -10,6 +10,7 @@
     "screener-runner": "./bin/screener-runner.js"
   },
   "scripts": {
+    "postinstall": "SAUCE_CONNECT_DOWNLOAD_ON_INSTALL=true SAUCE_CONNECT_VERSION=4.5.4 node ./node_modules/sauce-connect-launcher/scripts/install.js",
     "test": "npm run lint && nyc mocha \"test/**/*.spec.js\" && npm run coverage",
     "lint": "eslint .",
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
@@ -39,6 +40,7 @@
     "portfinder": "~1.0.10",
     "request": "~2.87.0",
     "requestretry": "~2.0.2",
+    "sauce-connect-launcher": "^1.3.1",
     "screener-ngrok": "2.2.28"
   },
   "devDependencies": {
