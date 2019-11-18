@@ -1,9 +1,11 @@
 var chai = require('chai');
 chai.use(require('chai-fs'));
 var expect = chai.expect;
+var path = require('path');
 var rewire = require('rewire');
 var sinon = require('sinon');
 var Tunnel = rewire('../src/tunnel');
+var SAUCE_CONNECT_LAUNCHER_VERSION = '4.5.4';
 
 describe('screener-runner/src/tunnel', function() {
   this.timeout(5000);
@@ -154,7 +156,7 @@ describe('screener-runner/src/tunnel', function() {
 
   describe('Sauce Connect Launcher', function() {
     it('should be downloaded after screener runner is installed', function() {
-      expect('./node_modules/sauce-connect-launcher/sc/sc-4.5.4-osx/bin/sc').to.be.a.file('Didn\'t download sauce connect launcher correctly');
+      expect(path.resolve(`./node_modules/sauce-connect-launcher/sc/sc-${SAUCE_CONNECT_LAUNCHER_VERSION}-osx/bin/sc`)).to.be.a.file('Didn\'t download sauce connect launcher correctly');
     });
   });
 });
