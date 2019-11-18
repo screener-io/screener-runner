@@ -10,7 +10,7 @@
     "screener-runner": "./bin/screener-runner.js"
   },
   "scripts": {
-    "postinstall": "SAUCE_CONNECT_DOWNLOAD_ON_INSTALL=true SAUCE_CONNECT_VERSION=4.5.4 node ./node_modules/sauce-connect-launcher/scripts/install.js || SAUCE_CONNECT_DOWNLOAD_ON_INSTALL=true SAUCE_CONNECT_VERSION=4.5.4 nodejs ./node_modules/sauce-connect-launcher/scripts/install.js",
+    "postinstall": "SAUCE_CONNECT_DOWNLOAD_ON_INSTALL=true SAUCE_CONNECT_VERSION=4.5.4 npm run postinstall --prefix ./node_modules/sauce-connect-launcher",
     "test": "npm run lint && nyc mocha \"test/**/*.spec.js\" && npm run coverage",
     "lint": "eslint .",
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
