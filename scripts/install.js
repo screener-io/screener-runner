@@ -8,5 +8,6 @@ sauceConnectLauncher.download({
   if (err) {
     console.log(`Failed to download sauce connect binary: ${err}`);
     console.log('sauce-connect-launcher will attempt to re-download next time it is run.');
+    process.exit(1);
   }
 });
