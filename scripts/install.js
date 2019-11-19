@@ -6,7 +6,7 @@ sauceConnectLauncher.download({
   version: SAUCE_CONNECT_LAUNCHER_VERSION,
 }, function (err) {
   if (err) {
-    console.log(`Failed to download sauce connect binary: ${err}`);
+    console.error(`Failed to download sauce connect binary: ${err}`);
     console.log('sauce-connect-launcher will attempt to re-download next time it is run.');
     process.exit(1);
   }
