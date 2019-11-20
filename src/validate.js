@@ -46,6 +46,7 @@ var sauceSchema = exports.sauceSchema = Joi.object().keys({
   username: Joi.string().required(),
   accessKey: Joi.string().required(),
   maxConcurrent: Joi.number(),
+  launchSauceConnect: Joi.boolean(),
   extendedDebugging: Joi.boolean(),
   tunnelIdentifier: Joi.string(),
   parentTunnel: Joi.string()
