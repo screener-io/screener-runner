@@ -128,28 +128,28 @@ describe('screener-runner/src/validate', function() {
     it('should throw error when no value passed in', function() {
       return Validate.runnerConfig()
         .catch(function(err) {
-          expect(err.message).to.equal('"value" is required');
+          expect(err.details[0].message).to.equal('"value" is required');
         });
     });
 
     it('should throw error when no apiKey', function() {
       return Validate.runnerConfig({})
         .catch(function(err) {
-          expect(err.message).to.equal('child "apiKey" fails because ["apiKey" is required]');
+          expect(err.details[0].message).to.equal('"apiKey" is required');
         });
     });
 
     it('should throw error when no projectRepo', function() {
       return Validate.runnerConfig({apiKey: 'key'})
         .catch(function(err) {
-          expect(err.message).to.equal('child "projectRepo" fails because ["projectRepo" is required]');
+          expect(err.details[0].message).to.equal('"projectRepo" is required');
         });
     });
 
     it('should throw error when tunnel exists but host is not set', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {}})
         .catch(function(err) {
-          expect(err.message).to.equal('child "tunnel" fails because [child "host" fails because ["host" is required]]');
+          expect(err.details[0].message).to.equal('"tunnel.host" is required');
         });
     });
 
@@ -212,7 +212,7 @@ describe('screener-runner/src/validate', function() {
     it('should throw error when vsts does not have instance', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], vsts: {}})
         .catch(function(err) {
-          expect(err.message).to.equal('child "vsts" fails because [child "instance" fails because ["instance" is required]]');
+          expect(err.message).to.equal('"vsts.instance" is required');
         });
     });
 
@@ -233,7 +233,7 @@ describe('screener-runner/src/validate', function() {
     it('should throw error when include/exclude rules are not in array', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: 'string', excludeRules: 'string'})
         .catch(function(err) {
-          expect(err.message).to.equal('child "includeRules" fails because ["includeRules" must be an array]');
+          expect(err.message).to.equal('"includeRules" must be an array');
         });
     });
 
@@ -255,7 +255,7 @@ describe('screener-runner/src/validate', function() {
       it('should error when setting above 255', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], failureExitCode: 256})
           .catch(function(err) {
-            expect(err.message).to.equal('child "failureExitCode" fails because ["failureExitCode" must be less than or equal to 255]');
+            expect(err.message).to.equal('"failureExitCode" must be less than or equal to 255');
           });
       });
     });
@@ -264,7 +264,7 @@ describe('screener-runner/src/validate', function() {
       it('should throw error when no states', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo'})
           .catch(function(err) {
-            expect(err.message).to.equal('child "states" fails because ["states" is required]');
+            expect(err.message).to.equal('"states" is required');
           });
       });
 
@@ -278,7 +278,7 @@ describe('screener-runner/src/validate', function() {
       it('should throw error when states item is incorrect shape', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{}]})
           .catch(function(err) {
-            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" is required]]]');
+            expect(err.message).to.equal('"states[0].url" is required');
           });
       });
 
@@ -292,7 +292,7 @@ describe('screener-runner/src/validate', function() {
       it('should error when state name is > 200 chars', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title.'}]})
           .catch(function(err) {
-            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "name" fails because ["name" length must be less than or equal to 200 characters long]]]');
+            expect(err.message).to.equal('"states[0].name" length must be less than or equal to 200 characters long');
           });
       });
 
@@ -313,7 +313,7 @@ describe('screener-runner/src/validate', function() {
       it('should error when shotsIndex < 0', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', shotsIndex: -1}]})
           .catch(function(err) {
-            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "shotsIndex" fails because ["shotsIndex" must be larger than or equal to 0]]]');
+            expect(err.message).to.equal('"states[0].shotsIndex" must be larger than or equal to 0');
           });
       });
     });
@@ -322,14 +322,14 @@ describe('screener-runner/src/validate', function() {
       it('should error when browsers is empty', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: []})
           .catch(function(err) {
-            expect(err.message).to.equal('child "browsers" fails because ["browsers" must contain at least 1 items]');
+            expect(err.message).to.equal('"browsers" must contain at least 1 items');
           });
       });
 
       it('should error when browsers are not unique', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'chrome' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function(err) {
-            expect(err.message).to.equal('child "browsers" fails because ["browsers" position 1 contains a duplicate value]');
+            expect(err.message).to.equal('"browsers[1]" contains a duplicate value');
           });
       });
 
@@ -436,14 +436,14 @@ describe('screener-runner/src/validate', function() {
       it('should throw error when resolutions is empty', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: []})
           .catch(function(err) {
-            expect(err.message).to.equal('child "resolutions" fails because ["resolutions" must contain at least 1 items]');
+            expect(err.message).to.equal('"resolutions" must contain at least 1 items');
           });
       });
 
       it('should throw error when resolutions in incorrect format', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: 'resolutions'})
           .catch(function(err) {
-            expect(err.message).to.equal('child "resolutions" fails because ["resolutions" must be an array]');
+            expect(err.message).to.equal('"resolutions" must be an array');
           });
       });
     });
@@ -452,7 +452,7 @@ describe('screener-runner/src/validate', function() {
       it('should throw error when resolution in incorrect format', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: 'resolution'})
           .catch(function(err) {
-            expect(err.message).to.equal('child "resolution" fails because ["resolution" with value "resolution" fails to match the resolution pattern, "resolution" must be an object, "resolution" must be an object]');
+            expect(err.message).to.equal('"resolution" with value "resolution" fails to match the resolution pattern');
           });
       });
 
@@ -494,7 +494,7 @@ describe('screener-runner/src/validate', function() {
       it('should throw error when resolution object in incorrect format', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {deviceName: 'iPhone 6', width: 1024, height: 768}})
           .catch(function(err) {
-            expect(err.message).to.equal('child "resolution" fails because ["resolution" must be a string, "deviceName" is not allowed, "width" is not allowed, "height" is not allowed]');
+            expect(err.message).to.equal('"resolution" does not match any of the allowed types');
           });
       });
 
@@ -518,14 +518,14 @@ describe('screener-runner/src/validate', function() {
     it('should throw error when shots is empty', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: []})
         .catch(function(err) {
-          expect(err.message).to.equal('child "shots" fails because ["shots" must contain at least 1 items]');
+          expect(err.message).to.equal('"shots" must contain at least 1 items');
         });
     });
 
     it('should throw error when required fields are missing', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name'}]})
         .catch(function(err) {
-          expect(err.message).to.equal('child "shots" fails because ["shots" at position 0 fails because [child "resolution" fails because ["resolution" is required]]]');
+          expect(err.message).to.equal('"shots[0].resolution" is required');
         });
     });
 
@@ -539,22 +539,24 @@ describe('screener-runner/src/validate', function() {
     it('should error when resolution is invalid format', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: 'desktop', shotsDir: '/tmp/shots'}]})
         .catch(function(err) {
-          expect(err.message).to.equal('child "shots" fails because ["shots" at position 0 fails because [child "resolution" fails because ["resolution" with value "desktop" fails to match the resolution pattern]]]');
+          expect(err.message).to.equal('"shots[0].resolution" with value "desktop" fails to match the resolution pattern');
         });
     });
 
     it('should error when duplicate shots items are found', function() {
       return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}, {name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}]})
         .catch(function(err) {
-          expect(err.message).to.equal('child "shots" fails because ["shots" position 1 contains a duplicate value]');
+          expect(err.message).to.equal('"shots[1]" contains a duplicate value');
         });
     });
   });
 
   describe('validate.steps', function() {
     it('should error when value not array', function() {
-      var result = Validate.steps('test');
-      expect(result.error.message).to.equal('"value" must be an array');
+      return Validate.steps('test')
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" must be an array');
+        });
     });
 
     it('should error when step with invalid type added', function() {
@@ -564,8 +566,10 @@ describe('screener-runner/src/validate', function() {
           name: 'hello'
         }
       ];
-      var result = Validate.steps(steps);
-      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+      return Validate.steps(steps)
+        .catch(function(err) {
+          expect(err.message).to.equal('"[0]" does not match any of the allowed types');
+        });
     });
 
     it('should error when valid step with extra property is added', function() {
@@ -576,8 +580,10 @@ describe('screener-runner/src/validate', function() {
           extra: 'prop'
         }
       ];
-      var result = Validate.steps(testSteps);
-      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+      return Validate.steps(testSteps)
+        .catch(function(err) {
+          expect(err.message).to.equal('"[0]" does not match any of the allowed types');
+        });
     });
 
     it('should error with invalid url format', function() {
@@ -587,8 +593,10 @@ describe('screener-runner/src/validate', function() {
           url: '/path'
         }
       ];
-      var result = Validate.steps(steps);
-      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+      return Validate.steps(steps)
+        .catch(function(err) {
+          expect(err.message).to.equal('"[0]" does not match any of the allowed types');
+        });
     });
 
     it('should allow valid url format', function() {
@@ -598,13 +606,17 @@ describe('screener-runner/src/validate', function() {
           url: 'http://url.com'
         }
       ];
-      var result = Validate.steps(steps);
-      expect(result.error).to.equal(null);
+      return Validate.steps(steps)
+        .catch(function(err) {
+          expect(err).to.equal(undefined);
+        });
     });
 
     it('should allow all valid types', function() {
-      var result = Validate.steps(steps);
-      expect(result.error).to.equal(null);
+      return Validate.steps(steps)
+        .catch(function(err) {
+          expect(err).to.equal(undefined);
+        });
     });
   });
 });

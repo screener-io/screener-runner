@@ -1,14 +1,13 @@
-var Joi = require('joi');
-var Promise = require('bluebird');
+var Joi = require('@hapi/joi');
 
 var includeRulesSchema = exports.includeRulesSchema = Joi.array().min(0).items(
   Joi.string(),
-  Joi.object().type(RegExp)
+  Joi.object().instance(RegExp)
 );
 
 var excludeRulesSchema = exports.excludeRulesSchema = Joi.array().min(0).items(
   Joi.string(),
-  Joi.object().type(RegExp)
+  Joi.object().instance(RegExp)
 );
 
 var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
@@ -30,12 +29,12 @@ var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
 
 var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   Joi.object().keys({
-    browserName: Joi.string().valid(['chrome', 'firefox']).required(),
+    browserName: Joi.string().valid('chrome', 'firefox').required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   }),
   Joi.object().keys({
-    browserName: Joi.string().valid(['chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer']).required(),
+    browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
     version: Joi.string().required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
@@ -91,7 +90,7 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     }).required()
   }),
   Joi.object().keys({
-    type: Joi.string().valid(['moveTo', 'clickAndHoldElement', 'releaseElement', 'ignoreElements', 'clearElementText']).required(),
+    type: Joi.string().valid('moveTo', 'clickAndHoldElement', 'releaseElement', 'ignoreElements', 'clearElementText').required(),
     locator: Joi.object().keys({
       type: Joi.string().valid('css selector').required(),
       value: Joi.string().required()
@@ -107,7 +106,7 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
     isPassword: Joi.boolean()
   }),
   Joi.object().keys({
-    type: Joi.string().valid(['clickElement', 'waitForElementPresent', 'waitForElementNotPresent']).required(),
+    type: Joi.string().valid('clickElement', 'waitForElementPresent', 'waitForElementNotPresent').required(),
     locator: Joi.object().keys({
       type: Joi.string().valid('css selector').required(),
       value: Joi.string().required()
@@ -175,7 +174,7 @@ var runnerSchema = Joi.object().keys({
   initialBaselineBranch: Joi.string().max(100),
   disableBranchBaseline: Joi.boolean(),
   disableConcurrency: Joi.boolean(),
-  useNewerBaseBranch: Joi.string().valid(['accepted', 'latest']),
+  useNewerBaseBranch: Joi.string().valid('accepted', 'latest'),
   diffOptions: Joi.object().keys({
     structure: Joi.boolean(),
     layout: Joi.boolean(),
@@ -195,7 +194,7 @@ var runnerSchema = Joi.object().keys({
   disableAutoSnapshots: Joi.boolean(),
   newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
-  beforeEachScript: [Joi.func(), Joi.string()],
+  beforeEachScript: Joi.alternatives().try(Joi.function(), Joi.string()),
   ieNativeEvents: Joi.boolean()
 })
   .without('resolutions', ['resolution'])
@@ -206,10 +205,9 @@ var runnerSchema = Joi.object().keys({
   .required();
 
 exports.runnerConfig = function(value) {
-  var validator = Promise.promisify(Joi.validate);
-  return validator(value, runnerSchema);
+  return runnerSchema.validateAsync(value);
 };
 
 exports.steps = function(value) {
-  return Joi.validate(value, stepsSchema);
+  return stepsSchema.validateAsync(value);
 };
