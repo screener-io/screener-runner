@@ -316,6 +316,13 @@ describe('screener-runner/src/validate', function() {
             expect(err.message).to.equal('"states[0].shotsIndex" must be larger than or equal to 0');
           });
       });
+
+      it('should error when url is not prefixed by http', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'localhost:8080/test.html', name: 'name'}]})
+          .catch(function(err) {
+            expect(err.message).to.equal('"states[0].url" with value "localhost:8080/test.html" fails to match the required pattern: /^(http|https):\\/\\//');
+          });
+      });
     });
 
     describe('validate.browsers', function() {
