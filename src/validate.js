@@ -159,7 +159,7 @@ var runnerSchema = Joi.object().keys({
   shots: shotsSchema,
   states: Joi.array().min(0).items(
     Joi.object().keys({
-      url: Joi.string().uri().required(),
+      url: Joi.string().pattern(/^(http|https):\/\//).uri().required(),
       name: Joi.string().max(200).required(),
       steps: stepsSchema,
       shotsIndex: Joi.number().integer().min(0)
