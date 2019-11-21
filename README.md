@@ -48,8 +48,6 @@ Run the following command:
 $ npm run test-screener
 ```
 
-After this command, `sauce-connect-launcher` version 4.5.4 will be installed.
-
 ### Testing Interactions
 
 To test interactions, you can add `Steps` to each state to interact with the UI. This is useful for clicking buttons, filling out forms, and getting the UI into the proper visual state to test.
