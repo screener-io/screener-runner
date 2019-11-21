@@ -32,7 +32,7 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
     browserName: Joi.string().valid('chrome', 'firefox').required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
-  }),
+  }).when('/sauce.launchSauceConnect', { is: true, then: Joi.forbidden() }),
   Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
     version: Joi.string().required(),
@@ -47,7 +47,7 @@ var sauceSchema = exports.sauceSchema = Joi.object().keys({
   maxConcurrent: Joi.number(),
   launchSauceConnect: Joi.boolean(),
   extendedDebugging: Joi.boolean(),
-  tunnelIdentifier: Joi.string(),
+  tunnelIdentifier: Joi.string().when('launchSauceConnect', { is: true, then: Joi.forbidden() }),
   parentTunnel: Joi.string()
 });
 
@@ -169,7 +169,7 @@ var runnerSchema = Joi.object().keys({
     host: Joi.string().required(),
     gzip: Joi.boolean(),
     cache: Joi.boolean()
-  }),
+  }).when('/sauce.launchSauceConnect', { is: true, then: Joi.forbidden() }),
   baseBranch: Joi.string().max(100),
   initialBaselineBranch: Joi.string().max(100),
   disableBranchBaseline: Joi.boolean(),

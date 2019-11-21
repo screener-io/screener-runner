@@ -411,6 +411,36 @@ describe('screener-runner/src/validate', function() {
       });
     });
 
+    describe('validate.sauce', function() {
+      it('should forbid tunnelIdentifier when launchSauceConnect is true', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true, tunnelIdentifier: 'id'}})
+          .catch(function(err) {
+            expect(err.message).to.equal('"sauce.tunnelIdentifier" is not allowed');
+          });
+      });
+
+      it('should forbid tunnelIdentifier when launchSauceConnect is true', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], tunnel: {host: 'host'}, sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('"tunnel" is not allowed');
+          });
+      });
+
+      it('should forbid screener browsers when launchSauceConnect is true', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browser: [{browserName: 'chrome'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('"browser" is not allowed');
+          });
+      });
+
+      it('should forbid screener browsers(sauce browsers also offered) when launchSauceConnect is true', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browser: [{browserName: 'chrome'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('"browser" is not allowed');
+          });
+      });
+    });
+
     describe('validate.resolutions', function() {
       it('should allow resolutions array by itself', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: ['1024x768']})
