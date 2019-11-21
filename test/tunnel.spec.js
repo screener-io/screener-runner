@@ -1,15 +1,7 @@
-var chai = require('chai');
-chai.use(require('chai-fs'));
-var expect = chai.expect;
-var path = require('path');
+var expect = require('chai').expect;
 var rewire = require('rewire');
 var sinon = require('sinon');
 var Tunnel = rewire('../src/tunnel');
-var SAUCE_CONNECT_LAUNCHER_VERSION = '4.5.4';
-var PLATFORM = {
-  darwin: 'osx',
-  win32: 'win32',
-}[process.platform] || 'linux';
 
 describe('screener-runner/src/tunnel', function() {
   this.timeout(5000);
@@ -155,12 +147,6 @@ describe('screener-runner/src/tunnel', function() {
       Tunnel.__set__('ngrok', ngrokMock);
       Tunnel.disconnect();
       expect(ngrokMock.disconnect.called).to.equal(true);
-    });
-  });
-
-  describe('Sauce Connect Launcher', function() {
-    it('should be downloaded after screener runner is installed', function() {
-      expect(path.resolve(`./node_modules/sauce-connect-launcher/sc/sc-${SAUCE_CONNECT_LAUNCHER_VERSION}-${PLATFORM}/bin/sc`)).to.be.a.file('Didn\'t download sauce connect launcher correctly');
     });
   });
 });
