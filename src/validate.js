@@ -1,13 +1,13 @@
-var Joi = require('@hapi/joi');
+var Joi = require('joi');
 
 var includeRulesSchema = exports.includeRulesSchema = Joi.array().min(0).items(
   Joi.string(),
-  Joi.object().instance(RegExp)
+  Joi.object().type(RegExp)
 );
 
 var excludeRulesSchema = exports.excludeRulesSchema = Joi.array().min(0).items(
   Joi.string(),
-  Joi.object().instance(RegExp)
+  Joi.object().type(RegExp)
 );
 
 var resolutionSchema = exports.resolutionSchema = Joi.alternatives().try(
@@ -159,7 +159,7 @@ var runnerSchema = Joi.object().keys({
   shots: shotsSchema,
   states: Joi.array().min(0).items(
     Joi.object().keys({
-      url: Joi.string().pattern(/^(http|https):\/\//).uri().required(),
+      url: Joi.string().regex(/^(http|https):\/\//).uri().required(),
       name: Joi.string().max(200).required(),
       steps: stepsSchema,
       shotsIndex: Joi.number().integer().min(0)
@@ -194,7 +194,7 @@ var runnerSchema = Joi.object().keys({
   disableAutoSnapshots: Joi.boolean(),
   newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
-  beforeEachScript: Joi.alternatives().try(Joi.function(), Joi.string()),
+  beforeEachScript: Joi.alternatives().try(Joi.func(), Joi.string()),
   ieNativeEvents: Joi.boolean()
 })
   .without('resolutions', ['resolution'])
@@ -205,9 +205,9 @@ var runnerSchema = Joi.object().keys({
   .required();
 
 exports.runnerConfig = function(value) {
-  return runnerSchema.validateAsync(value);
+  return runnerSchema.validate(value);
 };
 
 exports.steps = function(value) {
-  return stepsSchema.validateAsync(value);
+  return stepsSchema.validate(value);
 };
