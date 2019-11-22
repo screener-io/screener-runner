@@ -8,10 +8,8 @@ var Promise = require('bluebird');
 var cloneDeep = require('lodash/cloneDeep');
 var omit = require('lodash/omit');
 var pkg = require('../package.json');
-// var sauceConnectLauncher = require('sauce-connect-launcher');
 
 var MAX_MS = 30 * 60 * 1000; // max 30 mins
-// var sauceConnection;
 
 var transformToTunnelHost = function(states, host, tunnelHost) {
   return states.map(function(state) {
@@ -91,76 +89,7 @@ exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);
   return Validate.runnerConfig(config)
-  // .then(function() {
-  //   if (config.sauce) {
-  //     return new Promise(function (resolve) {
-  //       sauceConnectLauncher({
-  //         username: config.sauce.username,
-  //         accessKey: config.sauce.accessKey,
-  //         tunnelIdentifier: config.sauce.tunnelIdentifier
-  //       }, function (err, sauceConnectProcess) {
-  //         sauceConnection = sauceConnectProcess;
-  //         if (err) {
-  //           throw err;
-  //         }
-  //         console.log('Sauce Connect ready');
-  //         resolve();
-  //       });
-  //     });
-  //   }
-  // })
-  // .then(function() {
-  //   var totalStates = getTotalStates(config.states);
-  //   var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode']);
-  //   if (typeof payload.beforeEachScript === 'function') {
-  //     payload.beforeEachScript = payload.beforeEachScript.toString();
-  //   }
-  //   if (!config.shots) {
-  //     console.log('\n' + totalStates + ' UI state' + (totalStates === 1 ? '' : 's') + ' to capture per ' + (config.browsers ? 'browser/' : '') + 'resolution');
-  //     if (config.browsers) {
-  //       console.log('Browsers:');
-  //       config.browsers.forEach(function(browser, index) {
-  //         console.log('  ' + (index + 1) + '. ' + displayBrowser(browser));
-  //       });
-  //       config.browsers = convertRules(config.browsers);
-  //     }
-  //     if (config.resolution || config.resolutions) {
-  //       payload.resolutions = config.resolutions || [config.resolution];
-  //       console.log('Resolutions:');
-  //       payload.resolutions.forEach(function(resolution, index) {
-  //         console.log('  ' + (index + 1) + '. ' + displayResolution(resolution));
-  //       });
-  //       payload.resolutions = convertRules(payload.resolutions);
-  //     }
-  //   }
-  //   console.log('\nCreating build for ' + config.projectRepo);
-  //   return api.createBuildWithRetry(config.apiKey, payload).timeout(MAX_MS, 'Timeout waiting for Build');
-  // })
-  // .then(function(response) {
-  //   config.project = response.project;
-  //   config.build = response.build;
-  //   config.branch = response.branch;
-  //   console.log('Waiting for build #' + config.build + ' on ' + config.branch + ' to complete...\n');
-  //   console.log('View progress via Screener\'s Dashboard => https://screener.io/v2\n');
-  //   // output to ensure CI does not timeout
-  //   timer = setInterval(function() { console.log('.'); }, 120*1000);
-  //   return api.waitForBuild(config.apiKey, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
-  // })
-  // .then(function(response) {
-  //   clearInterval(timer);
-  //   if (response.indexOf('Build failed.') >= 0 && (config.failureExitCode !== 0 || response.indexOf('error running') >= 0)) {
-  //     throw new Error(response);
-  //   }
-  // })
-  // .finally(function () {
-  //   return new Promise(function() {
-  //     sauceConnection.close(function() {
-  //       console.log('Closed Sauce Connect process');
-  //     });
-  //   });
-  // });
-
-  // get tunnel token with acces key
+    // get tunnel token with access key
     .then(function() {
       // add package version
       if (!config.meta) config.meta = {};
