@@ -323,6 +323,13 @@ describe('screener-runner/src/validate', function() {
             expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" with value "localhost:8080/test.html" fails to match the required pattern: /^(http|https):\\/\\//]]]');
           });
       });
+
+      it('should allow states when url is prefixed by http', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://localhost:8080/test.html', name: 'name'}]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
     });
 
     describe('validate.browsers', function() {
@@ -426,7 +433,7 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should forbid tunnelIdentifier when launchSauceConnect is true', function() {
+      it('should forbid tunnel object when launchSauceConnect is true', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], tunnel: {host: 'host'}, sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
             expect(err.message).to.equal('"tunnel" is not allowed');
@@ -444,6 +451,13 @@ describe('screener-runner/src/validate', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browser: [{browserName: 'chrome'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
             expect(err.message).to.equal('"browser" is not allowed');
+          });
+      });
+
+      it('should allow sauce browsers when launchSauceConnect is true', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '78' }, { browserName: 'firefox', version: '70' }, { browserName: 'internet explorer', version: '11.0' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
           });
       });
     });
