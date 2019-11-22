@@ -429,33 +429,33 @@ describe('screener-runner/src/validate', function() {
       it('should forbid tunnelIdentifier when launchSauceConnect is true', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true, tunnelIdentifier: 'id'}})
           .catch(function(err) {
-            expect(err.message).to.equal('child "sauce" fails because [child "tunnelIdentifier" fails because ["tunnelIdentifier" is not allowed]]');
+            expect(err.message).to.equal('Can not specify tunnelIdentifier when sauce connect tunnel is being used');
           });
       });
 
       it('should forbid tunnel object when launchSauceConnect is true', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], tunnel: {host: 'host'}, sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
-            expect(err.message).to.equal('"tunnel" is not allowed');
+            expect(err.message).to.equal('Can not use sauce connect tunnel with ngrok tunnel at the time');
           });
       });
 
       it('should forbid screener browsers when launchSauceConnect is true', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browser: [{browserName: 'chrome'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
-            expect(err.message).to.equal('"browser" is not allowed');
+            expect(err.message).to.equal('Can not run screener browsers when sauce connect tunnel is being used');
           });
       });
 
       it('should forbid screener browsers(sauce browsers also offered) when launchSauceConnect is true', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browser: [{browserName: 'chrome'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
-            expect(err.message).to.equal('"browser" is not allowed');
+            expect(err.message).to.equal('Can not run screener browsers when sauce connect tunnel is being used');
           });
       });
 
       it('should allow sauce browsers when launchSauceConnect is true', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '78' }, { browserName: 'firefox', version: '70' }, { browserName: 'internet explorer', version: '11.0' }]})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '78.0' }, { browserName: 'firefox', version: '70.0' }, { browserName: 'internet explorer', version: '11.0' }], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function() {
             throw new Error('Should not be here');
           });
