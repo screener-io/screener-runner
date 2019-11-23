@@ -113,15 +113,16 @@ describe('screener-runner/src/runner', function() {
   });
 
   describe('Runner.run', function() {
-    it('should run test and wait for successful test status to return', function() {
-      return Runner.run(config)
+    it('should run test and wait for successful test status to return', function(done) {
+      Runner.run(config)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should convert beforeEachScript to string', function() {
+    it('should convert beforeEachScript to string', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -137,13 +138,14 @@ describe('screener-runner/src/runner', function() {
       });
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.beforeEachScript = function() { console.log('hello'); };
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should handle multi-browser test run', function() {
+    it('should handle multi-browser test run', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -181,14 +183,15 @@ describe('screener-runner/src/runner', function() {
       ];
       tmpConfig.sauce = sauceCreds;
       tmpConfig.pullRequest = '1';
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should convert browser includeRules/excludeRules regex to objects', function() {
+    it('should convert browser includeRules/excludeRules regex to objects', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -226,14 +229,15 @@ describe('screener-runner/src/runner', function() {
       ];
       tmpConfig.sauce = sauceCreds;
       tmpConfig.pullRequest = '1';
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should convert resolution includeRules/excludeRules regex to objects', function() {
+    it('should convert resolution includeRules/excludeRules regex to objects', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -263,23 +267,25 @@ describe('screener-runner/src/runner', function() {
         { width: 1024, height: 768, includeRules: [/^Button/, 'Component'] },
         { deviceName: 'iPhone 6', excludeRules: [/^Button/, 'Component'] }
       ];
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(false);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should cancel test run when there are no states', function() {
+    it('should cancel test run when there are no states', function(done) {
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.states = [];
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .catch(function(err) {
           expect(err.message).to.equal('No states to test');
+          done();
         });
     });
 
-    it('should connect, convert to tunnel urls, and disconnect tunnel when tunnel.host exists', function() {
+    it('should connect, convert to tunnel urls, and disconnect tunnel when tunnel.host exists', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -337,14 +343,15 @@ describe('screener-runner/src/runner', function() {
         host: 'localhost:8080',
         gzip: true
       };
-      return Runner.run(tmpData)
+      Runner.run(tmpData)
         .then(function(response) {
           expect(tunnelMock.disconnect.called).to.equal(true);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should run test and wait for failure test status to return', function() {
+    it('should run test and wait for failure test status to return', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         createBuildWithRetry: apiMock.createBuildWithRetry,
@@ -353,9 +360,10 @@ describe('screener-runner/src/runner', function() {
           return Promise.resolve('Build failed.');
         }
       });
-      return Runner.run(config)
+      Runner.run(config)
         .catch(function(err) {
           expect(err.message).to.equal('Build failed.');
+          done();
         });
     });
   });
