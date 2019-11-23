@@ -32,14 +32,24 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
     browserName: Joi.string().valid('chrome', 'firefox').required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
-  }).when('/sauce.launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('Can not run screener browsers when sauce connect tunnel is being used')) }),
+  }),
   Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
     version: Joi.string().required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   })
-);
+).when('sauce.launchSauceConnect', { is: true, then: Joi.array().min(1).unique().items(
+  Joi.object().keys({
+    browserName: Joi.string().valid('chrome', 'firefox').required(),
+  }).forbidden(),
+  Joi.object().keys({
+    browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
+    version: Joi.string().required(),
+    includeRules: includeRulesSchema,
+    excludeRules: excludeRulesSchema
+  }).required()
+).error(new Error('Can not run screener browsers when sauce connect tunnel is being used')) });
 
 var sauceSchema = exports.sauceSchema = Joi.object().keys({
   username: Joi.string().required(),
@@ -169,7 +179,7 @@ var runnerSchema = Joi.object().keys({
     host: Joi.string().required(),
     gzip: Joi.boolean(),
     cache: Joi.boolean()
-  }).when('/sauce.launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('Can not use sauce connect tunnel with ngrok tunnel at the time')) }),
+  }).when('sauce.launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('Can not use sauce connect tunnel with ngrok tunnel at the time')) }),
   baseBranch: Joi.string().max(100),
   initialBaselineBranch: Joi.string().max(100),
   disableBranchBaseline: Joi.boolean(),
