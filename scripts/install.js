@@ -7,7 +7,7 @@ sauceConnectLauncher.download({
 }, function (err) {
   if (err) {
     console.error(`Failed to download sauce connect binary: ${err}`);
-    console.log('sauce-connect-launcher will attempt to re-download next time it is run.');
+    console.log('sauce-connect-launcher will attempt to re-download next time when you run: npm install.');
     process.exit(1);
   }
 });
