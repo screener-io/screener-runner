@@ -34,8 +34,14 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
     excludeRules: excludeRulesSchema
   }),
   Joi.object().keys({
+    browserName: Joi.string().valid('internet explorer').required(),
+    version: Joi.string().regex(/^[1-9]\d+$/).required(),
+    includeRules: includeRulesSchema,
+    excludeRules: excludeRulesSchema
+  }),
+  Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
-    version: Joi.string().required(),
+    version: Joi.string().regex(/^\d+\.\d+$/).required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   })
@@ -44,12 +50,16 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
     browserName: Joi.string().valid('chrome', 'firefox').required(),
   }).forbidden(),
   Joi.object().keys({
+    browserName: Joi.string().valid('internet explorer').required(),
+    version: Joi.string().regex(/^[1-9]\d+$/).required(),
+  }).forbidden(),
+  Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
-    version: Joi.string().required(),
+    version: Joi.string().regex(/^\d+\.\d+$/).required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   }).required()
-).error(new Error('Can not run screener browsers when sauce connect tunnel is being used')) });
+).error(new Error('Please make sure screener browsers are not set when launchSauceConnect flag is true and specify the version of the browser up to one digit after decimal point')) });
 
 var sauceSchema = exports.sauceSchema = Joi.object().keys({
   username: Joi.string().required(),
