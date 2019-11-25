@@ -464,15 +464,23 @@ describe('screener-runner/src/validate', function() {
       it('should forbid screener browsers when launchSauceConnect is true', function(done) {
         Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
-            expect(err.message).to.equal('Can not run screener browsers when sauce connect tunnel is being used');
+            expect(err.message).to.equal('Please make sure screener browsers are not set when launchSauceConnect flag is true and specify the version of the browser up to one digit after decimal point');
             done();
           });
       });
 
       it('should forbid screener browsers(sauce browsers also offered) when launchSauceConnect is true', function(done) {
-        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'internet explorer', version: '11'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
-            expect(err.message).to.equal('Can not run screener browsers when sauce connect tunnel is being used');
+            expect(err.message).to.equal('Please make sure screener browsers are not set when launchSauceConnect flag is true and specify the version of the browser up to one digit after decimal point');
+            done();
+          });
+      });
+
+      it('should forbid if browser does not have dot version', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'safari', version: '11'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('Please make sure screener browsers are not set when launchSauceConnect flag is true and specify the version of the browser up to one digit after decimal point');
             done();
           });
       });
