@@ -471,9 +471,6 @@ describe('screener-runner/src/validate', function() {
 
       it('should forbid screener browsers(sauce browsers also offered) when launchSauceConnect is true', function(done) {
         Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
-          .then(function() {
-            throw new Error('hello');
-          })
           .catch(function(err) {
             expect(err.message).to.equal('Can not run screener browsers when sauce connect tunnel is being used');
             done();
