@@ -132,11 +132,14 @@ exports.run = function(config) {
     // establish ngrok tunnel and resolve ngrok url
     .then(function(proxyHost) {
       if (config.tunnel) {
-        console.log('Connecting tunnel');
-        return Tunnel.connect(proxyHost || config.tunnel.host, config.tunnel.token);
-      } else {
-        return Promise.resolve();
+        console.log('Connecting ngrok tunnel');
+        return Tunnel.connect({ ngrok: { host: proxyHost || config.tunnel.host, token: config.tunnel.token }});
       }
+      if (config.sauce && config.sauce.launchSauceConnect) {
+        console.log('Connecting sauce tunnel');
+        return Tunnel.connect({ sauce: config.sauce });
+      }
+      return Promise.resolve();
     })
     // transform URL in steps and send payload to back end
     .then(function(tunnelHost) {
@@ -180,12 +183,16 @@ exports.run = function(config) {
       timer = setInterval(function() { console.log('.'); }, 120*1000);
       return api.waitForBuild(config.apiKey, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
     })
+    // disconnect tunnel and relay the response
+    .then(function(response) {
+      if (config.tunnel || (config.sauce && config.sauce.launchSauceConnect)) {
+        return Tunnel.disconnect(response);
+      }
+      return response;
+    })
+    // receive response from screener api and keep checking the build status
     .then(function(response) {
       clearInterval(timer);
-      if (config.tunnel) {
-        console.log('Disconnecting tunnel');
-        Tunnel.disconnect();
-      }
       if (response.indexOf('Build failed.') >= 0 && (config.failureExitCode !== 0 || response.indexOf('error running') >= 0)) {
         throw new Error(response);
       }
