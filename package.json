@@ -10,6 +10,7 @@
     "screener-runner": "./bin/screener-runner.js"
   },
   "scripts": {
+    "postinstall": "node scripts/install.js || nodejs scripts/install.js",
     "test": "npm run lint && nyc mocha \"test/**/*.spec.js\" && npm run coverage",
     "lint": "eslint .",
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
@@ -39,10 +40,12 @@
     "portfinder": "~1.0.10",
     "request": "~2.87.0",
     "requestretry": "~2.0.2",
+    "sauce-connect-launcher": "github:saucelabs/sauce-connect-launcher#v1.3.1",
     "screener-ngrok": "2.2.28"
   },
   "devDependencies": {
     "chai": "~3.5.0",
+    "chai-fs": "^2.0.0",
     "eslint": "^4.18.2",
     "mocha": "~5.2.0",
     "nock": "~9.0.2",
