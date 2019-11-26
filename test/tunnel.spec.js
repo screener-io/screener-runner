@@ -15,6 +15,24 @@ describe('screener-runner/src/tunnel', function() {
         });
     });
 
+    it('should establish sauce connect tunnel when pass in sauce credentials', function(done) {
+      Tunnel.__set__('sauceConnectLauncher', function(options, cb) {
+        expect(options).to.deep.equal({
+          username: 'username',
+          accessKey: 'accessKey',
+        });
+        cb(null, 'sauceConnection');
+      });
+      Tunnel.connect({ sauce: { username: 'username', accessKey: 'accessKey' } })
+        .then(function(response) {
+          expect(response).to.equal(undefined);
+          done();
+        })
+        .catch(e => {
+          console.log('333', e);
+        });
+    });
+
     it('should pass host/token and return tunnel url on success', function(done) {
       Tunnel.__set__('ngrokLauncher', {
         connect: function(options, cb) {
@@ -152,8 +170,18 @@ describe('screener-runner/src/tunnel', function() {
         disconnect: sinon.spy()
       };
       Tunnel.__set__('ngrokLauncher', ngrokMock);
+      Tunnel.__set__('sauceConnection', undefined);
       Tunnel.disconnect();
       expect(ngrokMock.disconnect.called).to.equal(true);
+    });
+
+    it('should call sauceConnection.close()', function() {
+      var sauceConnection = {
+        close: sinon.spy()
+      };
+      Tunnel.__set__('sauceConnection', sauceConnection);
+      Tunnel.disconnect();
+      expect(sauceConnection.close.called).to.equal(true);
     });
   });
 });

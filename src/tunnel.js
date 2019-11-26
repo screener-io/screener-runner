@@ -7,7 +7,7 @@ var sauceConnection;
 exports.connect = function({ ngrok, sauce }, tries = 0) {
   if (sauce) {
     return new Promise(function(resolve, reject) {
-      sauceConnection = sauceConnectLauncher({
+      sauceConnectLauncher({
         username: sauce.username,
         accessKey: sauce.accessKey,
       }, function (err, sauceConnectProcess) {
