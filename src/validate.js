@@ -35,7 +35,7 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   }),
   Joi.object().keys({
     browserName: Joi.string().valid('internet explorer').required(),
-    version: Joi.string().regex(/^[1-9]\d+$/).required(),
+    version: Joi.string().valid('11').required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   }),
@@ -51,7 +51,7 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   }).forbidden(),
   Joi.object().keys({
     browserName: Joi.string().valid('internet explorer').required(),
-    version: Joi.string().regex(/^[1-9]\d+$/).required(),
+    version: Joi.string().valid('11').required(),
   }).forbidden(),
   Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
@@ -59,7 +59,7 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   }).required()
-).error(new Error('Please make sure screener browsers are not set when launchSauceConnect flag is true and specify the version of the browser up to one digit after decimal point')) });
+).error(new Error('Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled')) });
 
 var sauceSchema = exports.sauceSchema = Joi.object().keys({
   username: Joi.string().required(),
@@ -67,7 +67,7 @@ var sauceSchema = exports.sauceSchema = Joi.object().keys({
   maxConcurrent: Joi.number(),
   launchSauceConnect: Joi.boolean(),
   extendedDebugging: Joi.boolean(),
-  tunnelIdentifier: Joi.string().when('launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('Can not specify tunnelIdentifier when sauce connect tunnel is being used')) }),
+  tunnelIdentifier: Joi.string().when('launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('tunnelIdentifier cannot be set when launchSauceConnect flag is enabled')) }),
   parentTunnel: Joi.string()
 });
 
@@ -189,7 +189,7 @@ var runnerSchema = Joi.object().keys({
     host: Joi.string().required(),
     gzip: Joi.boolean(),
     cache: Joi.boolean()
-  }).when('sauce.launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('Can not use sauce connect tunnel with ngrok tunnel at the time')) }),
+  }).when('sauce.launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('tunnel option cannot be set when launchSauceConnect flag is enabled')) }),
   baseBranch: Joi.string().max(100),
   initialBaselineBranch: Joi.string().max(100),
   disableBranchBaseline: Joi.boolean(),
