@@ -49,12 +49,19 @@ var sauceCreds = {
   accessKey: 'key'
 };
 var tunnelMock = {
-  connect: function(host, token) {
-    expect(host).to.equal('localhost:8081');
-    expect(token).to.equal('token');
+  connect: function(config) {
+    if (config.ngrok && config.sauce) {
+      expect(config).to.deep.equal({ ngrok: { host: 'localhost:8081', token: 'token' }, sauce: sauceCreds });
+    }
+    if (config.ngrok) {
+      expect(config).to.deep.equal({ ngrok: { host: 'localhost:8081', token: 'token' }});
+    }
+    if (config.sauce) {
+      expect(config).to.deep.equal({ sauce: sauceCreds });
+    }
     return Promise.resolve('tunnel-url');
   },
-  disconnect: sinon.spy(),
+  disconnect: sinon.stub().withArgs('status').returns('status'),
   transformUrl: Tunnel.transformUrl
 };
 var apiMock = {
