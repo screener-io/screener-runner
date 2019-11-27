@@ -7,14 +7,15 @@ describe('screener-runner/src/tunnel', function() {
   this.timeout(5000);
 
   describe('Tunnel.connect', function() {
-    it('should error when no token', function() {
-      return Tunnel.connect('localhost:8080')
+    it('should error when no token', function(done) {
+      Tunnel.connect('localhost:8080')
         .catch(function(err) {
           expect(err.message).to.equal('No Tunnel Token');
+          done();
         });
     });
 
-    it('should pass host/token and return tunnel url on success', function() {
+    it('should pass host/token and return tunnel url on success', function(done) {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
@@ -26,13 +27,14 @@ describe('screener-runner/src/tunnel', function() {
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('localhost:8080', 'token')
+      Tunnel.connect('localhost:8080', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
+          done();
         });
     });
 
-    it('should default to port 80 if port not set', function() {
+    it('should default to port 80 if port not set', function(done) {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
@@ -44,13 +46,14 @@ describe('screener-runner/src/tunnel', function() {
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('localhost', 'token')
+      Tunnel.connect('localhost', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
+          done();
         });
     });
 
-    it('should support host with http protocol', function() {
+    it('should support host with http protocol', function(done) {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
@@ -62,13 +65,14 @@ describe('screener-runner/src/tunnel', function() {
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('http://localhost:3000/path', 'token')
+      Tunnel.connect('http://localhost:3000/path', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
+          done();
         });
     });
 
-    it('should support host with https protocol', function() {
+    it('should support host with https protocol', function(done) {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
@@ -80,13 +84,14 @@ describe('screener-runner/src/tunnel', function() {
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('https://domain.com/', 'token')
+      Tunnel.connect('https://domain.com/', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
+          done();
         });
     });
 
-    it('should support host with https protocol and custom port', function() {
+    it('should support host with https protocol and custom port', function(done) {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           expect(options).to.deep.equal({
@@ -98,21 +103,23 @@ describe('screener-runner/src/tunnel', function() {
           cb(null, 'https://tunnel-url');
         }
       });
-      return Tunnel.connect('https://domain.com:4430', 'token')
+      Tunnel.connect('https://domain.com:4430', 'token')
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
+          done();
         });
     });
 
-    it('should return error on failure', function() {
+    it('should return error on failure', function(done) {
       Tunnel.__set__('ngrok', {
         connect: function(options, cb) {
           cb(new Error('error msg'));
         }
       });
-      return Tunnel.connect('localhost:8080', 'token')
+      Tunnel.connect('localhost:8080', 'token')
         .catch(function(err) {
           expect(err.message).to.equal('error msg');
+          done();
         });
     });
   });
