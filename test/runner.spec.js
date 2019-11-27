@@ -64,7 +64,7 @@ var tunnelMock = {
       return Promise.resolve();
     }
   },
-  disconnect: sinon.stub().withArgs('status').returns('status'),
+  disconnect: sinon.stub().resolves(),
   transformUrl: Tunnel.transformUrl
 };
 var apiMock = {
