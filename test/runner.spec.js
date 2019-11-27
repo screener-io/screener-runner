@@ -6,7 +6,6 @@ var clone = require('lodash/clone');
 var Runner = rewire('../src/runner');
 var Tunnel = require('../src/tunnel');
 var pkg = require('../package.json');
-var uuidv5 = require('uuid/v5');
 
 var config = {
   apiKey: 'api-key',
@@ -49,7 +48,7 @@ var sauceCreds = {
   username: 'user',
   accessKey: 'key'
 };
-var tunnelIdentifier = `visual-runner-${uuidv5(sauceCreds.accessKey, uuidv5.URL)}`;
+var tunnelIdentifier = 'visual-runner-tunnelIdentifier';
 var tunnelMock = {
   connect: function(config) {
     if (config.ngrok && config.sauce) {
@@ -125,6 +124,11 @@ describe('screener-runner/src/runner', function() {
   beforeEach(function() {
     Runner.__set__('Tunnel', tunnelMock);
     Runner.__set__('api', apiMock);
+    Runner.__set__('shortid', {
+      generate: () => {
+        return 'tunnelIdentifier';
+      }
+    });
   });
 
   describe('Runner.run', function() {
