@@ -88,16 +88,15 @@ exports.transformUrl = function(origUrl, host, tunnelHost) {
   return newUrl;
 };
 
-exports.disconnect = function(response) {
+exports.disconnect = function() {
   return new Promise(function(resolve) {
     if (sauceConnection) {
       sauceConnection.close(function() {
-        console.log('Closed Sauce Connect process');
-        resolve(response);
+        resolve();
       });
     } else {
       ngrokLauncher.disconnect();
-      resolve(response);
+      resolve();
     }
   });
 };

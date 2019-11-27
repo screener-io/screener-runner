@@ -129,14 +129,14 @@ exports.run = function(config) {
         return Promise.resolve();
       }
     })
-    // establish ngrok tunnel and resolve ngrok url
+    // establish tunnel (ngrok or sauce connect)
     .then(function(proxyHost) {
       if (config.tunnel) {
-        console.log('Connecting ngrok tunnel');
+        console.log('Connecting tunnel');
         return Tunnel.connect({ ngrok: { host: proxyHost || config.tunnel.host, token: config.tunnel.token }});
       }
       if (config.sauce && config.sauce.launchSauceConnect) {
-        console.log('Connecting sauce tunnel');
+        console.log('Connecting tunnel');
         return Tunnel.connect({ sauce: config.sauce });
       }
       return Promise.resolve();
@@ -186,7 +186,11 @@ exports.run = function(config) {
     // disconnect tunnel and relay the response
     .then(function(response) {
       if (config.tunnel || (config.sauce && config.sauce.launchSauceConnect)) {
-        return Tunnel.disconnect(response);
+        console.log('Disconnecting tunnel');
+        return Tunnel.disconnect()
+          .then(() => {
+            return response;
+          });
       }
       return response;
     })

@@ -16,7 +16,7 @@
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
   },
   "engines": {
-    "node": ">= 4"
+    "node": ">= 6"
   },
   "nyc": {
     "include": [
@@ -51,6 +51,6 @@
     "nock": "~9.0.2",
     "nyc": "^14.1.1",
     "rewire": "~2.5.2",
-    "sinon": "^1.17.6"
+    "sinon": "~7.5.0"
   }
 }
