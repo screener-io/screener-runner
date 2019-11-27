@@ -125,31 +125,35 @@ var steps = [
 
 describe('screener-runner/src/validate', function() {
   describe('validate.runnerConfig', function() {
-    it('should throw error when no value passed in', function() {
-      return Validate.runnerConfig()
+    it('should throw error when no value passed in', function(done) {
+      Validate.runnerConfig()
         .catch(function(err) {
           expect(err.message).to.equal('"value" is required');
+          done();
         });
     });
 
-    it('should throw error when no apiKey', function() {
-      return Validate.runnerConfig({})
+    it('should throw error when no apiKey', function(done) {
+      Validate.runnerConfig({})
         .catch(function(err) {
           expect(err.message).to.equal('child "apiKey" fails because ["apiKey" is required]');
+          done();
         });
     });
 
-    it('should throw error when no projectRepo', function() {
-      return Validate.runnerConfig({apiKey: 'key'})
+    it('should throw error when no projectRepo', function(done) {
+      Validate.runnerConfig({apiKey: 'key'})
         .catch(function(err) {
           expect(err.message).to.equal('child "projectRepo" fails because ["projectRepo" is required]');
+          done();
         });
     });
 
-    it('should throw error when tunnel exists but host is not set', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {}})
+    it('should throw error when tunnel exists but host is not set', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], tunnel: {}})
         .catch(function(err) {
           expect(err.message).to.equal('child "tunnel" fails because [child "host" fails because ["host" is required]]');
+          done();
         });
     });
 
@@ -167,10 +171,11 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should not allow disableBranchBaseline option when baseBranch is not set', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], disableBranchBaseline: true})
+    it('should not allow disableBranchBaseline option when baseBranch is not set', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], disableBranchBaseline: true})
         .catch(function(err) {
           expect(err.message).to.equal('"disableBranchBaseline" missing required peer "baseBranch"');
+          done();
         });
     });
 
@@ -181,10 +186,11 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should not allow useNewerBaseBranch option when baseBranch is not set', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], useNewerBaseBranch: 'latest'})
+    it('should not allow useNewerBaseBranch option when baseBranch is not set', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], useNewerBaseBranch: 'latest'})
         .catch(function(err) {
           expect(err.message).to.equal('"useNewerBaseBranch" missing required peer "baseBranch"');
+          done();
         });
     });
 
@@ -195,10 +201,11 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should not allow alwaysAcceptBaseBranch option when baseBranch is not set', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], alwaysAcceptBaseBranch: true})
+    it('should not allow alwaysAcceptBaseBranch option when baseBranch is not set', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], alwaysAcceptBaseBranch: true})
         .catch(function(err) {
           expect(err.message).to.equal('"alwaysAcceptBaseBranch" missing required peer "baseBranch"');
+          done();
         });
     });
 
@@ -209,10 +216,11 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should throw error when vsts does not have instance', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], vsts: {}})
+    it('should throw error when vsts does not have instance', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], vsts: {}})
         .catch(function(err) {
           expect(err.message).to.equal('child "vsts" fails because [child "instance" fails because ["instance" is required]]');
+          done();
         });
     });
 
@@ -230,17 +238,19 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should throw error when include/exclude rules are not in array', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: 'string', excludeRules: 'string'})
+    it('should throw error when include/exclude rules are not in array', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], includeRules: 'string', excludeRules: 'string'})
         .catch(function(err) {
           expect(err.message).to.equal('child "includeRules" fails because ["includeRules" must be an array]');
+          done();
         });
     });
 
-    it('should throw error when field is unknown', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], someKey: 'key'})
+    it('should throw error when field is unknown', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], someKey: 'key'})
         .catch(function(err) {
           expect(err.message).to.equal('"someKey" is not allowed');
+          done();
         });
     });
 
@@ -252,19 +262,21 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should error when setting above 255', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], failureExitCode: 256})
+      it('should error when setting above 255', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], failureExitCode: 256})
           .catch(function(err) {
             expect(err.message).to.equal('child "failureExitCode" fails because ["failureExitCode" must be less than or equal to 255]');
+            done();
           });
       });
     });
 
     describe('validate.states', function() {
-      it('should throw error when no states', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo'})
+      it('should throw error when no states', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo'})
           .catch(function(err) {
             expect(err.message).to.equal('child "states" fails because ["states" is required]');
+            done();
           });
       });
 
@@ -275,10 +287,11 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should throw error when states item is incorrect shape', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{}]})
+      it('should throw error when states item is incorrect shape', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{}]})
           .catch(function(err) {
             expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" is required]]]');
+            done();
           });
       });
 
@@ -289,10 +302,11 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should error when state name is > 200 chars', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title.'}]})
+      it('should error when state name is > 200 chars', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title. this is a crazy super long title.'}]})
           .catch(function(err) {
             expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "name" fails because ["name" length must be less than or equal to 200 characters long]]]');
+            done();
           });
       });
 
@@ -310,26 +324,44 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should error when shotsIndex < 0', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', shotsIndex: -1}]})
+      it('should error when shotsIndex < 0', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name', shotsIndex: -1}]})
           .catch(function(err) {
             expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "shotsIndex" fails because ["shotsIndex" must be larger than or equal to 0]]]');
+            done();
+          });
+      });
+
+      it('should error when url is not prefixed by http', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'localhost:8080/test.html', name: 'name'}]})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "states" fails because ["states" at position 0 fails because [child "url" fails because ["url" with value "localhost:8080/test.html" fails to match the required pattern: /^(http|https):\\/\\//]]]');
+            done();
+          });
+      });
+
+      it('should allow states when url is prefixed by http', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://localhost:8080/test.html', name: 'name'}]})
+          .catch(function() {
+            throw new Error('Should not be here');
           });
       });
     });
 
     describe('validate.browsers', function() {
-      it('should error when browsers is empty', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: []})
+      it('should error when browsers is empty', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: []})
           .catch(function(err) {
             expect(err.message).to.equal('child "browsers" fails because ["browsers" must contain at least 1 items]');
+            done();
           });
       });
 
-      it('should error when browsers are not unique', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'chrome' }], sauce: { username: 'user', accessKey: 'key' }})
+      it('should error when browsers are not unique', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome' }, { browserName: 'chrome' }], sauce: { username: 'user', accessKey: 'key' }})
           .catch(function(err) {
             expect(err.message).to.equal('child "browsers" fails because ["browsers" position 1 contains a duplicate value]');
+            done();
           });
       });
 
@@ -347,10 +379,11 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should error when both sauce and browserStack options are present', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }, browserStack: { username: 'user', accessKey: 'key' }})
+      it('should error when both sauce and browserStack options are present', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }, browserStack: { username: 'user', accessKey: 'key' }})
           .catch(function(err) {
             expect(err.message).to.equal('"sauce" conflict with forbidden peer "browserStack"');
+            done();
           });
       });
 
@@ -411,6 +444,55 @@ describe('screener-runner/src/validate', function() {
       });
     });
 
+    describe('validate.sauce', function() {
+      it('should forbid tunnelIdentifier when launchSauceConnect is true', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true, tunnelIdentifier: 'id'}})
+          .catch(function(err) {
+            expect(err.message).to.equal('tunnelIdentifier cannot be set when launchSauceConnect flag is enabled');
+            done();
+          });
+      });
+
+      it('should forbid tunnel object when launchSauceConnect is true', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], tunnel: {host: 'localhost:8080'}, sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('tunnel option cannot be set when launchSauceConnect flag is enabled');
+            done();
+          });
+      });
+
+      it('should forbid screener browsers when launchSauceConnect is true', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled');
+            done();
+          });
+      });
+
+      it('should forbid screener browsers(sauce browsers also offered) when launchSauceConnect is true', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'internet explorer', version: '11'}, {browserName: 'safari', version: '11.1'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled');
+            done();
+          });
+      });
+
+      it('should forbid if browser does not have dot version', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'safari', version: '11'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function(err) {
+            expect(err.message).to.equal('Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled');
+            done();
+          });
+      });
+
+      it('should allow sauce browsers when launchSauceConnect is true', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '78.0' }, { browserName: 'firefox', version: '70.0' }, { browserName: 'internet explorer', version: '11.0' }], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+    });
+
     describe('validate.resolutions', function() {
       it('should allow resolutions array by itself', function() {
         return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: ['1024x768']})
@@ -426,33 +508,37 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should not allow both resolution and resolutions', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: '1024x768', resolutions: ['1024x768']})
+      it('should not allow both resolution and resolutions', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: '1024x768', resolutions: ['1024x768']})
           .catch(function(err) {
             expect(err.message).to.equal('"resolutions" conflict with forbidden peer "resolution"');
+            done();
           });
       });
 
-      it('should throw error when resolutions is empty', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: []})
+      it('should throw error when resolutions is empty', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: []})
           .catch(function(err) {
             expect(err.message).to.equal('child "resolutions" fails because ["resolutions" must contain at least 1 items]');
+            done();
           });
       });
 
-      it('should throw error when resolutions in incorrect format', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: 'resolutions'})
+      it('should throw error when resolutions in incorrect format', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolutions: 'resolutions'})
           .catch(function(err) {
             expect(err.message).to.equal('child "resolutions" fails because ["resolutions" must be an array]');
+            done();
           });
       });
     });
 
     describe('validate.resolutionSchema', function() {
-      it('should throw error when resolution in incorrect format', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: 'resolution'})
+      it('should throw error when resolution in incorrect format', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: 'resolution'})
           .catch(function(err) {
             expect(err.message).to.equal('child "resolution" fails because ["resolution" with value "resolution" fails to match the resolution pattern, "resolution" must be an object, "resolution" must be an object]');
+            done();
           });
       });
 
@@ -491,10 +577,11 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should throw error when resolution object in incorrect format', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {deviceName: 'iPhone 6', width: 1024, height: 768}})
+      it('should throw error when resolution object in incorrect format', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name'}], resolution: {deviceName: 'iPhone 6', width: 1024, height: 768}})
           .catch(function(err) {
             expect(err.message).to.equal('child "resolution" fails because ["resolution" must be a string, "deviceName" is not allowed, "width" is not allowed, "height" is not allowed]');
+            done();
           });
       });
 
@@ -515,17 +602,19 @@ describe('screener-runner/src/validate', function() {
   });
 
   describe('validate.shots', function() {
-    it('should throw error when shots is empty', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: []})
+    it('should throw error when shots is empty', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: []})
         .catch(function(err) {
           expect(err.message).to.equal('child "shots" fails because ["shots" must contain at least 1 items]');
+          done();
         });
     });
 
-    it('should throw error when required fields are missing', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name'}]})
+    it('should throw error when required fields are missing', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name'}]})
         .catch(function(err) {
           expect(err.message).to.equal('child "shots" fails because ["shots" at position 0 fails because [child "resolution" fails because ["resolution" is required]]]');
+          done();
         });
     });
 
@@ -536,39 +625,47 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should error when resolution is invalid format', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: 'desktop', shotsDir: '/tmp/shots'}]})
+    it('should error when resolution is invalid format', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: 'desktop', shotsDir: '/tmp/shots'}]})
         .catch(function(err) {
           expect(err.message).to.equal('child "shots" fails because ["shots" at position 0 fails because [child "resolution" fails because ["resolution" with value "desktop" fails to match the resolution pattern]]]');
+          done();
         });
     });
 
-    it('should error when duplicate shots items are found', function() {
-      return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}, {name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}]})
+    it('should error when duplicate shots items are found', function(done) {
+      Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], shots: [{name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}, {name: 'name', resolution: '1024x768', shotsDir: '/tmp/shots'}]})
         .catch(function(err) {
           expect(err.message).to.equal('child "shots" fails because ["shots" position 1 contains a duplicate value]');
+          done();
         });
     });
   });
 
   describe('validate.steps', function() {
-    it('should error when value not array', function() {
-      var result = Validate.steps('test');
-      expect(result.error.message).to.equal('"value" must be an array');
+    it('should error when value not array', function(done) {
+      Validate.steps('test')
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" must be an array');
+          done();
+        });
     });
 
-    it('should error when step with invalid type added', function() {
+    it('should error when step with invalid type added', function(done) {
       var steps = [
         {
           type: 'type',
           name: 'hello'
         }
       ];
-      var result = Validate.steps(steps);
-      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+      Validate.steps(steps)
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" at position 0 does not match any of the allowed types');
+          done();
+        });
     });
 
-    it('should error when valid step with extra property is added', function() {
+    it('should error when valid step with extra property is added', function(done) {
       var testSteps = [
         {
           type: 'saveScreenshot',
@@ -576,19 +673,25 @@ describe('screener-runner/src/validate', function() {
           extra: 'prop'
         }
       ];
-      var result = Validate.steps(testSteps);
-      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+      Validate.steps(testSteps)
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" at position 0 does not match any of the allowed types');
+          done();
+        });
     });
 
-    it('should error with invalid url format', function() {
+    it('should error with invalid url format', function(done) {
       var steps = [
         {
           type: 'url',
           url: '/path'
         }
       ];
-      var result = Validate.steps(steps);
-      expect(result.error.message).to.equal('"value" at position 0 does not match any of the allowed types');
+      Validate.steps(steps)
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" at position 0 does not match any of the allowed types');
+          done();
+        });
     });
 
     it('should allow valid url format', function() {
@@ -598,13 +701,11 @@ describe('screener-runner/src/validate', function() {
           url: 'http://url.com'
         }
       ];
-      var result = Validate.steps(steps);
-      expect(result.error).to.equal(null);
+      return Validate.steps(steps)
+        .catch(function() {
+          throw new Error('Should not be here');
+        });
     });
 
-    it('should allow all valid types', function() {
-      var result = Validate.steps(steps);
-      expect(result.error).to.equal(null);
-    });
   });
 });

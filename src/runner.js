@@ -89,6 +89,7 @@ exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);
   return Validate.runnerConfig(config)
+    // get tunnel token with access key
     .then(function() {
       // add package version
       if (!config.meta) config.meta = {};
@@ -113,6 +114,7 @@ exports.run = function(config) {
         return Promise.resolve();
       }
     })
+    // setup proxy server: response is proxy host
     .then(function(response) {
       if (config.tunnel) {
         config.tunnel.token = response.token;
@@ -127,6 +129,7 @@ exports.run = function(config) {
         return Promise.resolve();
       }
     })
+    // establish ngrok tunnel and resolve ngrok url
     .then(function(proxyHost) {
       if (config.tunnel) {
         console.log('Connecting tunnel');
@@ -135,12 +138,13 @@ exports.run = function(config) {
         return Promise.resolve();
       }
     })
+    // transform URL in steps and send payload to back end
     .then(function(tunnelHost) {
       var totalStates = getTotalStates(config.states);
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode']);
+      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
       if (typeof payload.beforeEachScript === 'function') {
         payload.beforeEachScript = payload.beforeEachScript.toString();
       }
@@ -165,6 +169,7 @@ exports.run = function(config) {
       console.log('\nCreating build for ' + config.projectRepo);
       return api.createBuildWithRetry(config.apiKey, payload).timeout(MAX_MS, 'Timeout waiting for Build');
     })
+    // receive response from screener api and keep checking the build status
     .then(function(response) {
       config.project = response.project;
       config.build = response.build;
