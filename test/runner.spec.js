@@ -6,6 +6,7 @@ var clone = require('lodash/clone');
 var Runner = rewire('../src/runner');
 var Tunnel = require('../src/tunnel');
 var pkg = require('../package.json');
+var uuidv5 = require('uuid/v5');
 
 var config = {
   apiKey: 'api-key',
@@ -61,6 +62,7 @@ var tunnelMock = {
     if (config.sauce) {
       expect(config.sauce).to.have.deep.property('username', sauceCreds.username);
       expect(config.sauce).to.have.deep.property('accessKey', sauceCreds.accessKey);
+      expect(config.sauce.tunnelIdentifier).to.equal(uuidv5(config.sauce.username, uuidv5.URL));
       return Promise.resolve();
     }
   },
@@ -220,7 +222,11 @@ describe('screener-runner/src/runner', function() {
             branch: 'git-branch',
             pullRequest: '1',
             states: config.states,
-            sauce: sauceCreds,
+            sauce: {
+              username: 'user',
+              accessKey: 'key',
+              tunnelIdentifier: uuidv5(payload.sauce.username, uuidv5.URL),
+            },
             meta: {
               'screener-runner': pkg.version
             }
