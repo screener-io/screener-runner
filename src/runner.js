@@ -136,7 +136,7 @@ exports.run = function(config) {
         return Tunnel.connect({ ngrok: { host: proxyHost || config.tunnel.host, token: config.tunnel.token }});
       }
       if (config.sauce && config.sauce.launchSauceConnect) {
-        console.log('Connecting tunnel');
+        console.log('Connecting Sauce Connect tunnel');
         return Tunnel.connect({ sauce: config.sauce });
       }
       return Promise.resolve();
