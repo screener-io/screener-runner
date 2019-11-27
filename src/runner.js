@@ -138,7 +138,7 @@ exports.run = function(config) {
       }
       if (config.sauce && config.sauce.launchSauceConnect) {
         console.log('Connecting Sauce Connect tunnel');
-        config.sauce.tunnelIdentifier = uuidv5(config.sauce.username, uuidv5.URL);
+        config.sauce.tunnelIdentifier = `visual-runner-${uuidv5(config.sauce.accessKey, uuidv5.URL)}`;
         return Tunnel.connect({ sauce: config.sauce });
       }
       return Promise.resolve();
