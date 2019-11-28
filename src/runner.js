@@ -8,6 +8,7 @@ var Promise = require('bluebird');
 var cloneDeep = require('lodash/cloneDeep');
 var omit = require('lodash/omit');
 var pkg = require('../package.json');
+var shortid = require('shortid');
 
 var MAX_MS = 30 * 60 * 1000; // max 30 mins
 
@@ -137,6 +138,7 @@ exports.run = function(config) {
       }
       if (config.sauce && config.sauce.launchSauceConnect) {
         console.log('Connecting Sauce Connect tunnel');
+        config.sauce.tunnelIdentifier = `visual-runner-${shortid.generate()}`;
         return Tunnel.connect({ sauce: config.sauce });
       }
       return Promise.resolve();
