@@ -2,6 +2,7 @@ var expect = require('chai').expect;
 var rewire = require('rewire');
 var sinon = require('sinon');
 var Tunnel = rewire('../src/tunnel');
+var path = require('path');
 
 describe('screener-runner/src/tunnel', function() {
   this.timeout(5000);
@@ -21,6 +22,7 @@ describe('screener-runner/src/tunnel', function() {
           username: 'username',
           accessKey: 'accessKey',
           tunnelIdentifier: 'tunnelIdentifier',
+          logfile: path.resolve(__dirname, '../sauce-connect.log'),
         });
         cb(null, 'sauceConnection');
       });
