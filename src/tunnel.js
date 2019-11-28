@@ -10,6 +10,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
       sauceConnectLauncher({
         username: sauce.username,
         accessKey: sauce.accessKey,
+        tunnelIdentifier: sauce.tunnelIdentifier,
       }, function (err, sauceConnectProcess) {
         sauceConnection = sauceConnectProcess;
         if (err) {

@@ -48,6 +48,7 @@ var sauceCreds = {
   username: 'user',
   accessKey: 'key'
 };
+var tunnelIdentifier = 'visual-runner-tunnelIdentifier';
 var tunnelMock = {
   connect: function(config) {
     if (config.ngrok && config.sauce) {
@@ -61,6 +62,9 @@ var tunnelMock = {
     if (config.sauce) {
       expect(config.sauce).to.have.deep.property('username', sauceCreds.username);
       expect(config.sauce).to.have.deep.property('accessKey', sauceCreds.accessKey);
+      if (config.sauce.launchSauceConnect) {
+        expect(config.sauce.tunnelIdentifier).to.equal(tunnelIdentifier);
+      }
       return Promise.resolve();
     }
   },
@@ -120,6 +124,11 @@ describe('screener-runner/src/runner', function() {
   beforeEach(function() {
     Runner.__set__('Tunnel', tunnelMock);
     Runner.__set__('api', apiMock);
+    Runner.__set__('shortid', {
+      generate: () => {
+        return 'tunnelIdentifier';
+      }
+    });
   });
 
   describe('Runner.run', function() {
@@ -220,7 +229,11 @@ describe('screener-runner/src/runner', function() {
             branch: 'git-branch',
             pullRequest: '1',
             states: config.states,
-            sauce: sauceCreds,
+            sauce: {
+              username: 'user',
+              accessKey: 'key',
+              tunnelIdentifier,
+            },
             meta: {
               'screener-runner': pkg.version
             }

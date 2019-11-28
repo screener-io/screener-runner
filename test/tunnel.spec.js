@@ -20,16 +20,14 @@ describe('screener-runner/src/tunnel', function() {
         expect(options).to.deep.equal({
           username: 'username',
           accessKey: 'accessKey',
+          tunnelIdentifier: 'tunnelIdentifier',
         });
         cb(null, 'sauceConnection');
       });
-      Tunnel.connect({ sauce: { username: 'username', accessKey: 'accessKey' } })
+      Tunnel.connect({ sauce: { username: 'username', accessKey: 'accessKey', tunnelIdentifier: 'tunnelIdentifier' } })
         .then(function(response) {
           expect(response).to.equal(undefined);
           done();
-        })
-        .catch(e => {
-          console.log('333', e);
         });
     });
 
