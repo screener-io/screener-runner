@@ -2,6 +2,7 @@ var ngrokLauncher = require('screener-ngrok');
 var Promise = require('bluebird');
 var url = require('url');
 var sauceConnectLauncher = require('sauce-connect-launcher');
+var path = require('path');
 var sauceConnection;
 
 exports.connect = function({ ngrok, sauce }, tries = 0) {
@@ -11,6 +12,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
         username: sauce.username,
         accessKey: sauce.accessKey,
         tunnelIdentifier: sauce.tunnelIdentifier,
+        logfile: path.resolve(__dirname, '../sauce-connect.log'),
       }, function (err, sauceConnectProcess) {
         sauceConnection = sauceConnectProcess;
         if (err) {
