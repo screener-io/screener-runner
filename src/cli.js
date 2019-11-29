@@ -43,7 +43,7 @@ Runner.run(config)
     }
     console.error('---');
     console.error('Exiting Screener Runner');
-    console.error('Need help? Contact: support@screener.io');
+    console.error('Need help? Contact: help@saucelabs.com');
     var exitCode = 1;
     if (config && typeof config.failureExitCode === 'number' && config.failureExitCode > 0) {
       exitCode = config.failureExitCode;
