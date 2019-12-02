@@ -50,7 +50,7 @@ Run the following command:
 npm run test-screener
 ```
 
-### Testing Interactions
+## Testing Interactions
 
 To test interactions, you can add `Steps` to each state to interact with the UI. This is useful for clicking buttons, filling out forms, and getting the UI into the proper visual state to test.
 
@@ -219,7 +219,73 @@ module.exports = {
 | microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 | safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 
-### Additional Configuration Options
+### Sauce Connect Integration
+
+When using Sauce Labs browsers, you have the option to use the Sauce Connect tunnel by setting the flag `launchSauceConnect: true`. When enabled, Sauce Connect will be launched and managed by this module, and assigned a unique tunnel identifier.
+
+  ```javascript
+  sauce: {
+    username: 'sauce_user',
+    accessKey: 'sauce_access_key',
+    maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
+    launchSauceConnect: true // optional,
+  }
+  ```
+
+#### Sauce Connect Notes
+
+- Must use Sauce browsers
+
+  When you run your tests in sauce labs, you could only run your tests inside sauce browsers, which means that you have to specify both the name of the browser and the version of the browser up to one digit after the decimal dot:
+
+    ```javascript
+      browsers: [
+        {
+          browserName: 'chrome',
+          version: '78.0'
+        },
+        {
+          browserName: 'firefox',
+          version: '70.0'
+        },
+        {
+          browserName: 'internet explorer',
+          version: '11.0'
+        }
+      ]
+    ```
+
+  If you don't follow the rules, the runner will throw you the error: `Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled`.
+
+- Where Sauce Connect logs are stored
+
+  The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at the root directory of your `screener-runner` project.
+
+- Sauce tunnel can not be used together with ngrok tunnel
+
+  `ngrok` tunnel is forbidden when you run the sauce connect tunnel, which means you can not set
+
+    ```javascript
+      tunnel: {
+        host: 'localhost:3000'
+      }
+    ```
+
+  when you enable `launchSauceConnect`. If you don't follow the rules, the runner will throw you the error: `tunnel option cannot be set when launchSauceConnect flag is enabled`.
+
+- `launchSauceConnect` and `tunnelIdentifier`
+
+  Please note that if you turn `launchSauceConnect` to be true, the runner will set a unique `tunnelIdentifier` for you insead of setting by yourself. If you don't follow the rules, the runner will throw you the error: `tunnelIdentifier cannot be set when launchSauceConnect flag is enabled`.
+
+- Sauce Connect valid ports
+
+  When you run your tests in your localhost, please be cautious that sauce connect only supports these [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?).
+
+- Further question
+
+  If you have further question, you could visit [Sauce Connect FAQ](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS) and [Sauce Connect troubleshooting](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Troubleshooting) pages.
+
+## Additional Configuration Options
 
 **Note:** Screener will automatically set `build`, `branch`, and `commit` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Visual Studio Team Services, Codeship, GitLab CI, Drone, Bitbucket Pipelines, Semaphore, Buildkite.
 
@@ -342,7 +408,7 @@ module.exports = {
       maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
       extendedDebugging: true, // optional
       tunnelIdentifier: 'MyTunnel01', // optional
-      launchSauceConnect: true // optional
+      launchSauceConnect: true // optional, view "Sauce Connect" for more information
     }
     ```
 
@@ -354,60 +420,3 @@ module.exports = {
       instance: 'myproject.visualstudio.com'
     }
     ```
-
-### Sauce Connect Integration
-
-You could run your tests through sauce connect tunnel by setting the flag `launchSauceConnect: true`:
-
-  ```javascript
-  sauce: {
-    username: 'sauce_user',
-    accessKey: 'sauce_access_key',
-    maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
-    extendedDebugging: true, // optional
-    launchSauceConnect: true // optional
-  }
-  ```
-
-The sauce connect tunnel will generate `sauce-connect.log` log file for debugging purpose at the root directory of your `screener-runner` project.
-
-#### Mutual Exclusion Relationship
-
-- `launchSauceConnect` and `tunnelIdentifier`
-  Please note that if you turn `launchSauceConnect` to be true, the runner will set a unique `tunnelIdentifier` for you insead of setting by yourself. If you don't follow the rules, the runner will throw you the error: `tunnelIdentifier cannot be set when launchSauceConnect flag is enabled`.
-- `ngrok` tunnel and `sauce connect` tunnel
-  `ngrok` tunnel is forbidden when you run the sauce connect tunnel, which means you can not set
-
-```javascript
-  tunnel: {
-    host: 'localhost:3000'
-  }
-```
-
-  when you enable `launchSauceConnect`. If you don't follow the rules, the runner will throw you the error: `tunnel option cannot be set when launchSauceConnect flag is enabled`.
-
-- `sauce` browsers and `screener` browsers
-  When you run your tests in sauce labs, you could only run your tests inside sauce browsers, which means that you have to specify both the name of the browser and the version of the browser up to one digit after the decimal dot:
-
-```javascript
-  browsers: [
-    {
-      browserName: 'chrome',
-      version: '78.0'
-    },
-    {
-      browserName: 'firefox',
-      version: '70.0'
-    },
-    {
-      browserName: 'internet explorer',
-      version: '11.0'
-    }
-  ]
-```
-
-  If you don't follow the rules, the runner will throw you the error: `Only Sauce Labs browsers with version can be used when launchSauceConnect flag is enabled`.
-
-#### Caveat
-
-When you run your tests in your localhost, please be cautious that sauce connect only supports these [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?).
