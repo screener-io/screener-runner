@@ -12,7 +12,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
         username: sauce.username,
         accessKey: sauce.accessKey,
         tunnelIdentifier: sauce.tunnelIdentifier,
-        logfile: path.resolve(__dirname, '../sauce-connect.log'),
+        logfile: path.resolve(__dirname, '../../../sauce-connect.log'),
       }, function (err, sauceConnectProcess) {
         sauceConnection = sauceConnectProcess;
         if (err) {
