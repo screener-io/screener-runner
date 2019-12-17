@@ -8,6 +8,7 @@ var Promise = require('bluebird');
 var cloneDeep = require('lodash/cloneDeep');
 var omit = require('lodash/omit');
 var pkg = require('../package.json');
+var shortid = require('shortid');
 
 var MAX_MS = 30 * 60 * 1000; // max 30 mins
 
@@ -89,6 +90,7 @@ exports.run = function(config) {
   // create copy of config
   config = cloneDeep(config);
   return Validate.runnerConfig(config)
+    // get tunnel token with access key
     .then(function() {
       // add package version
       if (!config.meta) config.meta = {};
@@ -113,6 +115,7 @@ exports.run = function(config) {
         return Promise.resolve();
       }
     })
+    // setup proxy server: response is proxy host
     .then(function(response) {
       if (config.tunnel) {
         config.tunnel.token = response.token;
@@ -127,20 +130,26 @@ exports.run = function(config) {
         return Promise.resolve();
       }
     })
+    // establish tunnel (ngrok or sauce connect)
     .then(function(proxyHost) {
       if (config.tunnel) {
         console.log('Connecting tunnel');
-        return Tunnel.connect(proxyHost || config.tunnel.host, config.tunnel.token);
-      } else {
-        return Promise.resolve();
+        return Tunnel.connect({ ngrok: { host: proxyHost || config.tunnel.host, token: config.tunnel.token }});
       }
+      if (config.sauce && config.sauce.launchSauceConnect) {
+        console.log('Connecting Sauce Connect tunnel');
+        config.sauce.tunnelIdentifier = `visual-runner-${shortid.generate()}`;
+        return Tunnel.connect({ sauce: config.sauce });
+      }
+      return Promise.resolve();
     })
+    // transform URL in steps and send payload to back end
     .then(function(tunnelHost) {
       var totalStates = getTotalStates(config.states);
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode']);
+      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
       if (typeof payload.beforeEachScript === 'function') {
         payload.beforeEachScript = payload.beforeEachScript.toString();
       }
@@ -165,6 +174,7 @@ exports.run = function(config) {
       console.log('\nCreating build for ' + config.projectRepo);
       return api.createBuildWithRetry(config.apiKey, payload).timeout(MAX_MS, 'Timeout waiting for Build');
     })
+    // receive response from screener api and keep checking the build status
     .then(function(response) {
       config.project = response.project;
       config.build = response.build;
@@ -175,12 +185,20 @@ exports.run = function(config) {
       timer = setInterval(function() { console.log('.'); }, 120*1000);
       return api.waitForBuild(config.apiKey, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
     })
+    // disconnect tunnel and relay the response
+    .then(function(response) {
+      if (config.tunnel || (config.sauce && config.sauce.launchSauceConnect)) {
+        console.log('Disconnecting tunnel');
+        return Tunnel.disconnect()
+          .then(() => {
+            return response;
+          });
+      }
+      return response;
+    })
+    // receive response from screener api and keep checking the build status
     .then(function(response) {
       clearInterval(timer);
-      if (config.tunnel) {
-        console.log('Disconnecting tunnel');
-        Tunnel.disconnect();
-      }
       if (response.indexOf('Build failed.') >= 0 && (config.failureExitCode !== 0 || response.indexOf('error running') >= 0)) {
         throw new Error(response);
       }

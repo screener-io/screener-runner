@@ -2,13 +2,14 @@
 
 Test Runner for [Screener.io](https://screener.io) Visual Testing service.
 
-### Installation
+## Installation
 
-```
-$ npm install --save-dev screener-runner
+```bash
+npm install --save-dev screener-runner
 ```
 
 Then add a script to your `package.json`:
+
 ```javascript
 "scripts": {
   "test-screener": "screener-runner --conf screener.config.js"
@@ -17,7 +18,8 @@ Then add a script to your `package.json`:
 
 Then add a configuration file to your project root. Here is an example:
 
-**screener.config.js**
+### screener.config.js
+
 ```javascript
 module.exports = {
   // full repository name for your project:
@@ -40,15 +42,15 @@ module.exports = {
 };
 ```
 
-### Run
+## Run
 
 Run the following command:
 
-```
-$ npm run test-screener
+```bash
+npm run test-screener
 ```
 
-### Testing Interactions
+## Testing Interactions
 
 To test interactions, you can add `Steps` to each state to interact with the UI. This is useful for clicking buttons, filling out forms, and getting the UI into the proper visual state to test.
 
@@ -79,25 +81,31 @@ The following methods are currently available:
 
 - `url(url)`: this will load a new url.
 - `click(selector)`: this will click on the first element matching the provided css selector.
-     - When selector is not found, will automatically retry. Default timeout is 15 seconds.
-     - Optional `options` param can contain a `maxTime` option (in ms):
-     ```javascript
-     .click('.selector', {maxTime: 30000})
-     ```
+  - When selector is not found, will automatically retry. Default timeout is 15 seconds.
+  - Optional `options` param can contain a `maxTime` option (in ms):
+
+    ```javascript
+    .click('.selector', {maxTime: 30000})
+    ```
+
 - `snapshot(name, [options])`: this will capture a visual snapshot.
-     - Optional `options` param can contain a `cropTo` option:
-     ```javascript
-     .snapshot('open', {cropTo: '.selector'})
-     ```
+  - Optional `options` param can contain a `cropTo` option:
+
+    ```javascript
+    .snapshot('open', {cropTo: '.selector'})
+    ```
+
 - `hover(selector)`: this will move the mouse over the first element matching the provided css selector.
 - `mouseDown(selector)`: this will press and hold the mouse button over the first element matching the provided css selector.
 - `mouseUp(selector)`: this will release the mouse button. `selector` is optional.
 - `focus(selector)`: this will set cursor focus on the first element matching the provided css selector.
 - `setValue(selector, value, [options])`: this will set the value of the input field matching the provided css selector.
-     - Optional `options` param can contain an `isPassword` option:
-     ```javascript
-     .setValue('.selector', 'text', {isPassword: true})
-     ```
+  - Optional `options` param can contain an `isPassword` option:
+
+    ```javascript
+    .setValue('.selector', 'text', {isPassword: true})
+    ```
+
 - `clearValue(selector)`: this will clear the value of the input field matching the provided css selector.
 - `keys(selector, keys)`: this will send the provided keys to the first element matching the provided css selector.
 - `executeScript(code)`: this executes custom JS code against the client browser the test is running in. The `code` parameter is a **string**.
@@ -105,10 +113,12 @@ The following methods are currently available:
 - `clearIgnores()`: this resets all ignores added using the ignore(selector) step.
 - `wait(ms)`: this will pause execution for the specified number of ms.
 - `wait(selector)`: this will wait until the element matching the provided css selector is present. Default timeout is 60 seconds.
-     - Optional `options` param can contain a `maxTime` option (in ms):
-     ```javascript
-     .wait('.selector', {maxTime: 90000})
-     ```
+  - Optional `options` param can contain a `maxTime` option (in ms):
+
+    ```javascript
+    .wait('.selector', {maxTime: 90000})
+    ```
+
 - `waitForNotFound(selector)`: this will wait until the element matching the provided css selector is Not present.
 - `cssAnimations(isEnabled)`: this will override the global cssAnimations option for the current UI state. Set to `true` to enable CSS Animations, and set to `false` to disable.
 - `rtl()`: this will set the current UI state to right-to-left direction.
@@ -117,8 +127,7 @@ The following methods are currently available:
 
 **Note:** When adding `Steps` using the fluent API, you **must** end the method chain with `end()`.
 
-
-### Testing Responsive Designs
+## Testing Responsive Designs
 
 To test against multiple resolutions or devices, you can add `resolutions` to your screener configuration file, with an array of resolutions.
 
@@ -146,7 +155,7 @@ module.exports = {
 };
 ```
 
-**Available Devices**
+### Available Devices
 
 `deviceName` can be one of the following values:
 
@@ -162,10 +171,9 @@ module.exports = {
 |          | iPhone 8 Plus |           |
 |          | iPhone X      |           |
 
+## Cross Browser Testing
 
-### Cross Browser Testing
-
-**Overview**
+### Overview
 
 For Cross Browser Testing, Screener provides cloud browsers and device emulators. The following browsers are available:
 
@@ -177,7 +185,7 @@ To test against additional browsers, Screener provides integrations with [Sauce 
 
 Cross Browser Testing is available through Screener's Perform plan. By default, Screener runs tests against the Chrome browser.
 
-**Adding Browsers**
+### Adding Browsers
 
 To test against multiple browsers, add the `browsers` option to your `screener.config.js` file:
 
@@ -199,10 +207,9 @@ module.exports = {
     }
   ]
 };
-
 ```
 
-**Supported Browsers**
+### Supported Browsers
 
 | browserName  | version | |
 | ------------- | ------------- | ------------- |
@@ -212,11 +219,34 @@ module.exports = {
 | microsoftedge | 17.17134 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 | safari | 11.1 | requires [Sauce Labs](https://screener.io/v2/docs/sauce) Integration |
 
+### Sauce Connect Integration
 
+When using Sauce Labs browsers, you have the option to use the Sauce Connect tunnel by setting the flag `launchSauceConnect: true`. When enabled, Sauce Connect will be launched and managed by this module, and assigned a unique tunnel identifier.
 
+  ```javascript
+  sauce: {
+    username: 'sauce_user',
+    accessKey: 'sauce_access_key',
+    maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
+    launchSauceConnect: true // optional,
+  }
+  ```
 
+#### Important Notes on Sauce Connect
 
-### Additional Configuration Options
+- Sauce Connect Integration requires all browsers to be Sauce Labs Browsers. An error is thrown when using non-Sauce browsers.
+
+- Logs for Sauce Connect are saved in the root of your project under `sauce-connect.log` for debugging purposes.
+
+- Sauce Connect tunnel cannot be used together with the `tunnel` option.
+
+- A unique `tunnelIdentifier` is automatically generated for you when using the Sauce Connect Integration. An error is thrown when `tunnelIdentifier` is set manually.
+
+- When running Sauce Connect tunnel on your localhost, please note that Sauce Connect only supports a limited set of [valid ports](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS#SauceConnectProxyFAQs-CanIAccessApplicationsonlocalhost?).
+
+- For additional information on Sauce Connect please refer to the [Sauce Connect FAQ](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+FAQS) and [Sauce Connect Troubleshooting](https://wiki.saucelabs.com/display/DOCS/Sauce+Connect+Proxy+Troubleshooting) documentation.
+
+## Additional Configuration Options
 
 **Note:** Screener will automatically set `build`, `branch`, and `commit` options if you are using one of the following CI tools: Jenkins, CircleCI, Travis CI, Visual Studio Team Services, Codeship, GitLab CI, Drone, Bitbucket Pipelines, Semaphore, Buildkite.
 
@@ -224,48 +254,57 @@ module.exports = {
 - **branch:** Branch name being built (see note above).
 - **commit:** Commit hash of the build (see note above).
 - **resolution:** Screen resolution to use. Defaults to `1024x768`
-    - Accepts a string in the format: `<width>x<height>`. Example: `1024x768`
-    - Or accepts an object for Device Emulation. Example:
+  - Accepts a string in the format: `<width>x<height>`. Example: `1024x768`
+  - Or accepts an object for Device Emulation. Example:
+
     ```javascript
     resolution: {
       deviceName: 'iPhone 6'
     }
     ```
-    - deviceOrientation option also available. Can be `portrait` or `landscape`. Defaults to `portrait`.
+
+  - deviceOrientation option also available. Can be `portrait` or `landscape`. Defaults to `portrait`.
 - **resolutions:** Array of resolutions for Responsive Design Testing. Each item in array is a `resolution`, either string or object format.
-    - See "Testing Responsive Designs" above for an example
-    - Note: `resolution` and `resolutions` are mutually exclusive. Only one can exist.
+  - See "Testing Responsive Designs" above for an example
+  - Note: `resolution` and `resolutions` are mutually exclusive. Only one can exist.
 - **cssAnimations:** Screener disables CSS Animations by default to help ensure consistent results in your visual tests. If you do not want this, and would like to __enable__ CSS Animations, then set this option to `true`.
 - **ignore:** Comma-delimited string of CSS Selectors that represent areas to be ignored. Example: `.qa-ignore-date, .qa-ignore-ad`
 - **hide:** Comma-delimited string of CSS Selectors that represent areas to hide before capturing screenshots. Example: `.hide-addon-widget, .hide-ad`
 - **baseBranch:** Optional branch name of your project's base branch (e.g. master). Set this option when developing using feature branches to:
-    - automatically compare and accept changes when merging a feature branch into the base branch, or when rebasing a feature branch.
-    - automatically pull the initial baseline of UI states for a feature branch from this base branch.
+  - automatically compare and accept changes when merging a feature branch into the base branch, or when rebasing a feature branch.
+  - automatically pull the initial baseline of UI states for a feature branch from this base branch.
 - **includeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be kept.
-    - Example:
+  - Example:
+
     ```javascript
     includeRules: [
       /^Component/
     ]
     ```
-    - Note: `includeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
+
+  - Note: `includeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
 - **excludeRules:** Optional array of RegExp expressions to filter states by. Rules are matched against state name. All matching states will be removed.
-    - Example:
+  - Example:
+
     ```javascript
     excludeRules: [
       /^Component/
     ]
     ```
-    - Note: `excludeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
+
+  - Note: `excludeRules` can be added as a property to objects in `browsers` or `resolutions` in order to filter states specifically by a browser or resolution.
 - **tunnel.host:** The internal host to tunnel. If this is set, an encrypted tunnel will be automatically started by screener-runner to the specified host.
-    - Example:
+  - Example:
+
     ```javascript
     tunnel: {
       host: 'localhost:3000'
     }
     ```
-    - Note: for HTTPS, add the protocol when setting the host: `https://localhost`
-    - `gzip` and `cache` options are also available to improve tunnel performance. Example:
+
+  - Note: for HTTPS, add the protocol when setting the host: `https://localhost`
+  - `gzip` and `cache` options are also available to improve tunnel performance. Example:
+
     ```javascript
     tunnel: {
       host: 'localhost:3000',
@@ -273,8 +312,10 @@ module.exports = {
       cache: true // sets cache-control header for all content being served from tunnel host. Must be used with gzip option
     }
     ```
+
 - **diffOptions:** Visual diff options to control validations.
-    - Example:
+  - Example:
+
     ```javascript
     diffOptions: {
       structure: true,
@@ -287,6 +328,7 @@ module.exports = {
       compareSVGDOM: false // Pass if SVG DOM is the same. Defaults to false.
     }
     ```
+
 - **failOnNewStates:** Option to set build to failure when `new` states are found, and to disable using `new` states as a baseline. Defaults to true.
 - **alwaysAcceptBaseBranch:** Option to automatically accept `new` and `changed` states in base branch. Assumes base branch should always be correct.
 - **disableAutoSnapshots:** Option to disable initial visual snapshots automatically captured for each state. Defaults to false.
@@ -294,38 +336,46 @@ module.exports = {
 - **disableConcurrency:** Option to disable running tests concurrently. This may be useful when test flows run concurrently may cause data conflicts or inconsistencies. Defaults to false.
 - **newSessionForEachState:** Option to start a new test session for each state. Defaults to false.
 - **failureExitCode:** The exit code to use on failure. Defaults to 1, which will fail a CI build.
-    - To NOT fail a CI build on Screener failure, set to 0. Example:
+  - To NOT fail a CI build on Screener failure, set to 0. Example:
+
     ```javascript
     failureExitCode: 0
     ```
+
 - **browsers:** Optional array of browsers for Cross Browser Testing. Each item in array is an object with `browserName` and `version` properties.
-    - `browserName` and `version` *must* match one of the supported browsers/versions in the browser table above.
-	- Example:
-	```javascript
-    browsers: [
-      {
-        browserName: 'chrome'
-      },
-      {
-        browserName: 'safari',
-        version: '11.1'
-      }
-    ]
-    ```
+  - `browserName` and `version` *must* match one of the supported browsers/versions in the browser table above.
+  - Example:
+
+    ```javascript
+      browsers: [
+        {
+          browserName: 'chrome'
+        },
+        {
+          browserName: 'safari',
+          version: '11.1'
+        }
+      ]
+      ```
+
 - **ieNativeEvents:** Option to enable native events in Internet Explorer browser. Defaults to false.
 - **sauce:** Optional Sauce Labs credentials for Cross Browser Testing.
-    - Example:
+  - Example:
+
     ```javascript
     sauce: {
       username: 'sauce_user',
       accessKey: 'sauce_access_key',
       maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
       extendedDebugging: true, // optional
-      tunnelIdentifier: 'MyTunnel01' // optional
+      tunnelIdentifier: 'MyTunnel01', // optional
+      launchSauceConnect: true // optional, view "Sauce Connect" for more information
     }
     ```
+
 - **vsts:** Optional configuration for integrating with Visual Studio Team Services.
-    - Example:
+  - Example:
+
     ```javascript
     vsts: {
       instance: 'myproject.visualstudio.com'
