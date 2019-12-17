@@ -48,13 +48,27 @@ var sauceCreds = {
   username: 'user',
   accessKey: 'key'
 };
+var tunnelIdentifier = 'visual-runner-tunnelIdentifier';
 var tunnelMock = {
-  connect: function(host, token) {
-    expect(host).to.equal('localhost:8081');
-    expect(token).to.equal('token');
-    return Promise.resolve('tunnel-url');
+  connect: function(config) {
+    if (config.ngrok && config.sauce) {
+      expect(config).to.deep.equal({ ngrok: { host: 'localhost:8081', token: 'token' }, sauce: sauceCreds });
+      return Promise.resolve('tunnel-url');
+    }
+    if (config.ngrok) {
+      expect(config).to.deep.equal({ ngrok: { host: 'localhost:8081', token: 'token' }});
+      return Promise.resolve('tunnel-url');
+    }
+    if (config.sauce) {
+      expect(config.sauce).to.have.deep.property('username', sauceCreds.username);
+      expect(config.sauce).to.have.deep.property('accessKey', sauceCreds.accessKey);
+      if (config.sauce.launchSauceConnect) {
+        expect(config.sauce.tunnelIdentifier).to.equal(tunnelIdentifier);
+      }
+      return Promise.resolve();
+    }
   },
-  disconnect: sinon.spy(),
+  disconnect: sinon.stub().resolves(),
   transformUrl: Tunnel.transformUrl
 };
 var apiMock = {
@@ -110,18 +124,24 @@ describe('screener-runner/src/runner', function() {
   beforeEach(function() {
     Runner.__set__('Tunnel', tunnelMock);
     Runner.__set__('api', apiMock);
+    Runner.__set__('shortid', {
+      generate: () => {
+        return 'tunnelIdentifier';
+      }
+    });
   });
 
   describe('Runner.run', function() {
-    it('should run test and wait for successful test status to return', function() {
-      return Runner.run(config)
+    it('should run test and wait for successful test status to return', function(done) {
+      Runner.run(config)
         .then(function(response) {
-          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(tunnelMock.disconnect.callCount).to.equal(0);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should convert beforeEachScript to string', function() {
+    it('should convert beforeEachScript to string', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -137,13 +157,14 @@ describe('screener-runner/src/runner', function() {
       });
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.beforeEachScript = function() { console.log('hello'); };
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should handle multi-browser test run', function() {
+    it('should handle multi-browser test run', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -181,14 +202,65 @@ describe('screener-runner/src/runner', function() {
       ];
       tmpConfig.sauce = sauceCreds;
       tmpConfig.pullRequest = '1';
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
-          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(tunnelMock.disconnect.callCount).to.equal(0);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should convert browser includeRules/excludeRules regex to objects', function() {
+    it('should run sauce browsers using sauce connect tunnel', function(done) {
+      Runner.__set__('api', {
+        getTunnelToken: apiMock.getTunnelToken,
+        getApiUrl: apiMock.getApiUrl,
+        createBuildWithRetry: function(apiKey, payload) {
+          expect(payload).to.deep.equal({
+            projectRepo: 'repo',
+            browsers: [
+              { browserName: 'chrome', version: '78.0' },
+              { browserName: 'safari', version: '11.0' }
+            ],
+            resolutions: [
+              '1024x768',
+              { deviceName: 'iPhone 6' }
+            ],
+            build: 'build-id',
+            branch: 'git-branch',
+            pullRequest: '1',
+            states: config.states,
+            sauce: {
+              username: 'user',
+              accessKey: 'key',
+              tunnelIdentifier,
+            },
+            meta: {
+              'screener-runner': pkg.version
+            }
+          });
+          return Promise.resolve({
+            project: 'project-id',
+            build: 'build-id'
+          });
+        },
+        waitForBuild: apiMock.waitForBuild
+      });
+      var tmpConfig = JSON.parse(JSON.stringify(config));
+      tmpConfig.browsers = [
+        { browserName: 'chrome', version: '78.0' },
+        { browserName: 'safari', version: '11.0' }
+      ];
+      tmpConfig.sauce = { username: sauceCreds.username, accessKey: sauceCreds.accessKey, launchSauceConnect: true };
+      tmpConfig.pullRequest = '1';
+      Runner.run(tmpConfig)
+        .then(function(response) {
+          expect(tunnelMock.disconnect.callCount).to.equal(1);
+          expect(response).to.equal('status');
+          done();
+        });
+    });
+
+    it('should convert browser includeRules/excludeRules regex to objects', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -226,14 +298,15 @@ describe('screener-runner/src/runner', function() {
       ];
       tmpConfig.sauce = sauceCreds;
       tmpConfig.pullRequest = '1';
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
-          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(tunnelMock.disconnect.callCount).to.equal(1);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should convert resolution includeRules/excludeRules regex to objects', function() {
+    it('should convert resolution includeRules/excludeRules regex to objects', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -263,23 +336,25 @@ describe('screener-runner/src/runner', function() {
         { width: 1024, height: 768, includeRules: [/^Button/, 'Component'] },
         { deviceName: 'iPhone 6', excludeRules: [/^Button/, 'Component'] }
       ];
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .then(function(response) {
-          expect(tunnelMock.disconnect.called).to.equal(false);
+          expect(tunnelMock.disconnect.callCount).to.equal(1);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should cancel test run when there are no states', function() {
+    it('should cancel test run when there are no states', function(done) {
       var tmpConfig = JSON.parse(JSON.stringify(config));
       tmpConfig.states = [];
-      return Runner.run(tmpConfig)
+      Runner.run(tmpConfig)
         .catch(function(err) {
           expect(err.message).to.equal('No states to test');
+          done();
         });
     });
 
-    it('should connect, convert to tunnel urls, and disconnect tunnel when tunnel.host exists', function() {
+    it('should connect, convert to tunnel urls, and disconnect tunnel when tunnel.host exists', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
@@ -337,14 +412,15 @@ describe('screener-runner/src/runner', function() {
         host: 'localhost:8080',
         gzip: true
       };
-      return Runner.run(tmpData)
+      Runner.run(tmpData)
         .then(function(response) {
-          expect(tunnelMock.disconnect.called).to.equal(true);
+          expect(tunnelMock.disconnect.callCount).to.equal(2);
           expect(response).to.equal('status');
+          done();
         });
     });
 
-    it('should run test and wait for failure test status to return', function() {
+    it('should run test and wait for failure test status to return', function(done) {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         createBuildWithRetry: apiMock.createBuildWithRetry,
@@ -353,9 +429,10 @@ describe('screener-runner/src/runner', function() {
           return Promise.resolve('Build failed.');
         }
       });
-      return Runner.run(config)
+      Runner.run(config)
         .catch(function(err) {
           expect(err.message).to.equal('Build failed.');
+          done();
         });
     });
   });
