@@ -78,7 +78,7 @@ exports.getVars = function() {
     return {
       build: env.SEMAPHORE_BUILD_NUMBER || env.SEMAPHORE_WORKFLOW_ID,
       branch: env.BRANCH_NAME || env.SEMAPHORE_GIT_BRANCH,
-      commit: env.REVISION || env.SEMAPHORE_GIT_PR_SHA
+      commit: env.REVISION || env.SEMAPHORE_GIT_PR_SHA || env.SEMAPHORE_GIT_SHA
     };
   }
   // GitLab
