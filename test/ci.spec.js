@@ -185,12 +185,12 @@ describe('screener-runner/src/ci', function() {
       });
     });
 
-    it('should return build/branch from Semaphore 2.0', function() {
+    it('should return build/branch from Semaphore 2.0 No PR', function() {
       process.env = {
         CI: 'true',
         SEMAPHORE: 'true',
         SEMAPHORE_GIT_BRANCH: 'semaphore2-branch',
-        SEMAPHORE_GIT_PR_SHA: 'semaphore2-commit',
+        SEMAPHORE_GIT_SHA: 'semaphore2-commit',
         SEMAPHORE_WORKFLOW_ID: 'semaphore2-build'
       };
       var result = CI.getVars();
@@ -198,6 +198,22 @@ describe('screener-runner/src/ci', function() {
         build: 'semaphore2-build',
         branch: 'semaphore2-branch',
         commit: 'semaphore2-commit'
+      });
+    });
+
+    it('should return build/branch from Semaphore 2.0 PR', function() {
+      process.env = {
+        CI: 'true',
+        SEMAPHORE: 'true',
+        SEMAPHORE_GIT_BRANCH: 'semaphore2-branch',
+        SEMAPHORE_GIT_PR_SHA: 'semaphore2-pr-commit',
+        SEMAPHORE_WORKFLOW_ID: 'semaphore2-build'
+      };
+      var result = CI.getVars();
+      expect(result).to.deep.equal({
+        build: 'semaphore2-build',
+        branch: 'semaphore2-branch',
+        commit: 'semaphore2-pr-commit'
       });
     });
 
