@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.2
+- Add handling for Semaphore 2.0, using env vars SEMAPHORE_WORKFLOW_ID,  SEMAPHORE_GIT_BRANCH, SEMAPHORE_GIT_PR_SHA.
+
 ## 0.11.1
 
 - Specify the version of Sauce Connect that is being used by screener-runner.
