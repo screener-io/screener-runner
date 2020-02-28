@@ -379,6 +379,13 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should allow browsers to have any subset of a semver version', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '70.0.1' }, { browserName: 'firefox', version: '57.0' }, { browserName: 'microsoftedge', version: '17' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
       it('should error when both sauce and browserStack options are present', function(done) {
         Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }, browserStack: { username: 'user', accessKey: 'key' }})
           .catch(function(err) {
