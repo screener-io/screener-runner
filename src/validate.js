@@ -41,7 +41,7 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   }),
   Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
-    version: Joi.string().regex(/^(\d+)(\.\d+)?(\.\d+)?$/).required(),
+    version: Joi.string().regex(/^(\d+\.\d+)(\.\d+)?$/).required(),
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   })
