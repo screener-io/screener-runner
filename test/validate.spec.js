@@ -379,8 +379,23 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
-      it('should allow browsers to have any subset of a semver version', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '70.0.1' }, { browserName: 'firefox', version: '57.0' }, { browserName: 'microsoftedge', version: '17' }]})
+      it('should allow browsers to have minor and patch versions', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '70.0.1' }, { browserName: 'firefox', version: '57.0' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when browser is a major version', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11' }])
+          .catch(function(err) {
+            expect(err.message).to.equal('"value" at position 0 does not match any of the allowed types');
+            done();
+          });
+      });
+
+      it('should allow internet explorer browser to have major version 11', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'internet explorer', version: '11' }]})
           .catch(function() {
             throw new Error('Should not be here');
           });
