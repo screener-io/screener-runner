@@ -379,6 +379,28 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should allow browsers to have minor and patch versions', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '70.0.1' }, { browserName: 'firefox', version: '57.0' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
+      it('should error when browser has a major version', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11' }]})
+          .catch(function(err) {
+            expect(err.message).to.equal('child "browsers" fails because ["browsers" at position 0 does not match any of the allowed types]');
+            done();
+          });
+      });
+
+      it('should allow internet explorer browser to have major version 11', function() {
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'internet explorer', version: '11' }]})
+          .catch(function() {
+            throw new Error('Should not be here');
+          });
+      });
+
       it('should error when both sauce and browserStack options are present', function(done) {
         Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11.0' }], sauce: { username: 'user', accessKey: 'key' }, browserStack: { username: 'user', accessKey: 'key' }})
           .catch(function(err) {
