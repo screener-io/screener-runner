@@ -387,9 +387,9 @@ describe('screener-runner/src/validate', function() {
       });
 
       it('should error when browser has a major version', function(done) {
-        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11' }])
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'safari', version: '11' }]})
           .catch(function(err) {
-            expect(err.message).to.equal('"value" at position 0 does not match any of the allowed types');
+            expect(err.message).to.equal('child "browsers" fails because ["browsers" at position 0 does not match any of the allowed types]');
             done();
           });
       });
