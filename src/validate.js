@@ -41,7 +41,7 @@ var browsersSchema = exports.browsersSchema = Joi.array().min(1).unique().items(
   }),
   Joi.object().keys({
     browserName: Joi.string().valid('chrome', 'firefox', 'safari', 'microsoftedge', 'internet explorer').required(),
-    version: Joi.string().regex(/^(\d+\.\d+)(\.\d+)?$/).required(),
+    version: Joi.string().regex(/^(\d+\.\d+)(\.\d+)?$/).required()
     includeRules: includeRulesSchema,
     excludeRules: excludeRulesSchema
   })
@@ -80,6 +80,11 @@ var browserStackSchema = exports.browserStackSchema = Joi.object().keys({
   accessKey: Joi.string().required(),
   maxConcurrent: Joi.number()
 });
+
+var ngrokSchema = exports.ngrokSchema = Joi.object().keys({
+  logFile: Joi.string(),
+  logLevel: Joi.string().valid('debug', 'error', 'warn', 'info')
+})
 
 var uniqShotGroup = function(a, b) {
   return a.name === b.name && a.resolution === b.resolution;
@@ -208,6 +213,7 @@ var runnerSchema = Joi.object().keys({
   sauce: sauceSchema,
   vsts: vstsSchema,
   browserStack: browserStackSchema,
+  ngrok: ngrokSchema,
   meta: Joi.object(),
   failOnNewStates: Joi.boolean(),
   alwaysAcceptBaseBranch: Joi.boolean(),

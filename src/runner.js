@@ -134,8 +134,14 @@ exports.run = function(config) {
     .then(function(proxyHost) {
       if (config.tunnel) {
         console.log('Connecting tunnel');
-        return Tunnel.connect({ ngrok: { host: proxyHost || config.tunnel.host, token: config.tunnel.token }});
-      }
+        var tunnelOptions = { host: proxyHost || config.tunnel.host, token: config.tunnel.token}}      
+        if (config.ngrok.logFile) {
+          tunnelOptions.logFile = config.ngrok.logFile;
+        }
+        if (config.ngrok.loglevel) {
+          tunnelOptions.logLevel = config.ngrok.loglevel;
+        }
+        return Tunnel.connect({ ngrok: tunnelOptions })
       if (config.sauce && config.sauce.launchSauceConnect) {
         console.log('Connecting Sauce Connect tunnel');
         config.sauce.tunnelIdentifier = `visual-runner-${shortid.generate()}`;
@@ -149,7 +155,7 @@ exports.run = function(config) {
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
+      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect', 'ngrok']);
       if (typeof payload.beforeEachScript === 'function') {
         payload.beforeEachScript = payload.beforeEachScript.toString();
       }

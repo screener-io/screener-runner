@@ -33,7 +33,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
   }
 
   if (ngrok) {
-    var { host, token } = ngrok;
+    var { host, token, logFile, logLevel } = ngrok;
     if (!token) {
       return Promise.reject(new Error('No Tunnel Token'));
     }
@@ -41,8 +41,15 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
     var urlObj = url.parse(href);
     var options = {
       bind_tls: true,
-      authtoken: token
+      authtoken: token,
     };
+
+    if (logFile) {
+      options.logFile = logFile;
+    }
+    if (logLevel) {
+      options.logLevel = logLevel;
+    }
     // https:
     if (/^https/.test(urlObj.protocol)) {
       options.addr = 'https://' + urlObj.hostname;
