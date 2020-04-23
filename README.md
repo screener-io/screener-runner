@@ -315,6 +315,17 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
     }
     ```
 
+
+- **ngrok:** Logging options passed through to ngrok (when used).
+  - Example:
+
+  ```javascript
+  ngrok: {
+    logFile: '/tmp/somefile.log',
+    logLevel: 'debug'
+  }
+  ```
+  
 - **diffOptions:** Visual diff options to control validations.
   - Example:
 
