@@ -68,7 +68,8 @@ var sauceSchema = exports.sauceSchema = Joi.object().keys({
   launchSauceConnect: Joi.boolean(),
   extendedDebugging: Joi.boolean(),
   tunnelIdentifier: Joi.string().when('launchSauceConnect', { is: true, then: Joi.forbidden().error(new Error('tunnelIdentifier cannot be set when launchSauceConnect flag is enabled')) }),
-  parentTunnel: Joi.string()
+  parentTunnel: Joi.string(),
+  timeZone: Joi.string()
 });
 
 var vstsSchema = exports.vstsSchema = Joi.object().keys({
