@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.4
+- Update Sauce Connect version to `4.6.2`
+
 ## 0.11.3
 - Bug: Fix browser validation issue from 0.11.0.
   - Patch versions will now pass validation, despite Sauce Labs ignoring the patch version when setting up the test browser (NOTE: patch version _will_ remain present in Screener log).
