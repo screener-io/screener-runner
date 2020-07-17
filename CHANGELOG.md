@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.5
+- Update dependency http-proxy to 1.18.1
+
 ## 0.11.4
 - Update Sauce Connect version to `4.6.2`
 
