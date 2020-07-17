@@ -1,5 +1,5 @@
 var sauceConnectLauncher = require('sauce-connect-launcher');
-var SAUCE_CONNECT_LAUNCHER_VERSION = '4.5.4';
+var SAUCE_CONNECT_LAUNCHER_VERSION = '4.6.2';
 
 sauceConnectLauncher.download({
   logger: console.log.bind(console),

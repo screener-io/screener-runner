@@ -2,7 +2,7 @@ var chai = require('chai');
 chai.use(require('chai-fs'));
 var expect = chai.expect;
 var path = require('path');
-var SAUCE_CONNECT_LAUNCHER_VERSION = '4.5.4';
+var SAUCE_CONNECT_LAUNCHER_VERSION = '4.6.2';
 var PLATFORM = {
   darwin: 'osx',
   win32: 'win32',
