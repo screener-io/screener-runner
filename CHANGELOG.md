@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.6
+- Increase retries/timeout for Ngrok
+
 ## 0.11.5
 - Update dependency http-proxy to 1.18.1
 
