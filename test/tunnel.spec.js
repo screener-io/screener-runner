@@ -4,7 +4,7 @@ var sinon = require('sinon');
 var Tunnel = rewire('../src/tunnel');
 
 describe('screener-runner/src/tunnel', function() {
-  this.timeout(5000);
+  this.timeout(35000);
 
   describe('Tunnel.connect', function() {
     it('should error when no token', function(done) {

@@ -67,7 +67,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
         return urlObj.host;
       })
       .catch(ex => {
-        if (tries < 2) {
+        if (tries < 30) {
           // on error, wait and retry
           return Promise.delay(1000).then(() =>
             exports.connect({ ngrok }, tries + 1)
