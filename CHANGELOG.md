@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.7
+- Add `disableDiffOnError` option
+
 ## 0.11.6
 - Increase retries/timeout for Ngrok
 
