@@ -39,7 +39,7 @@ exports.getVars = function() {
   if (env.CI === 'true' && env.TRAVIS === 'true') {
     var fullBranchName = env.TRAVIS_PULL_REQUEST_BRANCH || env.TRAVIS_BRANCH;
     var prSlug = env.TRAVIS_PULL_REQUEST_SLUG;
-    // if PR src and dest branches are equal, prefix with slug to differentiate 
+    // if PR src and dest branches are equal, prefix with slug to differentiate
     if (prSlug && env.TRAVIS_PULL_REQUEST_BRANCH === env.TRAVIS_BRANCH) {
       fullBranchName = prSlug + ':' + fullBranchName;
     }
@@ -61,6 +61,7 @@ exports.getVars = function() {
   // Bitbucket
   if (env.BITBUCKET_BRANCH && env.BITBUCKET_COMMIT) {
     return {
+      build: env.BITBUCKET_BUILD_NUMBER,
       branch: env.BITBUCKET_BRANCH,
       commit: env.BITBUCKET_COMMIT
     };

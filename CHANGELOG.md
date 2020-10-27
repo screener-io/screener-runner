@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.8
+- Add bitbucket build num
+
 ## 0.11.7
 - Add `disableDiffOnError` option
 
