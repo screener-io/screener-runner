@@ -143,11 +143,13 @@ describe('screener-runner/src/ci', function() {
 
     it('should return branch from Bitbucket Pipelines', function() {
       process.env = {
+        BITBUCKET_BUILD_NUMBER: '10',
         BITBUCKET_COMMIT: 'bitbucket-commit',
         BITBUCKET_BRANCH: 'bitbucket-branch'
       };
       var result = CI.getVars();
       expect(result).to.deep.equal({
+        build: '10',
         branch: 'bitbucket-branch',
         commit: 'bitbucket-commit'
       });
