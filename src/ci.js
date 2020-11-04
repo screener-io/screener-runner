@@ -116,6 +116,14 @@ exports.getVars = function() {
     }
     return result;
   }
+  // Github actions
+  if(env.CI === 'true' && env.GITHUB_ACTIONS === 'true'){
+    return {
+      build: env.GITHUB_RUN_NUMBER,
+      branch: env.GITHUB_REF,
+      commit: env.GITHUB_SHA
+    };
+  }
   // if no matches, return empty object
   return {};
 };
