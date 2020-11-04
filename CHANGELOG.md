@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.9
+- Update Sauce browser versions
+
 ## 0.11.8
 - Add bitbucket build num
 
