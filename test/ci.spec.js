@@ -304,7 +304,7 @@ describe('screener-runner/src/ci', function() {
         CI: 'true',
         GITHUB_ACTIONS: 'true',
         GITHUB_RUN_NUMBER: 'github-actions-build',
-        GITHUB_REF: 'github-actions-branch',
+        GITHUB_REF: 'refs/heads/github-actions-branch',
         GITHUB_SHA: 'github-actions-commit'
       };
       var result = CI.getVars();
