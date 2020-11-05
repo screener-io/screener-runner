@@ -119,7 +119,7 @@ exports.getVars = function() {
   // Github actions
   if(env.CI === 'true' && env.GITHUB_ACTIONS === 'true'){
 
-    var branchName = env.GITHUB_REF;
+    var branchName = env.GITHUB_REF || '';
     // remove prefix if exists
     if (branchName.indexOf('refs/heads/') === 0) {
       branchName = branchName.replace('refs/heads/', '');
