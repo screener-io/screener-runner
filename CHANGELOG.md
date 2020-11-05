@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.9
+- Add github actions support
+
 ## 0.11.8
 - Add bitbucket build num
 

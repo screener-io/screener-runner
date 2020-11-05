@@ -116,6 +116,21 @@ exports.getVars = function() {
     }
     return result;
   }
+  // Github actions
+  if(env.CI === 'true' && env.GITHUB_ACTIONS === 'true'){
+
+    var branchName = env.GITHUB_REF;
+    // remove prefix if exists
+    if (branchName && branchName.indexOf('refs/heads/') === 0) {
+      branchName = branchName.replace('refs/heads/', '');
+    }
+
+    return {
+      build: env.GITHUB_RUN_NUMBER,
+      branch: branchName,
+      commit: env.GITHUB_SHA
+    };
+  }
   // if no matches, return empty object
   return {};
 };
