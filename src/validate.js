@@ -160,7 +160,9 @@ var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
 );
 
 var runnerSchema = Joi.object().keys({
-  apiKey: Joi.string().required(),
+  apiKey: Joi.string(),
+  username: Joi.string(),
+  accessKey: Joi.string().required(),
   projectRepo: Joi.string().max(100).required(),
   build: Joi.string().max(40),
   branch: Joi.string().max(100),
@@ -220,6 +222,8 @@ var runnerSchema = Joi.object().keys({
 })
   .without('resolutions', ['resolution'])
   .without('sauce', ['browserStack'])
+  .xor('username', 'apiKey')
+  .and('username', 'accessKey')
   .with('disableBranchBaseline', ['baseBranch'])
   .with('useNewerBaseBranch', ['baseBranch'])
   .with('alwaysAcceptBaseBranch', ['baseBranch'])

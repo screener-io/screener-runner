@@ -12,6 +12,19 @@ var getApiUrl = exports.getApiUrl = function () {
 };
 
 var request = function(apiKey, options) {
+
+
+  var headers = {};
+
+  if(options.username && options.accessKey){
+    const buffer = Buffer.from(`${options.username}:${options.accessKey}`);
+    headers['Authorization'] = `Basic ${buffer.toString('base64')}`;
+  }
+
+  if(apiKey){
+    headers['x-api-key'] = apiKey;
+  }
+
   var defaults = {
     method: 'GET',
     headers: {
