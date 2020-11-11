@@ -16,8 +16,8 @@ var request = function(authObject, options) {
   var headers = {};
 
   if(authObject.username && authObject.accessKey){
-    const buffer = Buffer.from(`${options.username}:${options.accessKey}`);
-    headers['Authorization'] = `Basic ${buffer.toString('base64')}`;
+    const buffer = Buffer.from(`${authObject.username}:${authObject.accessKey}`).toString('base64');
+    headers['authorization'] = `Basic ${buffer}`;
   }
 
   if(authObject.apiKey){
