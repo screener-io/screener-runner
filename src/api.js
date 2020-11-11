@@ -11,25 +11,22 @@ var getApiUrl = exports.getApiUrl = function () {
   return API_URL;
 };
 
-var request = function(apiKey, options) {
-
+var request = function(authObject, options) {
 
   var headers = {};
 
-  if(options.username && options.accessKey){
+  if(authObject.username && authObject.accessKey){
     const buffer = Buffer.from(`${options.username}:${options.accessKey}`);
     headers['Authorization'] = `Basic ${buffer.toString('base64')}`;
   }
 
-  if(apiKey){
+  if(authObject.apiKey){
     headers['x-api-key'] = apiKey;
   }
 
   var defaults = {
     method: 'GET',
-    headers: {
-      'x-api-key': apiKey
-    },
+    headers: headers,
     maxAttempts: 10
   };
   return new Promise(function(resolve, reject) {
@@ -53,17 +50,17 @@ var request = function(apiKey, options) {
   });
 };
 
-exports.getTunnelToken = function(apiKey) {
+exports.getTunnelToken = function(authObject) {
   var url = `${getApiUrl()}/tunnel/token`;
   var options = {
     method: 'GET',
     uri: url,
     json: true
   };
-  return request(apiKey, options);
+  return request(authObject, options);
 };
 
-var createBuild = exports.createBuild = function(apiKey, payload) {
+var createBuild = exports.createBuild = function(authObject, payload) {
   var url = `${getApiUrl()}/projects`;
   var options = {
     method: 'POST',
@@ -71,25 +68,25 @@ var createBuild = exports.createBuild = function(apiKey, payload) {
     json: true,
     body: payload
   };
-  return request(apiKey, options);
+  return request(authObject, options);
 };
 
-var getBuildStatus = exports.getBuildStatus = function(apiKey, projectId, branch, buildId) {
+var getBuildStatus = exports.getBuildStatus = function(authObject, projectId, branch, buildId) {
   var url = getApiUrl() + '/projects/' + encodeURIComponent(projectId) + '/branches/' + encodeURIComponent(branch) + '/builds/' + encodeURIComponent(buildId) + '/status';
   var options = {
     uri: url
   };
-  return request(apiKey, options);
+  return request(authObject, options);
 };
 
-var createBuildWithRetry = exports.createBuildWithRetry = function(apiKey, payload) {
-  return createBuild(apiKey, payload)
+var createBuildWithRetry = exports.createBuildWithRetry = function(authObject, payload) {
+  return createBuild(authObject, payload)
     .catch(function(err) {
       if (err.message.indexOf('Conflict') >= 0) {
         return Promise.delay(RETRY_MS)
           .then(function() {
             console.log('Existing Build still running. Retrying...');
-            return createBuildWithRetry(apiKey, payload);
+            return createBuildWithRetry(authObject, payload);
           });
       } else {
         throw err;
@@ -97,22 +94,22 @@ var createBuildWithRetry = exports.createBuildWithRetry = function(apiKey, paylo
     });
 };
 
-var waitForBuild = exports.waitForBuild = function(apiKey, projectId, branch, buildId) {
-  return getBuildStatus(apiKey, projectId, branch, buildId)
+var waitForBuild = exports.waitForBuild = function(authObject, projectId, branch, buildId) {
+  return getBuildStatus(authObject, projectId, branch, buildId)
     .then(function(response) {
       if (response.trim().length > 0) {
         return response;
       }
       return Promise.delay(POLL_MS)
         .then(function() {
-          return waitForBuild(apiKey, projectId, branch, buildId);
+          return waitForBuild(authObject, projectId, branch, buildId);
         });
     })
     .catch(function(err) {
       if (err.message.indexOf('Build Not Found') >= 0) {
         return Promise.delay(POLL_MS)
           .then(function() {
-            return waitForBuild(apiKey, projectId, branch, buildId);
+            return waitForBuild(authObject, projectId, branch, buildId);
           });
       } else {
         throw err;
