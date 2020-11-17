@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.10
+- Add internal prop
+
 ## 0.11.9
 - Add github actions support
 
