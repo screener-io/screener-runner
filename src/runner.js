@@ -89,6 +89,13 @@ exports.run = function(config) {
   var timer;
   // create copy of config
   config = cloneDeep(config);
+
+  const authOptions = {
+    apiKey: config.apiKey,
+    username: config.username,
+    accessKey: config.accessKey,
+  };
+
   return Validate.runnerConfig(config)
     // get tunnel token with access key
     .then(function() {
@@ -103,11 +110,11 @@ exports.run = function(config) {
       }
       config = CI.setVars(config);
       if (config.tunnel) {
-        return api.getTunnelToken(config.apiKey)
+        return api.getTunnelToken(authOptions)
           .then(function(response) {
             // if no token in response, try again
             if (!response || !response.token) {
-              return api.getTunnelToken(config.apiKey);
+              return api.getTunnelToken(authOptions);
             }
             return response;
           });
@@ -149,7 +156,7 @@ exports.run = function(config) {
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = omit(config, ['apiKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
+      var payload = omit(config, ['apiKey',  'username', 'accessKey','resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
       if (typeof payload.beforeEachScript === 'function') {
         payload.beforeEachScript = payload.beforeEachScript.toString();
       }
@@ -172,7 +179,7 @@ exports.run = function(config) {
         }
       }
       console.log('\nCreating build for ' + config.projectRepo);
-      return api.createBuildWithRetry(config.apiKey, payload).timeout(MAX_MS, 'Timeout waiting for Build');
+      return api.createBuildWithRetry(authOptions, payload).timeout(MAX_MS, 'Timeout waiting for Build');
     })
     // receive response from screener api and keep checking the build status
     .then(function(response) {
@@ -183,7 +190,7 @@ exports.run = function(config) {
       console.log('View progress via Screener\'s Dashboard => https://screener.io/v2\n');
       // output to ensure CI does not timeout
       timer = setInterval(function() { console.log('.'); }, 120*1000);
-      return api.waitForBuild(config.apiKey, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
+      return api.waitForBuild(authOptions, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
     })
     // disconnect tunnel and relay the response
     .then(function(response) {
