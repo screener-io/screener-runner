@@ -156,7 +156,7 @@ exports.run = function(config) {
       if (tunnelHost) {
         config.states = transformToTunnelHost(config.states, config.tunnel.host, tunnelHost);
       }
-      var payload = omit(config, ['apiKey',  'username', 'accessKey','resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
+      var payload = omit(config, ['apiKey', 'username', 'accessKey', 'resolution', 'resolutions', 'includeRules', 'excludeRules', 'tunnel', 'failureExitCode', 'sauce.launchSauceConnect']);
       if (typeof payload.beforeEachScript === 'function') {
         payload.beforeEachScript = payload.beforeEachScript.toString();
       }
