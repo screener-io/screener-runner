@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.11.10
+- Add support to run tests with sauce credentials
+
 ## 0.11.9
 - Add github actions support
 
