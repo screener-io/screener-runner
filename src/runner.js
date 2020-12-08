@@ -85,21 +85,10 @@ var convertRules = function(array) {
   });
 };
 
-var getAuthObject = function(config){
-  return {
-    apiKey : config.apiKey,
-    username: config.username,
-    accessKey: config.accessKey
-  }
-};
-
 exports.run = function(config) {
   var timer;
   // create copy of config
   config = cloneDeep(config);
-<<<<<<< HEAD
-  var authObject = getAuthObject(config);
-=======
 
   const authOptions = {
     apiKey: config.apiKey,
@@ -107,7 +96,6 @@ exports.run = function(config) {
     accessKey: config.accessKey,
   };
 
->>>>>>> vslt/vslt-122
   return Validate.runnerConfig(config)
     // get tunnel token with access key
     .then(function() {
@@ -122,19 +110,11 @@ exports.run = function(config) {
       }
       config = CI.setVars(config);
       if (config.tunnel) {
-<<<<<<< HEAD
-        return api.getTunnelToken(authObject)
-          .then(function(response) {
-            // if no token in response, try again
-            if (!response || !response.token) {
-              return api.getTunnelToken(authObject);
-=======
         return api.getTunnelToken(authOptions)
           .then(function(response) {
             // if no token in response, try again
             if (!response || !response.token) {
               return api.getTunnelToken(authOptions);
->>>>>>> vslt/vslt-122
             }
             return response;
           });
@@ -199,11 +179,7 @@ exports.run = function(config) {
         }
       }
       console.log('\nCreating build for ' + config.projectRepo);
-<<<<<<< HEAD
-      return api.createBuildWithRetry(authObject, payload).timeout(MAX_MS, 'Timeout waiting for Build');
-=======
       return api.createBuildWithRetry(authOptions, payload).timeout(MAX_MS, 'Timeout waiting for Build');
->>>>>>> vslt/vslt-122
     })
     // receive response from screener api and keep checking the build status
     .then(function(response) {
@@ -214,11 +190,7 @@ exports.run = function(config) {
       console.log('View progress via Screener\'s Dashboard => https://screener.io/v2\n');
       // output to ensure CI does not timeout
       timer = setInterval(function() { console.log('.'); }, 120*1000);
-<<<<<<< HEAD
-      return api.waitForBuild(authObject, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
-=======
       return api.waitForBuild(authOptions, config.project, config.branch, config.build).timeout(MAX_MS, 'Timeout waiting for Build');
->>>>>>> vslt/vslt-122
     })
     // disconnect tunnel and relay the response
     .then(function(response) {

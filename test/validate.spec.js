@@ -133,10 +133,18 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should throw error when no apiKey', function(done) {
-      Validate.runnerConfig({})
+    it('should throw error when no apiKey or username', function(done) {
+      Validate.runnerConfig({ projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name' }]})
         .catch(function(err) {
-          expect(err.message).to.equal('child "apiKey" fails because ["apiKey" is required]');
+          expect(err.message).to.equal('"value" must contain at least one of [username, apiKey]');
+          done();
+        });
+    });
+
+    it('should throw error when no apiKey or username', function(done) {
+      Validate.runnerConfig({ username: 'username', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name' }]})
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" contains [username] without its required peers [accessKey]');
           done();
         });
     });
