@@ -218,7 +218,8 @@ var runnerSchema = Joi.object().keys({
   newSessionForEachState: Joi.boolean(),
   failureExitCode: Joi.number().integer().min(0).max(255).default(1),
   beforeEachScript: Joi.alternatives().try(Joi.func(), Joi.string()),
-  ieNativeEvents: Joi.boolean()
+  ieNativeEvents: Joi.boolean(),
+  internal: Joi.object()
 })
   .without('resolutions', ['resolution'])
   .without('sauce', ['browserStack'])
