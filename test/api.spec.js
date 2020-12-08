@@ -72,7 +72,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .post('/projects', payload)
         .reply(200, successResponse);
-      api.createBuild('api-key', payload)
+      api.createBuild({ apiKey : 'api-key' }, payload)
         .then(function(response) {
           expect(response).to.deep.equal(successResponse);
           done();
@@ -83,7 +83,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .post('/projects', payload)
         .reply(400, errorResponse);
-      api.createBuild('api-key', payload)
+      api.createBuild({ apiKey : 'api-key' }, payload)
         .catch(function(err) {
           expect(err.message).to.equal('Error: error msg');
           done();
@@ -94,7 +94,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .post('/projects', payload)
         .reply(400, {});
-      api.createBuild('api-key', payload)
+      api.createBuild({ apiKey : 'api-key' }, payload)
         .catch(function(err) {
           expect(err.message).to.equal('Error: Response Code 400');
           done();
@@ -107,7 +107,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/projects/project-id/branches/branch/builds/build-id/status')
         .reply(200, 'status');
-      api.getBuildStatus('api-key', 'project-id', 'branch', 'build-id')
+      api.getBuildStatus({ apiKey: 'api-key' }, 'project-id', 'branch', 'build-id')
         .then(function(response) {
           expect(response).to.deep.equal('status');
           done();
@@ -118,7 +118,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/projects/project-id/branches/branch/builds/build-id/status')
         .reply(400, '');
-      api.getBuildStatus('api-key', 'project-id', 'branch', 'build-id')
+      api.getBuildStatus({ apiKey: 'api-key' }, 'project-id', 'branch', 'build-id')
         .catch(function(err) {
           expect(err.message).to.equal('Error: Response Code 400');
           done();
@@ -131,7 +131,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .post('/projects', payload)
         .reply(200, successResponse);
-      api.createBuildWithRetry('api-key', payload)
+      api.createBuildWithRetry({ apiKey :'api-key' }, payload)
         .then(function(response) {
           expect(response).to.deep.equal(successResponse);
           done();
@@ -148,7 +148,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .post('/projects', payload)
         .reply(200, successResponse);
-      api.createBuildWithRetry('api-key', payload)
+      api.createBuildWithRetry({ apiKey :'api-key' }, payload)
         .then(function(response) {
           expect(response).to.deep.equal(successResponse);
           done();
@@ -159,7 +159,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .post('/projects', payload)
         .reply(400, errorResponse);
-      api.createBuildWithRetry('api-key', payload)
+      api.createBuildWithRetry({ apiKey :'api-key' }, payload)
         .catch(function(err) {
           expect(err.message).to.equal('Error: error msg');
           done();
@@ -172,7 +172,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/projects/project-id/branches/branch/builds/build-id/status')
         .reply(200, 'status');
-      api.waitForBuild('api-key', 'project-id', 'branch', 'build-id')
+      api.waitForBuild({ apiKey: 'api-key' }, 'project-id', 'branch', 'build-id')
         .then(function(response) {
           expect(response).to.deep.equal('status');
           done();
@@ -189,7 +189,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/projects/project-id/branches/branch/builds/build-id/status')
         .reply(200, 'status');
-      api.waitForBuild('api-key', 'project-id', 'branch', 'build-id')
+      api.waitForBuild({ apiKey: 'api-key' }, 'project-id', 'branch', 'build-id')
         .then(function(response) {
           expect(response).to.deep.equal('status');
           done();
@@ -203,7 +203,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/projects/project-id/branches/branch/builds/build-id/status')
         .reply(200, 'status');
-      api.waitForBuild('api-key', 'project-id', 'branch', 'build-id')
+      api.waitForBuild({ apiKey: 'api-key' }, 'project-id', 'branch', 'build-id')
         .then(function(response) {
           expect(response).to.deep.equal('status');
           done();
@@ -214,7 +214,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/projects/project-id/branches/branch/builds/build-id/status')
         .reply(400, '');
-      api.waitForBuild('api-key', 'project-id', 'branch', 'build-id')
+      api.waitForBuild({ apiKey: 'api-key' }, 'project-id', 'branch', 'build-id')
         .catch(function(err) {
           expect(err.message).to.equal('Error: Response Code 400');
           done();

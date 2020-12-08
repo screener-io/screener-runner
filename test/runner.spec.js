@@ -72,8 +72,8 @@ var tunnelMock = {
   transformUrl: Tunnel.transformUrl
 };
 var apiMock = {
-  getTunnelToken: function(apiKey) {
-    expect(apiKey).to.equal('api-key');
+  getTunnelToken: function(authOptions) {
+    expect(authOptions.apiKey).to.equal('api-key');
     return Promise.resolve({
       token: 'token'
     });
@@ -81,8 +81,8 @@ var apiMock = {
   getApiUrl: function() {
     return 'mock://v2';
   },
-  createBuildWithRetry: function(apiKey, payload) {
-    expect(apiKey).to.equal('api-key');
+  createBuildWithRetry: function(authOptions, payload) {
+    expect(authOptions.apiKey).to.equal('api-key');
     expect(payload).to.deep.equal({
       projectRepo: 'repo',
       resolutions: [
@@ -145,7 +145,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
-        createBuildWithRetry: function(apiKey, payload) {
+        createBuildWithRetry: function(authOptions, payload) {
           expect(typeof payload.beforeEachScript).to.equal('string');
           expect(payload.beforeEachScript).to.contain('{ console.log(\'hello\'); }');
           return Promise.resolve({
@@ -168,7 +168,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
-        createBuildWithRetry: function(apiKey, payload) {
+        createBuildWithRetry: function(authOptions, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
             browsers: [
@@ -214,7 +214,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
-        createBuildWithRetry: function(apiKey, payload) {
+        createBuildWithRetry: function(authOptions, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
             browsers: [
@@ -264,7 +264,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
-        createBuildWithRetry: function(apiKey, payload) {
+        createBuildWithRetry: function(authOptions, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
             browsers: [
@@ -310,7 +310,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
-        createBuildWithRetry: function(apiKey, payload) {
+        createBuildWithRetry: function(authOptions, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
             resolutions: [
@@ -358,7 +358,7 @@ describe('screener-runner/src/runner', function() {
       Runner.__set__('api', {
         getTunnelToken: apiMock.getTunnelToken,
         getApiUrl: apiMock.getApiUrl,
-        createBuildWithRetry: function(apiKey, payload) {
+        createBuildWithRetry: function(authOptions, payload) {
           expect(payload).to.deep.equal({
             projectRepo: 'repo',
             resolutions: [
