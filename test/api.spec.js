@@ -48,7 +48,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/tunnel/token')
         .reply(200, {token: 'token'});
-      api.getTunnelToken('api-key')
+      api.getTunnelToken({ apiKey: 'api-key' })
         .then(function(response) {
           expect(response).to.deep.equal({token: 'token'});
           done();
@@ -59,7 +59,7 @@ describe('screener-runner/src/api', function() {
       nock(API_URL, headers)
         .get('/tunnel/token')
         .reply(400, errorResponse);
-      api.getTunnelToken('api-key')
+      api.getTunnelToken({ apiKey: 'api-key' })
         .catch(function(err) {
           expect(err.message).to.equal('Error: error msg');
           done();
