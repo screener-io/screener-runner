@@ -141,7 +141,7 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should throw error when no apiKey or username', function(done) {
+    it('should throw error when no apiKey for username', function(done) {
       Validate.runnerConfig({ username: 'username', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name' }]})
         .catch(function(err) {
           expect(err.message).to.equal('"value" contains [username] without its required peers [accessKey]');
