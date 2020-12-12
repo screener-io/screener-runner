@@ -1,35 +1,36 @@
-var ngrokLauncher = require('screener-ngrok');
-var Promise = require('bluebird');
-var url = require('url');
-var sauceConnectLauncher = require('sauce-connect-launcher');
+const ngrokLauncher = require('screener-ngrok');
+const Promise = require('bluebird');
+const url = require('url');
+const Saucelabs = require('saucelabs').default;
+
 var sauceConnection;
 
 exports.connect = function({ ngrok, sauce }, tries = 0) {
   if (sauce) {
     return new Promise(function(resolve, reject) {
-      sauceConnectLauncher({
-        username: sauce.username,
-        accessKey: sauce.accessKey,
+      const account = new Saucelabs({
+        user: sauce.username,
+        key: sauce.accessKey
+      });
+      const scOptions = {
         tunnelIdentifier: sauce.tunnelIdentifier,
-        logfile: `${process.cwd()}/sauce-connect.log`,
-      }, function (err, sauceConnectProcess) {
-        sauceConnection = sauceConnectProcess;
-        if (err) {
+        logfile: `${process.cwd()}/sauce-connect.log`
+      };
+      account.startSauceConnect(scOptions)
+        .then((tunnel) => {
+          console.log('Sauce Connect ready');
+          sauceConnection = tunnel;
+          console.log(tunnel);
+          resolve();
+        })
+        .catch((err) => {
+          if(tries < 2) { 
+            // on error wait and retry
+            return Promise.delay(1000).then(() => { exports.connect({ sauce }, tries + 1); }); 
+          }
           reject(err);
-        }
-        console.log('Sauce Connect ready');
-        resolve();
-      });
-    })
-      .catch(ex => {
-        if (tries < 2) {
-          // on error, wait and retry
-          return Promise.delay(1000).then(() =>
-            exports.connect({ sauce }, tries + 1)
-          );
-        }
-        throw ex;
-      });
+        });
+    });
   }
 
   if (ngrok) {
