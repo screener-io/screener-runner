@@ -50,7 +50,7 @@ module.exports = {
 
   // this example assumes Environment Variables listed below exist on your system:
   username: process.env.SAUCE_USERNAME,
-  accessKey: process.env.SAUCE_USERNAME,
+  accessKey: process.env.SAUCE_ACCESS_KEY,
 
   // array of UI states to capture visual snapshots of.
   // each state consists of a url and a name.
