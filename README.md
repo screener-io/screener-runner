@@ -20,7 +20,7 @@ Then add a configuration file to your project root. Here is an example:
 
 ### screener.config.js
 
-#### Using API Key to authenticate
+#### Using Screener API Key to authenticate
 ```javascript
 module.exports = {
   // full repository name for your project:
