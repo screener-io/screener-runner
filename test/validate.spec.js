@@ -133,6 +133,14 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
+    it('should throw error when both apiKey and username', function(done) {
+      Validate.runnerConfig({ apiKey: 'apiKey', username: 'username', projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name' }]})
+        .catch(function(err) {
+          expect(err.message).to.equal('"value" contains a conflict between exclusive peers [username, apiKey]');
+          done();
+        });
+    });
+
     it('should throw error when no apiKey or username', function(done) {
       Validate.runnerConfig({ projectRepo: 'repo', states: [{url: 'http://url.com', name: 'name' }]})
         .catch(function(err) {
