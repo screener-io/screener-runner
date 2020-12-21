@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const url = require('url');
 const Saucelabs = require('saucelabs').default;
 
-var sauceConnection;
+let sauceConnection;
 
 exports.connect = function({ ngrok, sauce }, tries = 0) {
   if (sauce) {
@@ -92,14 +92,10 @@ exports.transformUrl = function(origUrl, host, tunnelHost) {
 };
 
 exports.disconnect = function() {
-  return new Promise(function(resolve) {
-    if (sauceConnection) {
-      sauceConnection.close(function() {
-        resolve();
-      });
-    } else {
-      ngrokLauncher.disconnect();
-      resolve();
-    }
-  });
+  if(sauceConnection)
+    return sauceConnection.close();
+  else{
+    ngrokLauncher.disconnect();      
+    return Promise.resolve();
+  }
 };
