@@ -6,6 +6,6 @@ var SAUCE_CONNECT_LAUNCHER_VERSION = 'v4.6.2';
 
 describe('Sauce Connect Launcher', function() {
   it('should be downloaded after screener runner is installed', function() {
-    expect(path.resolve(`./node_modules/saucelabs/build/.sc-${SAUCE_CONNECT_LAUNCHER_VERSION}/bin/sc`)).to.be.a.file('Didn\'t download sauce connect launcher correctly');
+    expect(path.resolve(`${process.cwd()}/node_modules/saucelabs/build/.sc-${SAUCE_CONNECT_LAUNCHER_VERSION}/bin/sc`)).to.be.a.file('Didn\'t download sauce connect launcher correctly');
   });
 });
