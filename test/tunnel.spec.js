@@ -1,30 +1,55 @@
 var expect = require('chai').expect;
 var rewire = require('rewire');
 var sinon = require('sinon');
-var Tunnel = rewire('../src/tunnel');
+const mock = require('mock-require');
+const ngrokLauncher = require('screener-ngrok');
+let Tunnel;
 
 describe('screener-runner/src/tunnel', function() {
-  this.timeout(35000);
+  
+  beforeEach(function(){
+    Tunnel = rewire('../src/tunnel');
+  });
+
+  afterEach(function(){
+    sinon.restore();
+  });
 
   describe('Tunnel.connect', function() {
+    
+
     it('should error when no token', function(done) {
+
       Tunnel.connect({ ngrok: { host: 'localhost:8080' }})
         .catch(function(err) {
           expect(err.message).to.equal('No Tunnel Token');
           done();
         });
+
+      mock.stopAll();
     });
 
     it('should establish sauce connect tunnel when pass in sauce credentials', function(done) {
-      Tunnel.__set__('sauceConnectLauncher', function(options, cb) {
-        expect(options).to.deep.equal({
-          username: 'username',
-          accessKey: 'accessKey',
-          tunnelIdentifier: 'tunnelIdentifier',
-          logfile: `${process.cwd()}/sauce-connect.log`,
-        });
-        cb(null, 'sauceConnection');
+
+      class SaucelabsMock{
+        constructor({user, key}){
+          expect(user).to.be.equal('username');
+          expect(key).to.be.equal('accessKey');
+        }
+      
+        startSauceConnect({tunnelIdentifier, logfile}){
+          expect(tunnelIdentifier).to.be.equal('tunnelIdentifier');
+          expect(logfile).to.be.equal(`${process.cwd()}/sauce-connect.log`);
+          return Promise.resolve();
+        }
+      }
+
+      mock('saucelabs', {
+        default: SaucelabsMock
       });
+
+      Tunnel = mock.reRequire('../src/tunnel');
+
       Tunnel.connect({ sauce: { username: 'username', accessKey: 'accessKey', tunnelIdentifier: 'tunnelIdentifier' } })
         .then(function(response) {
           expect(response).to.equal(undefined);
@@ -33,17 +58,18 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should pass host/token and return tunnel url on success', function(done) {
-      Tunnel.__set__('ngrokLauncher', {
-        connect: function(options, cb) {
-          expect(options).to.deep.equal({
-            addr: 'localhost:8080',
-            host_header: 'localhost:8080',
-            authtoken: 'token',
-            bind_tls: true
-          });
-          cb(null, 'https://tunnel-url');
-        }
+
+      sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb) {
+        expect(options).to.deep.equal({
+          addr: 'localhost:8080',
+          host_header: 'localhost:8080',
+          authtoken: 'token',
+          bind_tls: true
+        });
+        cb(null, 'https://tunnel-url');
       });
+
+
       Tunnel.connect({ ngrok: { host: 'localhost:8080', token: 'token' }})
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
@@ -52,17 +78,17 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should default to port 80 if port not set', function(done) {
-      Tunnel.__set__('ngrokLauncher', {
-        connect: function(options, cb) {
-          expect(options).to.deep.equal({
-            addr: 'localhost:80',
-            host_header: 'localhost',
-            authtoken: 'token',
-            bind_tls: true
-          });
-          cb(null, 'https://tunnel-url');
-        }
+
+      sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb) {
+        expect(options).to.deep.equal({
+          addr: 'localhost:80',
+          host_header: 'localhost',
+          authtoken: 'token',
+          bind_tls: true
+        });
+        cb(null, 'https://tunnel-url');
       });
+
       Tunnel.connect({ ngrok: { host: 'localhost', token: 'token' }})
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
@@ -71,17 +97,17 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should support host with http protocol', function(done) {
-      Tunnel.__set__('ngrokLauncher', {
-        connect: function(options, cb) {
-          expect(options).to.deep.equal({
-            addr: 'localhost:3000',
-            host_header: 'localhost:3000',
-            authtoken: 'token',
-            bind_tls: true
-          });
-          cb(null, 'https://tunnel-url');
-        }
+      
+      sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb) {
+        expect(options).to.deep.equal({
+          addr: 'localhost:3000',
+          host_header: 'localhost:3000',
+          authtoken: 'token',
+          bind_tls: true
+        });
+        cb(null, 'https://tunnel-url');
       });
+
       Tunnel.connect({ ngrok: { host: 'http://localhost:3000/path', token: 'token' }})
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
@@ -90,17 +116,17 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should support host with https protocol', function(done) {
-      Tunnel.__set__('ngrokLauncher', {
-        connect: function(options, cb) {
-          expect(options).to.deep.equal({
-            addr: 'https://domain.com',
-            host_header: 'rewrite',
-            authtoken: 'token',
-            bind_tls: true
-          });
-          cb(null, 'https://tunnel-url');
-        }
+
+      sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb) {
+        expect(options).to.deep.equal({
+          addr: 'https://domain.com',
+          host_header: 'rewrite',
+          authtoken: 'token',
+          bind_tls: true
+        });
+        cb(null, 'https://tunnel-url');
       });
+
       Tunnel.connect({ ngrok: { host: 'https://domain.com/', token: 'token' }})
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
@@ -109,17 +135,17 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should support host with https protocol and custom port', function(done) {
-      Tunnel.__set__('ngrokLauncher', {
-        connect: function(options, cb) {
-          expect(options).to.deep.equal({
-            addr: 'https://domain.com:4430',
-            host_header: 'rewrite',
-            authtoken: 'token',
-            bind_tls: true
-          });
-          cb(null, 'https://tunnel-url');
-        }
+
+      sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb){
+        expect(options).to.deep.equal({
+          addr: 'https://domain.com:4430',
+          host_header: 'rewrite',
+          authtoken: 'token',
+          bind_tls: true
+        });
+        cb(null, 'https://tunnel-url');
       });
+
       Tunnel.connect({ ngrok: { host: 'https://domain.com:4430', token: 'token' }})
         .then(function(tunnelUrl) {
           expect(tunnelUrl).to.equal('tunnel-url');
@@ -128,10 +154,11 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should return error on failure', function(done) {
-      Tunnel.__set__('ngrokLauncher', {
-        connect: function(options, cb) {
-          cb(new Error('error msg'));
-        }
+
+      this.timeout(35000);
+
+      sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb){
+        cb(new Error('error msg'));
       });
       Tunnel.connect({ ngrok: { host: 'localhost:8080', token: 'token' }})
         .catch(function(err) {
@@ -165,13 +192,13 @@ describe('screener-runner/src/tunnel', function() {
 
   describe('Tunnel.disconnect', function() {
     it('should call ngrok.disconnect()', function() {
-      var ngrokMock = {
-        disconnect: sinon.spy()
-      };
-      Tunnel.__set__('ngrokLauncher', ngrokMock);
+     
       Tunnel.__set__('sauceConnection', undefined);
+
+      const disconnectStub = sinon.stub(ngrokLauncher, 'disconnect');
+
       Tunnel.disconnect();
-      expect(ngrokMock.disconnect.called).to.equal(true);
+      expect(disconnectStub.called).to.equal(true);
     });
 
     it('should call sauceConnection.close()', function() {

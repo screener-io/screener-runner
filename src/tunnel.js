@@ -16,7 +16,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
         tunnelIdentifier: sauce.tunnelIdentifier,
         logfile: `${process.cwd()}/sauce-connect.log`
       };
-      account.startSauceConnect(scOptions)
+      return account.startSauceConnect(scOptions)
         .then((tunnel) => {
           console.log('Sauce Connect ready');
           sauceConnection = tunnel;
