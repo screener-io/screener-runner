@@ -21,13 +21,12 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
       .then((tunnel) => {
         console.log('Sauce Connect ready');
         sauceConnection = tunnel;
-        console.log(tunnel);
       })
       .catch((err) => {
         if (tries < 2) {
           // on error wait and retry
           return Promise.delay(1000).then(() => {
-            exports.connect({ sauce }, tries + 1);
+            return exports.connect({ sauce }, tries + 1);
           });
         }
         throw err;
@@ -96,7 +95,7 @@ exports.disconnect = function() {
   if(sauceConnection)
     return sauceConnection.close();
   else{
-    ngrokLauncher.disconnect();      
+    ngrokLauncher.disconnect();
     return Promise.resolve();
   }
 };
