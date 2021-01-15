@@ -7,31 +7,31 @@ let sauceConnection;
 
 exports.connect = function({ ngrok, sauce }, tries = 0) {
   if (sauce) {
-    return new Promise(function(resolve, reject) {
-      const account = new Saucelabs({
-        user: sauce.username,
-        key: sauce.accessKey
-      });
-      const scOptions = {
-        tunnelIdentifier: sauce.tunnelIdentifier,
-        logfile: `${process.cwd()}/sauce-connect.log`,
-        scVersion: process.env.SAUCE_CONNECT_VERSION || '4.6.2',
-      };
-      return account.startSauceConnect(scOptions)
-        .then((tunnel) => {
-          console.log('Sauce Connect ready');
-          sauceConnection = tunnel;
-          console.log(tunnel);
-          resolve();
-        })
-        .catch((err) => {
-          if(tries < 2) { 
-            // on error wait and retry
-            return Promise.delay(1000).then(() => { exports.connect({ sauce }, tries + 1); }); 
-          }
-          reject(err);
-        });
+    const account = new Saucelabs({
+      user: sauce.username,
+      key: sauce.accessKey,
     });
+    const scOptions = {
+      tunnelIdentifier: sauce.tunnelIdentifier,
+      logfile: `${process.cwd()}/sauce-connect.log`,
+      scVersion: process.env.SAUCE_CONNECT_VERSION || '4.6.2',
+    };
+    return account
+      .startSauceConnect(scOptions)
+      .then((tunnel) => {
+        console.log('Sauce Connect ready');
+        sauceConnection = tunnel;
+        console.log(tunnel);
+      })
+      .catch((err) => {
+        if (tries < 2) {
+          // on error wait and retry
+          return Promise.delay(1000).then(() => {
+            exports.connect({ sauce }, tries + 1);
+          });
+        }
+        throw err;
+      });
   }
 
   if (ngrok) {
