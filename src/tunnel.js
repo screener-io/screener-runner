@@ -1,34 +1,36 @@
-var ngrokLauncher = require('screener-ngrok');
-var Promise = require('bluebird');
-var url = require('url');
-var sauceConnectLauncher = require('sauce-connect-launcher');
-var sauceConnection;
+const ngrokLauncher = require('screener-ngrok');
+const Promise = require('bluebird');
+const url = require('url');
+const Saucelabs = require('saucelabs').default;
+
+let sauceConnection;
 
 exports.connect = function({ ngrok, sauce }, tries = 0) {
   if (sauce) {
-    return new Promise(function(resolve, reject) {
-      sauceConnectLauncher({
-        username: sauce.username,
-        accessKey: sauce.accessKey,
-        tunnelIdentifier: sauce.tunnelIdentifier,
-        logfile: `${process.cwd()}/sauce-connect.log`,
-      }, function (err, sauceConnectProcess) {
-        sauceConnection = sauceConnectProcess;
-        if (err) {
-          reject(err);
-        }
+    const account = new Saucelabs({
+      user: sauce.username,
+      key: sauce.accessKey,
+    });
+    const scOptions = {
+      tunnelIdentifier: sauce.tunnelIdentifier,
+      logfile: `${process.cwd()}/sauce-connect.log`,
+      scVersion: process.env.SAUCE_CONNECT_VERSION || '4.6.2',
+    };
+    return account
+      .startSauceConnect(scOptions)
+      .then((tunnel) => {
         console.log('Sauce Connect ready');
-        resolve();
-      });
-    })
-      .catch(ex => {
+        sauceConnection = tunnel;
+        console.log(tunnel);
+      })
+      .catch((err) => {
         if (tries < 2) {
-          // on error, wait and retry
-          return Promise.delay(1000).then(() =>
-            exports.connect({ sauce }, tries + 1)
-          );
+          // on error wait and retry
+          return Promise.delay(1000).then(() => {
+            exports.connect({ sauce }, tries + 1);
+          });
         }
-        throw ex;
+        throw err;
       });
   }
 
@@ -91,14 +93,10 @@ exports.transformUrl = function(origUrl, host, tunnelHost) {
 };
 
 exports.disconnect = function() {
-  return new Promise(function(resolve) {
-    if (sauceConnection) {
-      sauceConnection.close(function() {
-        resolve();
-      });
-    } else {
-      ngrokLauncher.disconnect();
-      resolve();
-    }
-  });
+  if(sauceConnection)
+    return sauceConnection.close();
+  else{
+    ngrokLauncher.disconnect();      
+    return Promise.resolve();
+  }
 };
