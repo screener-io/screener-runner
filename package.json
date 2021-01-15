@@ -15,7 +15,7 @@
     "coverage": "nyc check-coverage --statements 90 --functions 90 --branches 80 --lines 90"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">= 10"
   },
   "nyc": {
     "include": [
