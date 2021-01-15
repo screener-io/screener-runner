@@ -1,9 +1,9 @@
 # Change Log
 
-## 0.11.11
-
+## 0.12.0
 - Switching to saucelabs package to launch Sauce Connect
 - Environment variable to configure sauce connect version SAUCE_CONNECT_VERSION, default is 4.6.2
+- Node 10+
 
 ## 0.11.10
 - Add internal prop
