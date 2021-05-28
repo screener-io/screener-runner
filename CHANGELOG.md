@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.12.2
+- Increase branch max length
+
 ## 0.12.0
 - Switching to saucelabs package to launch Sauce Connect
 - Environment variable to configure sauce connect version SAUCE_CONNECT_VERSION, default is 4.6.2
