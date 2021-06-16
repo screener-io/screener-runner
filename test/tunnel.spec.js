@@ -6,7 +6,7 @@ const ngrokLauncher = require('screener-ngrok');
 let Tunnel;
 
 describe('screener-runner/src/tunnel', function() {
-  
+
   beforeEach(function(){
     Tunnel = rewire('../src/tunnel');
   });
@@ -16,7 +16,7 @@ describe('screener-runner/src/tunnel', function() {
   });
 
   describe('Tunnel.connect', function() {
-    
+
 
     it('should error when no token', function(done) {
 
@@ -36,7 +36,7 @@ describe('screener-runner/src/tunnel', function() {
           expect(user).to.be.equal('username');
           expect(key).to.be.equal('accessKey');
         }
-      
+
         startSauceConnect({tunnelIdentifier, logfile}){
           expect(tunnelIdentifier).to.be.equal('tunnelIdentifier');
           expect(logfile).to.be.equal(`${process.cwd()}/sauce-connect.log`);
@@ -97,7 +97,7 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should support host with http protocol', function(done) {
-      
+
       sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb) {
         expect(options).to.deep.equal({
           addr: 'localhost:3000',
@@ -188,11 +188,16 @@ describe('screener-runner/src/tunnel', function() {
       var newUrl = Tunnel.transformUrl('http://domain.com/path', 'localhost:8080', 'tunnel-url');
       expect(newUrl).to.equal('http://domain.com/path');
     });
+
+    it('should return original url when relative path', function() {
+      var newUrl = Tunnel.transformUrl('?query=string', 'localhost:8080', 'tunnel-url');
+      expect(newUrl).to.equal('?query=string');
+    });
   });
 
   describe('Tunnel.disconnect', function() {
     it('should call ngrok.disconnect()', function() {
-     
+
       Tunnel.__set__('sauceConnection', undefined);
 
       const disconnectStub = sinon.stub(ngrokLauncher, 'disconnect');
