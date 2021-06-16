@@ -83,7 +83,7 @@ exports.transformUrl = function(origUrl, host, tunnelHost) {
   var origUrlObj = url.parse(origUrl);
   var hostUrlObj = url.parse(/^https?:\/\//.test(host) ? host : 'http://' + host);
   var newUrl = origUrl;
-  if (origUrlObj.host.toLowerCase() === hostUrlObj.host.toLowerCase() && origUrlObj.protocol === hostUrlObj.protocol) {
+  if (origUrlObj.host && origUrlObj.host.toLowerCase() === hostUrlObj.host.toLowerCase() && origUrlObj.protocol === hostUrlObj.protocol) {
     origUrlObj.protocol = 'https';
     origUrlObj.host = tunnelHost;
     newUrl = url.format(origUrlObj);

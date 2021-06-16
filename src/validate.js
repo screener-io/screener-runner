@@ -95,7 +95,7 @@ var shotsSchema = exports.shotsSchema = Joi.array().min(1).items(
 var stepsSchema = exports.stepsSchema = Joi.array().min(0).items(
   Joi.object().keys({
     type: Joi.string().valid('url').required(),
-    url: Joi.string().uri().required()
+    url: Joi.string().uri({allowRelative: true}).required()
   }),
   Joi.object().keys({
     type: Joi.string().valid('saveScreenshot').required(),
