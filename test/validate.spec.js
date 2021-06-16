@@ -702,17 +702,16 @@ describe('screener-runner/src/validate', function() {
         });
     });
 
-    it('should error with invalid url format', function(done) {
+    it('should allow relative url format', function() {
       var steps = [
         {
           type: 'url',
-          url: '/path'
+          url: '?query=string'
         }
       ];
-      Validate.steps(steps)
-        .catch(function(err) {
-          expect(err.message).to.equal('"value" at position 0 does not match any of the allowed types');
-          done();
+      return Validate.steps(steps)
+        .catch(function() {
+          throw new Error('Should not be here');
         });
     });
 

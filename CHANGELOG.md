@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.12.3
+- allow relative urls in `url` step
+
 ## 0.12.2
 - Increase branch max length
 
