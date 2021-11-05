@@ -1,7 +1,10 @@
 # Change Log
 
+## 0.12.4
+- Update screener-ngrok in package-lock.json
+
 ## 0.12.3
-- Update screener-ngrok
+- Update screener-ngrok in package.json
 
 ## 0.12.2
 - Increase branch max length
