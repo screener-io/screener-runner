@@ -1,5 +1,8 @@
 # Change Log
 
+## 0.12.5
+- Update Sauce Connect version to `4.7.1`
+
 ## 0.12.4
 - Update screener-ngrok in package-lock.json
 

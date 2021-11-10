@@ -228,13 +228,14 @@ When using Sauce Labs browsers, you have the option to use the Sauce Connect tun
     username: 'sauce_user',
     accessKey: 'sauce_access_key',
     maxConcurrent: 10, // optional available concurrency you have from Sauce Labs
-    launchSauceConnect: true // optional,
+    launchSauceConnect: true // optional
+    scVersion: '4.7.1' // optional sauce connect version, to be used with launchSauceConnect option only
   }
   ```
 
 #### Important Notes on Sauce Connect
 
-- Using Sauce Connect version `4.6.2`.
+- Using Sauce Connect version `4.7.1`. This version can be overridden with `scVersion` option (see example above).
 
 - Sauce Connect Integration requires all browsers to be Sauce Labs Browsers. An error is thrown when using non-Sauce browsers.
 

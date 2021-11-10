@@ -250,7 +250,7 @@ describe('screener-runner/src/runner', function() {
         { browserName: 'chrome', version: '78.0' },
         { browserName: 'safari', version: '11.0' }
       ];
-      tmpConfig.sauce = { username: sauceCreds.username, accessKey: sauceCreds.accessKey, launchSauceConnect: true };
+      tmpConfig.sauce = { username: sauceCreds.username, accessKey: sauceCreds.accessKey, launchSauceConnect: true, scVersion: '1.0' };
       tmpConfig.pullRequest = '1';
       Runner.run(tmpConfig)
         .then(function(response) {
