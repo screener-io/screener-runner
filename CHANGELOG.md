@@ -1,9 +1,9 @@
 # Change Log
 
-## 0.12.5
+## 0.13.0
 - Update default Sauce Connect version to `4.7.1`
 - Add `sauce.scVersion` config
-- Update `saucelabs`
+- Update `saucelabs` package to latest, with `tunnelIdentifier` option changed to `tunnelName`
 
 ## 0.12.4
 - Update screener-ngrok in package-lock.json
