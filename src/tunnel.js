@@ -12,14 +12,14 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
       key: sauce.accessKey,
     });
     const scOptions = {
-      tunnelIdentifier: sauce.tunnelIdentifier,
+      tunnelName: sauce.tunnelIdentifier,
       logfile: `${process.cwd()}/sauce-connect.log`,
       scVersion: process.env.SAUCE_CONNECT_VERSION || sauce.scVersion || '4.7.1',
     };
     return account
       .startSauceConnect(scOptions)
       .then((tunnel) => {
-        console.log('Sauce Connect ready');
+        console.log(`Sauce Connect ready (${scOptions.scVersion})`);
         sauceConnection = tunnel;
       })
       .catch((err) => {
