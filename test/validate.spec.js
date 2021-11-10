@@ -483,6 +483,14 @@ describe('screener-runner/src/validate', function() {
           });
       });
 
+      it('should forbid scVersion object when launchSauceConnect is not set', function(done) {
+        Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], tunnel: {host: 'localhost:8080'}, sauce: {username: 'user', accessKey: 'key', scVersion: '1.0'}})
+          .catch(function(err) {
+            expect(err.message).to.equal('scVersion can only be set when launchSauceConnect flag is enabled');
+            done();
+          });
+      });
+
       it('should forbid screener browsers when launchSauceConnect is true', function(done) {
         Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{browserName: 'chrome'}], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
           .catch(function(err) {
@@ -508,7 +516,7 @@ describe('screener-runner/src/validate', function() {
       });
 
       it('should allow sauce browsers when launchSauceConnect is true', function() {
-        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '78.0' }, { browserName: 'firefox', version: '70.0' }, { browserName: 'internet explorer', version: '11.0' }], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true}})
+        return Validate.runnerConfig({apiKey: 'key', projectRepo: 'repo', states: [], browsers: [{ browserName: 'chrome', version: '78.0' }, { browserName: 'firefox', version: '70.0' }, { browserName: 'internet explorer', version: '11.0' }], sauce: {username: 'user', accessKey: 'key', launchSauceConnect: true, scVersion: '1.0'}})
           .catch(function() {
             throw new Error('Should not be here');
           });
