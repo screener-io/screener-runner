@@ -6,7 +6,7 @@ const ngrokLauncher = require('screener-ngrok');
 let Tunnel;
 
 describe('screener-runner/src/tunnel', function() {
-  
+
   beforeEach(function(){
     Tunnel = rewire('../src/tunnel');
   });
@@ -16,7 +16,7 @@ describe('screener-runner/src/tunnel', function() {
   });
 
   describe('Tunnel.connect', function() {
-    
+
 
     it('should error when no token', function(done) {
 
@@ -36,9 +36,9 @@ describe('screener-runner/src/tunnel', function() {
           expect(user).to.be.equal('username');
           expect(key).to.be.equal('accessKey');
         }
-      
-        startSauceConnect({tunnelIdentifier, logfile}){
-          expect(tunnelIdentifier).to.be.equal('tunnelIdentifier');
+
+        startSauceConnect({tunnelName, logfile}){
+          expect(tunnelName).to.be.equal('tunnelIdentifier');
           expect(logfile).to.be.equal(`${process.cwd()}/sauce-connect.log`);
           return Promise.resolve();
         }
@@ -97,7 +97,7 @@ describe('screener-runner/src/tunnel', function() {
     });
 
     it('should support host with http protocol', function(done) {
-      
+
       sinon.stub(ngrokLauncher, 'connect').callsFake(function(options, cb) {
         expect(options).to.deep.equal({
           addr: 'localhost:3000',
@@ -192,7 +192,7 @@ describe('screener-runner/src/tunnel', function() {
 
   describe('Tunnel.disconnect', function() {
     it('should call ngrok.disconnect()', function() {
-     
+
       Tunnel.__set__('sauceConnection', undefined);
 
       const disconnectStub = sinon.stub(ngrokLauncher, 'disconnect');
