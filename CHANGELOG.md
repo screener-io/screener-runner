@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.1
+
+- Set correct registry
+
 ## 0.13.0
 - Update default Sauce Connect version to `4.7.1`
 - Add `sauce.scVersion` config
