@@ -30,3 +30,6 @@ yarn-error.log
 # Test files
 /setup.sh
 /conf.js
+
+# Intelij
+.idea
