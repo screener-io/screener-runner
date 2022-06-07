@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.13.2
+
+Add package-lock
+
 ## 0.13.1
 
 - Set correct registry
