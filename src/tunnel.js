@@ -14,7 +14,7 @@ exports.connect = function({ ngrok, sauce }, tries = 0) {
     const scOptions = {
       tunnelName: sauce.tunnelIdentifier,
       logfile: `${process.cwd()}/sauce-connect.log`,
-      scVersion: process.env.SAUCE_CONNECT_VERSION || sauce.scVersion || '4.7.1',
+      scVersion: process.env.SAUCE_CONNECT_VERSION || sauce.scVersion || '4.8.1',
     };
     return account
       .startSauceConnect(scOptions)
