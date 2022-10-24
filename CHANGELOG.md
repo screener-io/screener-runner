@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.14.0
+
+- Update to saucelabs v7.2.0
+- Set default sc to v4.8.1
+
 ## 0.13.2
 
 Add package-lock
