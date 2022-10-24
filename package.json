@@ -38,7 +38,7 @@
     "lodash": "~4.17.13",
     "portfinder": "~1.0.10",
     "request": "~2.87.0",
-    "requestretry": "~2.0.2",
+    "requestretry": "~7.0.0",
     "saucelabs": "~7.2.0",
     "screener-ngrok": "2.2.30",
     "shortid": "~2.2.15"
